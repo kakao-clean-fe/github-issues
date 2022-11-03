@@ -1,5 +1,8 @@
-export function getIssueTpl() {
-	return `
+import {STATUS} from "./constants.js";
+
+export function getIssueTpl({numOpened = 0, numClosed = 0, activeStatus}) {
+    const isStatusOpen = activeStatus === STATUS.OPEN;
+    return `
     <div id="issue-wrapper" class="w-9/12 m-auto min-w-min">
     <div id="header" class="flex justify-between">
 
@@ -29,8 +32,12 @@ export function getIssueTpl() {
         </div>
 
         <div class="statusTab flex">
-          <div class="whitespace-nowrap open-count font-bold cursor-pointer">0 Opens</div>
-          <div class="whitespace-nowrap close-count ml-3 cursor-pointer">0 Closed</div>
+          <div class="whitespace-nowrap open-count ${
+        isStatusOpen ? "active font-bold" : ""
+    } cursor-pointer">${numOpened} Opens</div>
+          <div class="whitespace-nowrap close-count ${
+        !isStatusOpen ? "active font-bold" : ""
+    } ml-3 cursor-pointer">${numClosed} Closed</div>
         </div>
 
         <div class="details-list flex ml-auto">
@@ -76,22 +83,23 @@ export function getIssueItemTpl(item) {
               <div class="issue-title font-bold flex">
                   <div>${item.title}</div>
                   <div class='tags ml-4'>
-                    ${item.tags.reduce((html, { tagName, color }) => {
-                      return `
-                        ${html} <span class="rounded-lg border text-white p-1" style="background-color:${color}">${tagName}</span>
-                      `;
-                    }, ``)}
+                    ${item.tags.reduce(
+        (html, {tagName, color}) => {
+            return (
+                `${html} <span class="rounded-lg border text-white p-1" style="background-color:${color}">${tagName}</span>`
+            );
+        }, ``)}
                   </div>
               </div>
               <div class="issue-description text-xs mt-2">
-                ${item._id} ${item.status}ed ${item['open-date']} ${item.milestones}
+                ${item._id} ${item.status}ed ${item["open-date"]} ${item.milestones}
               </div>
           </div>
         </li>`;
 }
 
-export function getLabelTpl() {
-  return `
+export function getLabelTpl({numLabels = 0}) {
+    return `
   <div id="label-wrapper" class="w-9/12 m-auto min-w-min">
 
   <div id="header" class="flex justify-between">
@@ -205,7 +213,7 @@ export function getLabelTpl() {
     <div class="label-header h-16 flex justify-between items-center border-b">
 
       <div class="mr-3 d-none pl-4">
-        <div class="whitespace-nowrap open-count font-bold cursor-pointer">6 Labels</div>
+        <div class="whitespace-nowrap open-count font-bold cursor-pointer">${numLabels} Labels</div>
       </div>
 
       <div class="details-list flex ml-auto">
@@ -221,11 +229,11 @@ export function getLabelTpl() {
   </div>
     <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
 </div>
-  `
+  `;
 }
 
-export function getLabelItemTpl({ name, color, description }) {
-		return `
+export function getLabelItemTpl({name, color, description}) {
+    return `
             <li class="label-item flex items-center ml-4 py-3 justify-between border-b ">
                 <div class="issue-title flex"> 
                     <span class="rounded-lg border p-1 px-2" style="background-color:#${color}">${name}</span> 
