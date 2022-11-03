@@ -3,7 +3,7 @@ import {getIssueTpl, getIssueItemTpl, getLabelTpl, getLabelItemTpl} from "./tpl.
 import {getData, createRenderer, createEventBinder, asyncPipe, getClassList} from "./utils.js";
 
 (
-    async () => {
+    () => {
         /* definitions */
         const appRenderer = createRenderer("#app");
         const issueListRenderer = createRenderer("#app .issue-list ul");
@@ -23,7 +23,6 @@ import {getData, createRenderer, createEventBinder, asyncPipe, getClassList} fro
                 const closedIssues = data.issues.filter(({status}) => status === STATUS.CLOSE);
                 const filteredIssues = activeStatus === STATUS.OPEN ? openedIssues : closedIssues;
 
-                /* start render */
                 // attach app(clear)
                 appRenderer(
                     getIssueTpl({
