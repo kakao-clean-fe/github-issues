@@ -1,24 +1,28 @@
 module.exports = {
+  root: true,
   env: {
     browser: true,
-    es2021: true,
+    es2021: true
   },
   extends: 'standard-with-typescript',
-  overrides: [
-  ],
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-  },
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint'],
+  overrides: [{
+    files: ['*.ts', '*.tsx'],
+    extends: [
+      'plugin:@typescript-eslint/recommended',
+      'plugin:@typescript-eslint/recommended-requiring-type-checking'
+    ],
+    parserOptions: {
+      project: ['./tsconfig.json'], // Specify it only for TypeScript files
+      ecmaVersion: 'latest',
+      sourceType: 'module'
+    },
+    rules: {
+      '@typescript-eslint/explicit-function-return-type': ['warn']
+    }
+  }],
   rules: {
-    semi: ['error', 'always'],
-    'comma-dangle': ['error', {
-      arrays: 'never',
-      objects: 'always',
-      imports: 'never',
-      exports: 'never',
-      functions: 'never',
-    }],
-    'no-useless-escape': ['warn'],
-  },
-};
+    'no-useless-escape': 'warn'
+  }
+}
