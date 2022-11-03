@@ -1,5 +1,5 @@
 export function getIssueTpl() {
-	return `
+	return /*html*/`
     <div id="issue-wrapper" class="w-9/12 m-auto min-w-min">
     <div id="header" class="flex justify-between">
 
@@ -67,7 +67,7 @@ export function getIssueTpl() {
 }
 
 export function getIssueItemTpl(item) {
-    return `
+    return /*html*/`
         <li> 
           <div class="py-4">
               <input type="checkbox">
@@ -91,7 +91,7 @@ export function getIssueItemTpl(item) {
 }
 
 export function getLabelTpl() {
-  return `
+  return /*html*/`
   <div id="label-wrapper" class="w-9/12 m-auto min-w-min">
 
   <div id="header" class="flex justify-between">
@@ -225,7 +225,7 @@ export function getLabelTpl() {
 }
 
 export function getLabelItemTpl({ name, color, description }) {
-		return `
+		return /*html*/`
             <li class="label-item flex items-center ml-4 py-3 justify-between border-b ">
                 <div class="issue-title flex"> 
                     <span class="rounded-lg border p-1 px-2" style="background-color:#${color}">${name}</span> 
