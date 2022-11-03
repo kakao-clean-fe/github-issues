@@ -19,10 +19,12 @@ module.exports = {
       sourceType: 'module'
     },
     rules: {
+      '@typescript-eslint/semi': ['error', 'always'],
       '@typescript-eslint/explicit-function-return-type': ['warn']
     }
   }],
   rules: {
+    semi: ['error', 'always'],
     'no-useless-escape': 'warn'
   }
-}
+};
