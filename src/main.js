@@ -19,8 +19,14 @@ function renderIssueItemElement(issue) {
     document.querySelector('.issue-list ul').appendChild(newIssueItemElement);
 }
 
+function renderStatusNum(allIssueNum, openedNum) {
+    document.getElementsByClassName('open-count')[0].innerText = openedNum + ' Opened';
+    document.getElementsByClassName('close-count')[0].innerText = (allIssueNum - openedNum) + ' Closed';
+}
+
 document.getElementById('app').innerHTML = getIssueTpl();
 fetchIssues().then(issues => {
-    console.log(issues);
     issues.forEach(renderIssueItemElement);
+    renderStatusNum(issues.length, issues.filter(({status}) => status === "open").length);
 });
+
