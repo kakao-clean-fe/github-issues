@@ -4,8 +4,12 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "isolatedModules": true,
+    "target": "es6",
+    "baseUrl": "./src",
+    "paths": {
+      "~/*": ["./*"]
+    },
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"],
-  "target": "es6"
+  "exclude": ["node_modules"]
 }
