@@ -29,8 +29,8 @@ export function getIssueTpl() {
         </div>
 
         <div class="statusTab flex">
-          <div class="whitespace-nowrap open-count font-bold cursor-pointer">0 Opens</div>
-          <div class="whitespace-nowrap close-count ml-3 cursor-pointer">0 Closed</div>
+          <div class="whitespace-nowrap open-count font-bold cursor-pointer"><span class='open-count-value'>0</span> Opens</div>
+          <div class="whitespace-nowrap close-count ml-3 cursor-pointer"><span class='close-count-value'>0</span> Closed</div>
         </div>
 
         <div class="details-list flex ml-auto">
@@ -59,7 +59,7 @@ export function getIssueTpl() {
 
       </div>
       <div class="issue-list flex ml-auto">
-        <ul></ul>
+        <ul class="issue-list-ul"></ul>
       </div>
     </div>
   </div>
