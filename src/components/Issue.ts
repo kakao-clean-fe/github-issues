@@ -1,6 +1,6 @@
-import { Item } from '../types';
-import FunctionComponent from './FunctionComponent';
-import { getIssueItemTpl } from './tpl';
+import { Item } from '../../types';
+import FunctionComponent from '../common/FunctionComponent';
+import { getIssueItemTpl } from '../common/tpl';
 
 const Issue = (item: Item) => {
   const { getRoot, setComponent } = FunctionComponent();

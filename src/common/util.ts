@@ -1,5 +1,10 @@
-import { Api } from '../types';
+import { Api } from '../../types';
 import { API_METHOD } from './constants';
+
+export const pipe =
+  <P = any, R = any | void>(...fns: ((args: P | R) => R)[]) =>
+  (args?: P | R) =>
+    fns.reduce((prev, next) => next(prev), args);
 
 export const eventListener = (
   element: Element,
@@ -121,3 +126,5 @@ export const getProxy = <T = any>(initData: T) => {
   }
   return _data;
 };
+
+window['pipe'] = pipe;

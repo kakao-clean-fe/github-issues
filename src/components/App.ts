@@ -1,9 +1,11 @@
-import { Item, Status } from '../types';
-import { STATUS } from './constants';
-import FunctionComponent from './FunctionComponent';
+import { Item, Status } from '../../types';
 import Issue from './Issue';
-import { getIssueTpl } from './tpl';
-import { API } from './util';
+import { itemStore } from '../model/ItemStore';
+import { getIssueTpl } from '../common/tpl';
+import { API } from '../common/util';
+import { STATUS } from '../common/constants';
+import FunctionComponent from '../common/FunctionComponent';
+import Observable from '../common/Observable';
 
 const App = (appElement: Element) => {
   const {
@@ -14,15 +16,9 @@ const App = (appElement: Element) => {
     addEventListener,
     getRoot,
     getElement,
-  } = FunctionComponent();
-
-  const [state, setState] = useState<{
-    selectedFilter: Status | '';
-    initData: Item[];
-  }>({
-    initData: [],
-    selectedFilter: '',
-  });
+    getData,
+    setData,
+  } = Observable(itemStore);
 
   addAfterRender(() => {
     setOpenStatusCount();
@@ -33,23 +29,23 @@ const App = (appElement: Element) => {
   const getFilterEle = (status: Status) => getElement(`.${status}-count`);
   const getOpenFilterEle = () => getFilterEle(STATUS.OPEN);
   const getCloseFilterEle = () => getFilterEle(STATUS.CLOSE);
-  const getDataByFiltered = (status: Status | '') =>
-    state.initData.filter((e) => e.status.includes(status));
+  const getDataByFiltered = (items: Item[], status: Status | '') =>
+    items.filter((e) => e.status.includes(status));
   const setOpenStatusCount = () => {
     const openEle = getOpenFilterEle();
     openEle.innerHTML = `${
-      state.initData.filter((e) => e.status === STATUS.OPEN).length
+      getData().initData.filter((e) => e.status === STATUS.OPEN).length
     } Opens`;
   };
   const setCloseStatusCount = () => {
     const closeEle = getCloseFilterEle();
     closeEle.innerHTML = `${
-      state.initData.filter((e) => e.status === STATUS.CLOSE).length
+      getData().initData.filter((e) => e.status === STATUS.CLOSE).length
     } Closed`;
   };
 
   const setStatusBold = () => {
-    switch (state.selectedFilter) {
+    switch (getData().selectedFilter) {
       case STATUS.OPEN:
         getOpenFilterEle().classList.add('font-bold');
         getCloseFilterEle().classList.remove('font-bold');
@@ -68,7 +64,7 @@ const App = (appElement: Element) => {
   setComponent(
     () =>
       getIssueTpl(
-        getDataByFiltered(state.selectedFilter)
+        getDataByFiltered(getData().initData, getData().selectedFilter)
           .map((e) => Issue(e))
           .join('')
       ),
@@ -80,26 +76,29 @@ const App = (appElement: Element) => {
       url: './data-sources/issues.json',
       errorMessage: '초기데이터 로딩에 실패했습니다.',
     });
-    setState({
-      ...state,
+    setData({
+      ...getData(),
       initData: data,
     });
+    console.log(itemStore);
   });
 
   addEventListener('.open-count', 'click', (e) => {
-    setState({
-      ...state,
+    const { initData, selectedFilter } = getData();
+    setData({
+      initData,
       selectedFilter:
-        state.selectedFilter === '' || state.selectedFilter === STATUS.CLOSE
+        selectedFilter === '' || selectedFilter === STATUS.CLOSE
           ? STATUS.OPEN
           : '',
     });
   });
   addEventListener('.close-count', 'click', (e) => {
-    setState({
-      ...state,
+    const { initData, selectedFilter } = getData();
+    setData({
+      initData,
       selectedFilter:
-        state.selectedFilter === '' || state.selectedFilter === STATUS.OPEN
+        selectedFilter === '' || selectedFilter === STATUS.OPEN
           ? STATUS.CLOSE
           : '',
     });

@@ -1,6 +1,27 @@
-import { findElement, findElementAll, getProxy } from './util';
-
-const FunctionComponent = (...props) => {
+import {
+  getProxy,
+  eventListener,
+  findElement,
+  findElementAll,
+  pipe,
+} from './util';
+export interface IFunctionComponent {
+  useState: <T = any>(initData: T) => [T, (t: T) => void];
+  useEffect: (callback: () => void, references?: any[][]) => void;
+  setComponent: (innerHTML: () => string, element: Element) => void;
+  addEventListener: (
+    querySelector: string,
+    event: string,
+    callback: (e: Event) => void
+  ) => void;
+  render: () => void;
+  addBeforeRender: (fn: () => void) => void;
+  addAfterRender: (fn: () => void) => void;
+  getRoot: () => Element;
+  getElement: (querySelector: string) => Element;
+  getElementAll: (querySelector: string) => void;
+}
+const FunctionComponent = (...props): IFunctionComponent => {
   let _element: Element;
   let _innerHTML: () => string;
   const _eventList = [];
@@ -16,6 +37,7 @@ const FunctionComponent = (...props) => {
         case 'string':
           break;
         case 'number':
+          console.log(_data);
           break;
         case 'boolean':
           break;
@@ -50,7 +72,7 @@ const FunctionComponent = (...props) => {
     callback: (e: Event) => void
   ) => {
     _eventList.push(() => {
-      findElement(_element)(querySelector).addEventListener(event, callback);
+      eventListener(findElement(_element)(querySelector), event, callback);
     });
   };
   const setComponent = (

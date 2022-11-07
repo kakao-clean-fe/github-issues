@@ -1,2 +1,2 @@
-import App from './App';
+import App from './components/App';
 App(document.querySelector('#app'));

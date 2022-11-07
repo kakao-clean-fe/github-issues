@@ -1,9 +1,3 @@
-import { STATUS } from './constants';
-
-export function getFullTpl(itemList) {
-  return getIssueTpl(getIssueItemTplByItemList(itemList));
-}
-
 export function getIssueTpl(items) {
   return `
     <div id="issue-wrapper" class="w-9/12 m-auto min-w-min">
