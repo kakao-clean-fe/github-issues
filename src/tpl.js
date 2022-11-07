@@ -65,7 +65,7 @@ export function getIssueTpl(items) {
 
       </div>
       <div class="issue-list flex ml-auto">
-        <ul>${getIssueItemTplByItemList(items)}</ul>
+        <ul>${items}</ul>
       </div>
     </div>
   </div>

@@ -1,6 +1,6 @@
 import { findElement, findElementAll } from './util';
 
-const FunctionComponent = (() => {
+const FunctionComponent = (...props) => {
   let _element: Element;
   let _innerHTML: () => string;
   const _eventList = [];
@@ -71,6 +71,6 @@ const FunctionComponent = (() => {
     getElement,
     getElementAll,
   };
-})();
+};
 
 export default FunctionComponent;

@@ -1,19 +1,20 @@
 import { Item, Status } from '../types';
 import { STATUS } from './constants';
 import FunctionComponent from './FunctionComponent';
+import Issue from './Issue';
 import { getIssueTpl } from './tpl';
 import { API } from './util';
 
 const App = (appElement: Element) => {
-  const app = FunctionComponent;
-
   const {
     addAfterRender,
     useState,
     useEffect,
     setComponent,
     addEventListener,
-  } = app;
+    getRoot,
+    getElement,
+  } = FunctionComponent();
 
   const [state, setState] = useState<{
     selectedFilter: Status | '';
@@ -29,7 +30,7 @@ const App = (appElement: Element) => {
     setStatusBold();
   });
 
-  const getFilterEle = (status: Status) => app.getElement(`.${status}-count`);
+  const getFilterEle = (status: Status) => getElement(`.${status}-count`);
   const getOpenFilterEle = () => getFilterEle(STATUS.OPEN);
   const getCloseFilterEle = () => getFilterEle(STATUS.CLOSE);
   const getDataByFiltered = (status: Status | '') =>
@@ -65,7 +66,12 @@ const App = (appElement: Element) => {
   };
 
   setComponent(
-    () => getIssueTpl(getDataByFiltered(state().selectedFilter)),
+    () =>
+      getIssueTpl(
+        getDataByFiltered(state().selectedFilter)
+          .map((e) => Issue(e))
+          .join('')
+      ),
     appElement
   );
 
@@ -98,5 +104,6 @@ const App = (appElement: Element) => {
           : '',
     });
   });
+  return getRoot().innerHTML;
 };
 export default App;
