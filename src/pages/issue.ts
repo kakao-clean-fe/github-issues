@@ -47,11 +47,15 @@ const initIssueStatusEventHandler = (issues: Issue[]): void => {
   });
 };
 
-const main = async () => {
+const renderIssuePageTemplate = () => {
   findParentAndRenderInnerHtml({
     selector: ROOT_SELECTOR,
     html: getIssueTpl()
   });
+};
+
+const main = async () => {
+  renderIssuePageTemplate();
   const issues: Issue[] = await getIssues();
   renderIssueList(filterOpenedIssues(issues));
   renderIssueStatusCount({
