@@ -10,3 +10,9 @@ export interface RenderInnerHtmlArgs {
 }
 
 export interface FindParentAndRenderInnerHtmlArgs extends FindElementArgs, Pick<RenderInnerHtmlArgs, 'html'> {}
+
+export interface AddEventListerArgs {
+  element: Element | null
+  event: string
+  eventHandler: Parameters<typeof addEventListener>[1]
+}

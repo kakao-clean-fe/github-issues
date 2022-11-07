@@ -1,4 +1,6 @@
-import type { FindElementArgs, RenderInnerHtmlArgs, FindParentAndRenderInnerHtmlArgs } from '~/types/utils/dom';
+import type { FindElementArgs, RenderInnerHtmlArgs, FindParentAndRenderInnerHtmlArgs, AddEventListerArgs } from '~/types/utils/dom';
+import { pipe } from '~/utils/functional-util';
+
 export const findElement = ({ fromElement = document, selector }: FindElementArgs): Element | null => {
   return fromElement.querySelector(selector);
 };
@@ -15,3 +17,13 @@ export const findParentAndRenderInnerHtml = ({ fromElement, selector, html }: Fi
     (parent: Element | null) => renderInnerHtml({ parent, html })
   )({ fromElement, selector });
 };
+
+const addEventListener = ({ element, event, eventHandler }: AddEventListerArgs): void => {
+  if (element !== null) {
+    element.addEventListener(event, eventHandler);
+  }
+};
+
+const setEventToEventListener = (event: string) => (args: Omit<AddEventListerArgs, 'event'>) => addEventListener({ event, ...args });
+
+export const addClickEventListener = setEventToEventListener('click');
