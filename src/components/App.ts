@@ -11,11 +11,14 @@ import { itemObserver } from '../viewModel/ItemObserver';
 const App = (appElement: Element) => {
   const app = FunctionComponent();
   const {
-    getData,
+    getFilteredData,
+    getOpensCount,
+    getClosedCount,
     subscribe,
     changeSelectedFilterToClose,
     changeSelectedFilterToOpen,
     changeSelectedFilterToAll,
+    getSelectedFilter,
   } = itemObserver;
   subscribe(app);
   const {
@@ -37,23 +40,17 @@ const App = (appElement: Element) => {
   const getFilterEle = (status: Status) => getElement(`.${status}-count`);
   const getOpenFilterEle = () => getFilterEle(STATUS.OPEN);
   const getCloseFilterEle = () => getFilterEle(STATUS.CLOSE);
-  const getDataByFiltered = (items: Item[], status: Status | '') =>
-    items.filter((e) => e.status.includes(status));
   const setOpenStatusCount = () => {
     const openEle = getOpenFilterEle();
-    openEle.innerHTML = `${
-      getData().initData.filter((e) => e.status === STATUS.OPEN).length
-    } Opens`;
+    openEle.innerHTML = `${getOpensCount()} Opens`;
   };
   const setCloseStatusCount = () => {
     const closeEle = getCloseFilterEle();
-    closeEle.innerHTML = `${
-      getData().initData.filter((e) => e.status === STATUS.CLOSE).length
-    } Closed`;
+    closeEle.innerHTML = `${getClosedCount()} Closed`;
   };
 
   const setStatusBold = () => {
-    switch (getData().selectedFilter) {
+    switch (getSelectedFilter()) {
       case STATUS.OPEN:
         getOpenFilterEle().classList.add('font-bold');
         getCloseFilterEle().classList.remove('font-bold');
@@ -72,7 +69,7 @@ const App = (appElement: Element) => {
   setComponent(
     () =>
       getIssueTpl(
-        getDataByFiltered(getData().initData, getData().selectedFilter)
+        getFilteredData()
           .map((e) => Issue(e))
           .join('')
       ),
@@ -80,14 +77,12 @@ const App = (appElement: Element) => {
   );
 
   addEventListener('.open-count', 'click', (e) => {
-    const { selectedFilter } = getData();
-    selectedFilter === '' || selectedFilter === STATUS.CLOSE
+    getSelectedFilter() === '' || getSelectedFilter() === STATUS.CLOSE
       ? changeSelectedFilterToOpen()
       : changeSelectedFilterToAll();
   });
   addEventListener('.close-count', 'click', (e) => {
-    const { selectedFilter } = getData();
-    selectedFilter === '' || selectedFilter === STATUS.OPEN
+    getSelectedFilter() === '' || getSelectedFilter() === STATUS.OPEN
       ? changeSelectedFilterToClose()
       : changeSelectedFilterToAll();
   });
