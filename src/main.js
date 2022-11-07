@@ -3,12 +3,13 @@ import {IssuesData} from './stores/issue';
 import {setDefaultTemplate, setListTemplate} from './utils/template';
 import {getStatusCount} from './utils/status';
 import {setEventListerElement} from './utils/event';
+import {pipe} from './utils/pipe';
 
 const main = async () => {
   const issuesData = IssuesData();
   issuesData.setIssues(await getFetchData('issues'));
   const issues = issuesData.getIssues();
-  setDefaultTemplate(getStatusCount(issues));
+  pipe(getStatusCount, setDefaultTemplate)(issues);
   setEventListerElement(issues);
   setListTemplate(issues);
 }
