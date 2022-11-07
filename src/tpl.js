@@ -1,5 +1,5 @@
 export function getIssueTpl() {
-	return `
+    return `
     <div id="issue-wrapper" class="w-9/12 m-auto min-w-min">
     <div id="header" class="flex justify-between">
 
@@ -29,7 +29,7 @@ export function getIssueTpl() {
         </div>
 
         <div class="statusTab flex">
-          <div class="whitespace-nowrap open-count font-bold cursor-pointer">0 Opens</div>
+          <div class="whitespace-nowrap open-count cursor-pointer">0 Opens</div>
           <div class="whitespace-nowrap close-count ml-3 cursor-pointer">0 Closed</div>
         </div>
 
@@ -76,11 +76,11 @@ export function getIssueItemTpl(item) {
               <div class="issue-title font-bold flex">
                   <div>${item.title}</div>
                   <div class='tags ml-4'>
-                    ${item.tags.reduce((html, { tagName, color }) => {
-                      return `
+                    ${item.tags.reduce((html, {tagName, color}) => {
+        return `
                         ${html} <span class="rounded-lg border text-white p-1" style="background-color:${color}">${tagName}</span>
                       `;
-                    }, ``)}
+    }, ``)}
                   </div>
               </div>
               <div class="issue-description text-xs mt-2">
@@ -91,7 +91,7 @@ export function getIssueItemTpl(item) {
 }
 
 export function getLabelTpl() {
-  return `
+    return `
   <div id="label-wrapper" class="w-9/12 m-auto min-w-min">
 
   <div id="header" class="flex justify-between">
@@ -224,8 +224,8 @@ export function getLabelTpl() {
   `
 }
 
-export function getLabelItemTpl({ name, color, description }) {
-		return `
+export function getLabelItemTpl({name, color, description}) {
+    return `
             <li class="label-item flex items-center ml-4 py-3 justify-between border-b ">
                 <div class="issue-title flex"> 
                     <span class="rounded-lg border p-1 px-2" style="background-color:#${color}">${name}</span> 
