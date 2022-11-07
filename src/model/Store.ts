@@ -4,7 +4,9 @@ export interface IStore<T> {
   getData: () => T;
   setData: (data: T) => void;
   undo: () => void;
-  subscribe: (component) => IFunctionComponent;
+  subscribe: (
+    component
+  ) => IFunctionComponent & { getData: () => T; setData: (data: T) => void };
 }
 
 export default <T = any>(initData: T): IStore<T> => {

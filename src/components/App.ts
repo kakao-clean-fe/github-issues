@@ -1,6 +1,6 @@
 import { Item, Status } from '../../types';
 import Issue from './Issue';
-import { itemStore } from '../model/ItemStore';
+import { IItemStore, itemStore } from '../model/ItemStore';
 import { getIssueTpl } from '../common/tpl';
 import { API } from '../common/util';
 import { STATUS } from '../common/constants';
@@ -18,8 +18,8 @@ const App = (appElement: Element) => {
     getElement,
     getData,
     setData,
-  } = Observable(itemStore);
-
+  } = Observable<IItemStore>(itemStore);
+  
   addAfterRender(() => {
     setOpenStatusCount();
     setCloseStatusCount();
