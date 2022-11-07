@@ -13,7 +13,7 @@ export const IssueView = () => {
     let $list: HTMLUListElement | null = null;
 
     const updateCounter = (issues: Array<Issue>) => {
-        if (!$openDiv || !$closeDiv) throw new Error('not display issueView');
+        if (!$openDiv || !$closeDiv) return;
         const [open, close] = issues.reduce((acc, issue) => {
             if (issue.status === 'open') acc[0]++;
             else acc[1]++;
@@ -24,12 +24,11 @@ export const IssueView = () => {
     }
 
     const updateList = (issues: Array<Issue>) => {
-        if (!$list) throw new Error('not display issueView');
+        if (!$list) return;
         $list.innerHTML = issues.reduce((acc, issue) => `${acc}${getIssueItemTpl(issue)}`, '');
     }
 
     const updateApp = (issues: Array<Issue>) => {
-        if (!$list || !$openDiv || !$closeDiv) throw new Error('not display issueView');
         updateList(issues);
         updateCounter(issues);
     }

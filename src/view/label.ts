@@ -11,7 +11,7 @@ export const LabelView = () => {
     let $list: HTMLUListElement | null = null;
 
     const updateApp = (labels: Array<Label>) => {
-        if (!$list) throw new Error('not display labelView');
+        if (!$list) return
         $list.innerHTML = labels.reduce((acc, label) => `${acc}${getLabelItemTpl(label)}`, '');
     }
 
