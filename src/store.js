@@ -1,46 +1,13 @@
-const store = () => {
-  let issues = [];
-  let activatedStatus = ''; // 'open' or 'close'
-  const allIssuesWatchers = [];
-  const statusWatchers = [];
+import {store, createDerivedStore, fetchData} from './util/storeUtil.js';
 
-  return {
-    getIssues() {
-      return issues;
-    },
-    setIssues(newValue) {
-      issues = newValue;
-      allIssuesWatchers.forEach(watcher => watcher());
-    },
-    getActivatedStatusIssues() {
-      return activatedStatus === 'open' ? this.getOpenIssues() : this.getCloseIssues();
-    },
-    addAllIssuesWatchers(watchers) { // []
-      watchers.forEach(watcher => allIssuesWatchers.push(watcher));
-    },
-    addStatusWatchers(watchers) { // []
-      watchers.forEach(watcher => statusWatchers.push(watcher));
-    },
-    getActivatedStatus() {
-      return activatedStatus;
-    },
-    setActivatedStatus(status) {
-      const prev = activatedStatus;
+export const issueStore$ = store([]);
+export const statusStore$ = store('open');
 
-      if (prev === status) {
-        return;
-      }
+const getActivatedIssues = (issues, status) => {
+  return issues.filter(issue => issue.status === status);
+}
 
-      activatedStatus = status;
-      statusWatchers.forEach(watcher => watcher(status))
-    },
-    getOpenIssues() {
-      return issues.filter(issue => issue.status === 'open');
-    },
-    getCloseIssues() {
-      return issues.filter(issue => issue.status === 'close');
-    }
-  }
-};
+export const activatedIssuesStore$ = createDerivedStore(getActivatedIssues, issueStore$, statusStore$);
 
-export default store();
+/** fetch and store data */
+export const loadIssueData = () => fetchData('../data-sources/issues.json')(issueStore$);

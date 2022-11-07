@@ -1,18 +1,18 @@
 import {getIssueTpl, getIssueItemTpl, openCountSelector, closeCountSelector, openIssueTabSelector, closeIssueTabSelector, issueContainerSelector, activateTabClass} from './tpl';
-import {renderTemplate, getPromiseData, $, clearElement} from './util';
-import store from './store.js'
+import {$, clearElement, setRenderTarget, compose, pipe} from './util/componentUtil';
+import {issueStore$,statusStore$, activatedIssuesStore$, loadIssueData } from './store.js'
 
-const getIssueData = async () => {
-  const issues = await getPromiseData('../data-sources/issues.json');
-  
-  store.setIssues(issues);
-  
-  return issues;
+const getOpenIssues = (issues) => {
+  return issues.filter(issue => issue.status === 'open');
 }
 
-const renderOpenCloseCount = () => {
-  $(openCountSelector).textContent = store.getOpenIssues().length;
-  $(closeCountSelector).textContent = store.getCloseIssues().length;
+const getCloseIssues = (issues) => {
+  return issues.filter(issue => issue.status === 'close');
+}
+
+const renderOpenCloseCount = (issues) => {
+  $(openCountSelector).textContent = getOpenIssues(issues).length;
+  $(closeCountSelector).textContent = getCloseIssues(issues).length;
 }
 
 /**
@@ -24,21 +24,18 @@ const addIssueTabClickListener = () => {
 }
 
 const clickOpenTabHandler = () => {
-  store.setActivatedStatus('open');
+  statusStore$.setValue('open')
 }
 
 const clickCloseTabHandler = () => {
-  store.setActivatedStatus('close');
+  statusStore$.setValue('close')
 }
 
-const renderIssues = () => {
+const renderIssues = (issues) => {
   clearElement(issueContainerSelector);
-
-  store.getActivatedStatusIssues().forEach(issue => renderIssue(issue));
-}
-
-const renderIssue = (issue) => {
-  renderTemplate($(issueContainerSelector), getIssueItemTpl(issue))
+  
+  const renderIssue = setRenderTarget($(issueContainerSelector));
+  issues.forEach(issue => compose(renderIssue, getIssueItemTpl)(issue));
 }
 
 const activateTab = (status) => {
@@ -49,28 +46,32 @@ const activateTab = (status) => {
     $(openIssueTabSelector).classList.remove(activateTabClass);
     $(closeIssueTabSelector).classList.add(activateTabClass);
   }
-
 }
 
-const registerAllIssuesWatcher = () => {
-  store.addAllIssuesWatchers([renderOpenCloseCount]);
-}
-
-const registerIssueStatusWatcher = () => {
-  store.addStatusWatchers([renderIssues, activateTab]);
-}
-
-const init = async () => {
-  const app = $('#app');
-  
-  renderTemplate(app, getIssueTpl()); // render wrapper
-  registerAllIssuesWatcher();
+const registerWatcher = () => {
+  registerIssueWatcher();
   registerIssueStatusWatcher();
-
-  // init render Issues
-  await getIssueData();
-  store.setActivatedStatus('open'); // set initial state
-  addIssueTabClickListener();
+  registerActivatedIssuesWatcher();
 }
 
-init();
+const registerIssueWatcher = () => {
+  issueStore$.addWatchers([renderOpenCloseCount])
+}
+const registerIssueStatusWatcher = () => {
+  statusStore$.addWatchers([activateTab]);
+}
+
+const registerActivatedIssuesWatcher = () => {
+  activatedIssuesStore$.addWatchers([renderIssues])
+}
+
+(function init() {
+  const renderWrapper = compose(setRenderTarget($('#app')), getIssueTpl); // render wrapper
+  const initialRenderPipe = pipe(renderWrapper, addIssueTabClickListener);
+  const initialStorePipe = pipe(
+    registerWatcher,
+    loadIssueData,
+  );
+
+  pipe(initialRenderPipe, initialStorePipe)();
+})();
