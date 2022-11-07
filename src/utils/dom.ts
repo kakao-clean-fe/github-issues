@@ -1,7 +1,6 @@
 import type { FindElementArgs, RenderInnerHtmlArgs, AddEventListerArgs } from '~/types/utils/dom';
 
 export const findElement = ({ fromElement = document, selector }: FindElementArgs): Element | null => {
-  console.count(selector);
   return fromElement.querySelector(selector);
 };
 
