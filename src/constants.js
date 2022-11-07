@@ -1,3 +1,4 @@
+/** constants.js  */
 export const TAB = {
   ISSUE: "issue",
   LABEL: "label"
