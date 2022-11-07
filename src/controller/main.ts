@@ -1,6 +1,7 @@
 import {Model} from '../models';
 import {IssueViewType} from "../view/issue";
 import {LabelViewType} from "../view/label";
+import {readIssues, readLabels} from "../utils";
 
 type Props = {
     issueView: IssueViewType;
@@ -21,5 +22,13 @@ export const mainController = ({issueView, labelView, model}: Props) => {
         labelView.updateApp((model.getResource('labels')));
     }
 
-    return { displayIssueView, displayLabelView };
+    const initModel = () => {
+        Promise.all([readIssues(), readLabels()]).then(([issue, label]) => {
+            model.setResource('issues', issue);
+            model.setResource('labels', label);
+        })
+    }
+
+
+    return { displayIssueView, displayLabelView, initModel };
 }

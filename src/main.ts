@@ -11,6 +11,7 @@ const main = () => {
     const manager = mainController({issueView,labelView, model: state});
     GNB(manager);
 
+    manager.initModel();
     manager.displayIssueView();
 }
 

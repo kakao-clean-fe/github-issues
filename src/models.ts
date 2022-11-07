@@ -1,5 +1,3 @@
-import issues from '../data-sources/issues.json';
-import labels from '../data-sources/labels.json';
 import {IssueViewType} from "./view/issue";
 import {LabelViewType} from "./view/label";
 
@@ -11,9 +9,8 @@ type Props = {
 
 export type Model = ReturnType<typeof model>;
 
-
 const model = ({issueView, labelView}: Props) => {
-    const resource: Record<ResourceKey, any> = { issues, labels };
+    const resource: Record<ResourceKey, any> = { issues: undefined, labels: undefined };
 
     const notifyUpdate = (key: ResourceKey) => {
         switch (key) {
