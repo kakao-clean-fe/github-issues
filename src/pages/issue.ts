@@ -34,16 +34,16 @@ const renderIssueStatusCount = ({ openCount, closeCount }: { openCount: number, 
 };
 
 const initIssueStatusEventHandler = (issues: Issue[]): void => {
-  const $openCount = findElement({ selector: ISSUE_OPEN_COUNT_SELECTOR });
-  const $closeCount = findElement({ selector: ISSUE_CLOSE_COUNT_SELECTOR });
+  const data = [
+    { selector: ISSUE_OPEN_COUNT_SELECTOR, eventHandler: () => renderIssueList(filterOpenedIssues(issues)) },
+    { selector: ISSUE_CLOSE_COUNT_SELECTOR, eventHandler: () => renderIssueList(filterClosedIssues(issues)) }
+  ];
 
-  addClickEventListener({
-    element: $openCount,
-    eventHandler: () => renderIssueList(filterOpenedIssues(issues))
-  });
-  addClickEventListener({
-    element: $closeCount,
-    eventHandler: () => renderIssueList(filterClosedIssues(issues))
+  data.forEach(({ selector, eventHandler }) => {
+    addClickEventListener({
+      element: findElement({ selector }),
+      eventHandler
+    });
   });
 };
 
