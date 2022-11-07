@@ -1,4 +1,4 @@
-import { findParentAndRenderInnerHtml, addClickEventListener, toggleClass } from '~/utils/dom';
+import { addClickEventListener, toggleClass, renderInnerHtml } from '~/utils/dom';
 import { filterArray, countArray } from '~/utils/array';
 import { pipe } from '~/utils/functional-util';
 import { ISSUE_CLOSE_COUNT_SELECTOR, ISSUE_OPEN_COUNT_SELECTOR } from '~/constants/selector';
@@ -18,14 +18,13 @@ const countIssueStatus = ({ issues, status }: { issues: Issue[], status: Status 
 
 const getIssueStatusCountData = (issues: Issue[]) => {
   return [
-    { selector: ISSUE_OPEN_COUNT_SELECTOR, html: `${countIssueStatus({ issues, status: 'open' })} Opens` },
-    { selector: ISSUE_CLOSE_COUNT_SELECTOR, html: `${countIssueStatus({ issues, status: 'close' })} Closed` }
+    { parent: getElement(ISSUE_OPEN_COUNT_SELECTOR), html: `${countIssueStatus({ issues, status: 'open' })} Opens` },
+    { parent: getElement(ISSUE_CLOSE_COUNT_SELECTOR), html: `${countIssueStatus({ issues, status: 'close' })} Closed` }
   ];
 };
 
 const render = (issues: Issue[]): void => {
-  getIssueStatusCountData(issues)
-    .forEach((findParentAndRenderInnerHtml));
+  getIssueStatusCountData(issues).forEach(renderInnerHtml);
 };
 
 // 이벤트 핸들러
