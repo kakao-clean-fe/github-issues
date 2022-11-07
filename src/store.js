@@ -1,18 +1,29 @@
 import { ISSUE_STATUS } from "./constant";
 
-const initialState = {
+let state = {
   issues: [],
   labels: [],
   selectedStatus: ISSUE_STATUS.OPEN,
 };
+
 let listeners = [];
-const store = new Proxy(initialState, {
-  set(target, p, value) {
-    target[p] = value;
-    listeners.forEach((li) => li(target));
-    return true;
-  },
-});
+const removeChangeListener = (listener) => listeners.filter(li !== listener);
+const addChangeListener = (...listener) => {
+  const listenerPipe = pipe(...listener);
+  listenerPipe(state);
+  listeners.push(listenerPipe);
+  return () => removeChangeListener(listenerPipe);
+};
+
+const emmitChanges = () => {
+  listeners.forEach((li) => li(state));
+};
+
+const setState = (newState) => {
+  state = newState;
+  emmitChanges();
+};
+const getState = () => state;
 
 const fetchBody = (url) => fetch(url).then((response) => response.json());
 const initState = async () => {
@@ -20,42 +31,32 @@ const initState = async () => {
     fetchBody("/data-sources/issues.json"),
     fetchBody("/data-sources/labels.json"),
   ]);
-
-  store.issues = issues;
-  store.labels = labels;
+  setState({
+    ...state,
+    issues,
+    labels,
+  });
 };
 
 initState();
 
 const pipe = (...fns) => {
-
   return (args) =>
     fns.reduce((acc, fn) => {
       return fn(acc);
     }, args);
 };
 
-const addChangeListener = (...listener) => {
-  const listenerPipe = pipe(...listener);
-  listenerPipe(store);
-  listeners.push(listenerPipe);
-  return () => {
-    listeners = listeners.filter((li) => li !== listenerPipe);
-  };
-};
-
-const selectIssues = () => store.issues;
+const selectIssues = () => getState().issues;
 const selectOpenIssues = () =>
   selectIssues().filter((issue) => issue.status === ISSUE_STATUS.OPEN);
 const selectCloseIssues = () =>
   selectIssues().filter((issue) => issue.status === ISSUE_STATUS.CLOSE);
 
-const selectCurrentIssues = () => 
-  selectIssues().filter((issue) => issue.status === store.selectedStatus);
+const selectCurrentIssues = () =>
+  selectIssues().filter((issue) => issue.status === state.selectedStatus);
 
-
-const selectSelectedStatus = () => store.selectedStatus;
-const setSelectedStatus = (status) => (store.selectedStatus = status);
+const selectSelectedStatus = () => getState().selectedStatus;
 
 export default {
   addChangeListener,
@@ -63,5 +64,6 @@ export default {
   selectCloseIssues,
   selectCurrentIssues,
   selectSelectedStatus,
-  setSelectedStatus,
+  getState,
+  setState,
 };

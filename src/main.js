@@ -8,7 +8,6 @@ import {
 import store from "./store.js";
 import { ISSUE_STATUS } from "./constant.js";
 
-
 const app$ = document.getElementById("app");
 app$.innerHTML = getIssueTpl();
 
@@ -17,10 +16,16 @@ const openCount$ = document.querySelector(".open-count");
 const closeCount$ = document.querySelector(".close-count");
 
 openCount$.addEventListener("click", () =>
-  store.setSelectedStatus(ISSUE_STATUS.OPEN)
+  store.setState({
+    ...store.getState(),
+    selectedStatus: ISSUE_STATUS.OPEN,
+  })
 );
 closeCount$.addEventListener("click", () =>
-  store.setSelectedStatus(ISSUE_STATUS.CLOSE)
+  store.setState({
+    ...store.getState(),
+    selectedStatus: ISSUE_STATUS.CLOSE,
+  })
 );
 
 store.addChangeListener(store.selectOpenIssues, (openIssues) => {
@@ -45,4 +50,3 @@ store.addChangeListener(store.selectSelectedStatus, (status) => {
   closeCount$.classList.add(boldClass);
   openCount$.classList.remove(boldClass);
 });
-
