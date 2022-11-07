@@ -1,6 +1,6 @@
 import { getIssueTpl, getIssueItemTpl } from '~/tpl.js';
 import { getIssues } from '~/store/action';
-import { findElement, renderInnerHtml } from '~/utils/dom';
+import { findElement, findParentAndRenderInnerHtml } from '~/utils/dom';
 import { filterArray, countArray } from '~/utils/array';
 import { pipe } from '~/utils/functional-util';
 import { ROOT_SELECTOR, ISSUE_CLOSE_COUNT_SELECTOR, ISSUE_LIST_SELECTOR, ISSUE_OPEN_COUNT_SELECTOR } from '~/constants/selector';
@@ -11,8 +11,8 @@ const renderIssueList = (issues: Issue[]): void => {
     return `${template}${getIssueItemTpl(issue)}`;
   }, '');
 
-  renderInnerHtml({
-    parent: findElement({ selector: ISSUE_LIST_SELECTOR }),
+  findParentAndRenderInnerHtml({
+    selector: ISSUE_LIST_SELECTOR,
     html: issuesTemplate
   });
 };
@@ -25,12 +25,12 @@ const countIssueStatus = ({ issues, status }: { issues: Issue[], status: Status 
 };
 
 const renderIssueStatusCount = ({ openCount, closeCount }: { openCount: number, closeCount: number }): void => {
-  renderInnerHtml({
-    parent: findElement({ selector: ISSUE_OPEN_COUNT_SELECTOR }),
+  findParentAndRenderInnerHtml({
+    selector: ISSUE_OPEN_COUNT_SELECTOR,
     html: `${openCount} Opens`
   });
-  renderInnerHtml({
-    parent: findElement({ selector: ISSUE_CLOSE_COUNT_SELECTOR }),
+  findParentAndRenderInnerHtml({
+    selector: ISSUE_CLOSE_COUNT_SELECTOR,
     html: `${closeCount} Closed`
   });
 };
@@ -56,8 +56,8 @@ const filterIssueByStatus = ({ issues, status }: { issues: Issue[], status: Stat
 };
 
 const main = async () => {
-  renderInnerHtml({
-    parent: findElement({ selector: ROOT_SELECTOR }),
+  findParentAndRenderInnerHtml({
+    selector: ROOT_SELECTOR,
     html: getIssueTpl()
   });
   const issues: Issue[] = await getIssues();
