@@ -21,21 +21,27 @@ const countIssueStatus = ({ issues, status }: { issues: Issue[], status: Status 
   )({ arr: issues, filterFunc: (issue) => issue.status === status });
 };
 
-const renderIssueStatusCount = ({ openCount, closeCount }: { openCount: number, closeCount: number }): void => {
-  const data = [
+const getIssueStatusCountData = ({ openCount, closeCount }: { openCount: number, closeCount: number }) => {
+  return [
     { selector: ISSUE_OPEN_COUNT_SELECTOR, html: `${openCount} Opens` },
     { selector: ISSUE_CLOSE_COUNT_SELECTOR, html: `${closeCount} Closed` }
   ];
-  data.forEach(({ selector, html }) => findParentAndRenderInnerHtml({ selector, html }));
+};
+
+const renderIssueStatusCount = ({ openCount, closeCount }: { openCount: number, closeCount: number }): void => {
+  getIssueStatusCountData({ openCount, closeCount })
+    .forEach((findParentAndRenderInnerHtml));
+};
+
+export const getIssueStatusEventData = (issues: Issue[]) => {
+  return [
+    { selector: ISSUE_OPEN_COUNT_SELECTOR, eventHandler: () => pipe(filterOpenedIssues, renderIssueList)(issues) },
+    { selector: ISSUE_CLOSE_COUNT_SELECTOR, eventHandler: () => pipe(filterClosedIssues, renderIssueList)(issues) }
+  ];
 };
 
 const initIssueStatusEventHandler = (issues: Issue[]): void => {
-  const data = [
-    { selector: ISSUE_OPEN_COUNT_SELECTOR, eventHandler: () => renderIssueList(filterOpenedIssues(issues)) },
-    { selector: ISSUE_CLOSE_COUNT_SELECTOR, eventHandler: () => renderIssueList(filterClosedIssues(issues)) }
-  ];
-
-  data.forEach(({ selector, eventHandler }) => {
+  getIssueStatusEventData(issues).forEach(({ selector, eventHandler }) => {
     addClickEventListener({
       element: findElement({ selector }),
       eventHandler
