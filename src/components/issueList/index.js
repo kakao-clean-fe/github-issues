@@ -1,12 +1,14 @@
 import { convertTemplateToElement } from '../../utils/element';
 import {issueTemplate} from '../../template/issue';
 import IssueItem from '../IssueItem';
+import Component from '../../core/component';
 
-export default class IssueList {
+export default class IssueList extends Component {
   constructor ({$target, issueList}){
-    this.$root = convertTemplateToElement(issueTemplate.issueList());
-    $target.appendChild(this.$root);
-
+    super({
+      $target,
+      template: issueTemplate.issueList(),
+    })
     this.$listWrapper;
 
     this.issueList = issueList;

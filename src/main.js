@@ -5,11 +5,14 @@ import IssueHeader from './components/IssueHeader';
 import IssueInnerWrapper from './components/IssueInnerWrapper';
 import { getElement } from './utils/element';
 import { STATUS } from './type/issue';
+import Component from './core/component';
 
-class Main {
+class Main extends Component {
   constructor({$target}) {
-    $target.innerHTML = issueTemplate.wrapper().trim();
-    this.$root = $target.firstChild;
+    super({
+      $target,
+      template: issueTemplate.wrapper(),
+    })
 
     this.issueListResponse = JSON.parse(JSON.stringify(issueResponse));
     this.selectedIssueStatus = STATUS.OPEN;

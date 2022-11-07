@@ -1,12 +1,12 @@
 import { convertTemplateToElement } from '../../utils/element';
 import {issueTemplate} from '../../template/issue';
+import Component from '../../core/component';
 
-export default class IssueHeader {
+export default class IssueHeader extends Component {
   constructor ({$target}){
-    this.$root = convertTemplateToElement(issueTemplate.header());
-    $target.appendChild(this.$root);
-  }
-  
-  render() {
+    super({
+      $target,
+      template: issueTemplate.header(),
+    })
   }
 }

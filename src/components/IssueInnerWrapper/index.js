@@ -1,18 +1,23 @@
 import { convertTemplateToElement, getElement } from '../../utils/element';
 import {issueTemplate} from '../../template/issue';
 import { STATUS } from '../../type/issue';
+import Component from '../../core/component';
 
-export default class IssueInnerHeader {
+export default class IssueInnerHeader extends Component {
   constructor ({$target, selectedIssueStatus, openedIssueCount, closedIssueCount, onChangeSelectedIssueStatus}){
-    this.$root = convertTemplateToElement(issueTemplate.innerWrapper({selectedIssueStatus, openedIssueCount, closedIssueCount}));
-    $target.appendChild(this.$root);
-
-    this.$openButton = getElement('.open-count');
-    this.$openButton.addEventListener('click', () => onChangeSelectedIssueStatus(STATUS.OPEN))
-    this.$closeButton = getElement('.close-count');
-    this.$closeButton.addEventListener('click', () => onChangeSelectedIssueStatus(STATUS.CLOSE))
-  }
-  
-  render() {
+    super({
+      $target,
+      template: issueTemplate.innerWrapper({selectedIssueStatus, openedIssueCount, closedIssueCount}),
+      events: [{
+        selector: '.open-count',
+        event: 'click',
+        callback: () => onChangeSelectedIssueStatus(STATUS.OPEN),
+      },
+      {
+        selector: '.close-count',
+        event: 'click',
+        callback: () => onChangeSelectedIssueStatus(STATUS.CLOSE),
+      }]
+    })
   }
 }
