@@ -10,7 +10,13 @@ import { itemObserver } from '../viewModel/ItemObserver';
 
 const App = (appElement: Element) => {
   const app = FunctionComponent();
-  const { getData, setData, subscribe } = itemObserver;
+  const {
+    getData,
+    subscribe,
+    changeSelectedFilterToClose,
+    changeSelectedFilterToOpen,
+    changeSelectedFilterToAll,
+  } = itemObserver;
   subscribe(app);
   const {
     addAfterRender,
@@ -73,37 +79,17 @@ const App = (appElement: Element) => {
     appElement
   );
 
-  useEffect(async () => {
-    const data = await API.GET<Item[]>({
-      url: './data-sources/issues.json',
-      errorMessage: '초기데이터 로딩에 실패했습니다.',
-    });
-    setData({
-      ...getData(),
-      initData: data,
-    });
-    console.log(itemStore);
-  });
-
   addEventListener('.open-count', 'click', (e) => {
-    const { initData, selectedFilter } = getData();
-    setData({
-      initData,
-      selectedFilter:
-        selectedFilter === '' || selectedFilter === STATUS.CLOSE
-          ? STATUS.OPEN
-          : '',
-    });
+    const { selectedFilter } = getData();
+    selectedFilter === '' || selectedFilter === STATUS.CLOSE
+      ? changeSelectedFilterToOpen()
+      : changeSelectedFilterToAll();
   });
   addEventListener('.close-count', 'click', (e) => {
-    const { initData, selectedFilter } = getData();
-    setData({
-      initData,
-      selectedFilter:
-        selectedFilter === '' || selectedFilter === STATUS.OPEN
-          ? STATUS.CLOSE
-          : '',
-    });
+    const { selectedFilter } = getData();
+    selectedFilter === '' || selectedFilter === STATUS.OPEN
+      ? changeSelectedFilterToClose()
+      : changeSelectedFilterToAll();
   });
   return getRoot().innerHTML;
 };
