@@ -1,6 +1,7 @@
 import { getIssueTpl, getIssueItemTpl } from '~/tpl.js';
 import { getIssues } from '~/store/action';
 import { findElement } from '~/utils/dom';
+import { ROOT_SELECTOR, ISSUE_CLOSE_COUNT_SELECTOR, ISSUE_LIST_SELECTOR, ISSUE_OPEN_COUNT_SELECTOR } from '~/constants/selector';
 import type { Issue, Status } from '~/types/issue';
 
 const renderIssueList = (issues: Issue[]): void => {
@@ -8,7 +9,7 @@ const renderIssueList = (issues: Issue[]): void => {
     return `${template}${getIssueItemTpl(issue)}`;
   }, '');
 
-  const $issueListParent = findElement({ selector: '.issue-list > ul' });
+  const $issueListParent = findElement({ selector: ISSUE_LIST_SELECTOR });
   if ($issueListParent != null) {
     $issueListParent.innerHTML = issuesTemplate;
   }
@@ -21,8 +22,8 @@ const countIssueStatus = ({ issues, status }: { issues: Issue[], status: Status 
 };
 
 const renderIssueStatusCount = ({ openCount, closeCount }: { openCount: number, closeCount: number }): void => {
-  const $openCount = findElement({ selector: '.open-count' });
-  const $closeCount = findElement({ selector: '.close-count' });
+  const $openCount = findElement({ selector: ISSUE_OPEN_COUNT_SELECTOR });
+  const $closeCount = findElement({ selector: ISSUE_CLOSE_COUNT_SELECTOR });
 
   if ($openCount != null) {
     $openCount.innerHTML = `${openCount} Opens`;
@@ -33,8 +34,8 @@ const renderIssueStatusCount = ({ openCount, closeCount }: { openCount: number, 
 };
 
 const initIssueStatusEventHandler = (issues: Issue[]): void => {
-  const $openCount = findElement({ selector: '.open-count' });
-  const $closeCount = findElement({ selector: '.close-count' });
+  const $openCount = findElement({ selector: ISSUE_OPEN_COUNT_SELECTOR });
+  const $closeCount = findElement({ selector: ISSUE_CLOSE_COUNT_SELECTOR });
 
   if (($openCount == null) || ($closeCount == null)) {
     return;
@@ -53,7 +54,7 @@ const filterIssueByStatus = ({ issues, status }: { issues: Issue[], status: Stat
 };
 
 const main = async () => {
-  const $app = findElement({ selector: '#app' });
+  const $app = findElement({ selector: ROOT_SELECTOR });
   if ($app != null) {
     $app.innerHTML = getIssueTpl();
   }
