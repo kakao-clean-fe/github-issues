@@ -1,0 +1,2 @@
+export const $ = <T extends HTMLElement = HTMLElement> (selector: string, base: Element = document.body) => base.querySelector<T>(selector);
+export const $$ = <T extends HTMLElement = HTMLElement> (selector: string, base: Element = document.body) => base.querySelectorAll<T>(selector);
