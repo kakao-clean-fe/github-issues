@@ -8,10 +8,7 @@ export const setDefaultTemplate = (statusCount) => {
 
 export const setListTemplate = (issues) => {
   const ULElement = document.querySelector('.issue-list>ul');
-  let innerHTML = '';
-  issues.forEach(issue => {
-    innerHTML += getIssueItemTpl(issue);
-  });
+  const innerHTML = issues.reduce((preValue, currValue) => preValue + getIssueItemTpl(currValue), '');
   ULElement.innerHTML = innerHTML;
 }
 /**
