@@ -1,4 +1,4 @@
-import {fetchIssueData, filterIssueByStatus, getIssueTplStr} from "./util.js";
+import {fetchIssueData, filterIssueByStatus, getIssueTplStr, pipe} from "./util.js";
 import {getIssueTpl} from "./tpl.js";
 import {CSS, ISSUE_STATUS} from "./const.js";
 import {getIssueStatusStore, getIssueStore} from "./store.js";
@@ -9,7 +9,7 @@ const {getIssueStatus, setIssueStatus} = getIssueStatusStore();
 export const initIssueContainer = async () => {
     setIssues(await fetchIssueData());
     renderIssueContainer();
-    renderIssueItems(filterIssueByStatus(getIssues(), getIssueStatus()));
+    pipe(filterIssueByStatus, renderIssueItems)(getIssues(), getIssueStatus())
 }
 
 const renderIssueContainer = () => {
@@ -33,7 +33,7 @@ const initIssueStatus = (issueContainer) => {
 const onClickIssueStatus = (issueStatusTabs) => ({target}) => {
     setIssueStatus();
     changeIssueStatusStyle(target, issueStatusTabs);
-    renderIssueItems(filterIssueByStatus(getIssues(), getIssueStatus()));
+    pipe(filterIssueByStatus, renderIssueItems)(getIssues(), getIssueStatus());
 }
 
 const changeIssueStatusStyle = (target, issueStatusTabs) => {
