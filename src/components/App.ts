@@ -5,9 +5,13 @@ import { getIssueTpl } from '../common/tpl';
 import { API } from '../common/util';
 import { STATUS } from '../common/constants';
 import FunctionComponent from '../common/FunctionComponent';
-import Observable from '../common/Observable';
+import Observable from '../viewModel/Observable';
+import { itemObserver } from '../viewModel/ItemObserver';
 
 const App = (appElement: Element) => {
+  const app = FunctionComponent();
+  const { getData, setData, subscribe } = itemObserver;
+  subscribe(app);
   const {
     addAfterRender,
     useState,
@@ -16,10 +20,8 @@ const App = (appElement: Element) => {
     addEventListener,
     getRoot,
     getElement,
-    getData,
-    setData,
-  } = Observable<IItemStore>(itemStore);
-  
+  } = app;
+
   addAfterRender(() => {
     setOpenStatusCount();
     setCloseStatusCount();
