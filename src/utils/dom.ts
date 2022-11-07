@@ -2,6 +2,7 @@ import type { FindElementArgs, RenderInnerHtmlArgs, FindParentAndRenderInnerHtml
 import { pipe } from '~/utils/functional-util';
 
 export const findElement = ({ fromElement = document, selector }: FindElementArgs): Element | null => {
+  console.count(selector);
   return fromElement.querySelector(selector);
 };
 
