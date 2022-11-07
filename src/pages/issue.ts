@@ -2,6 +2,7 @@ import { getIssueTpl, getIssueItemTpl } from '~/tpl.js';
 import { getIssues } from '~/store/action';
 import { findElement, renderInnerHtml } from '~/utils/dom';
 import { filterArray, countArray } from '~/utils/array';
+import { pipe } from '~/utils/functional-util';
 import { ROOT_SELECTOR, ISSUE_CLOSE_COUNT_SELECTOR, ISSUE_LIST_SELECTOR, ISSUE_OPEN_COUNT_SELECTOR } from '~/constants/selector';
 import type { Issue, Status } from '~/types/issue';
 
@@ -17,7 +18,10 @@ const renderIssueList = (issues: Issue[]): void => {
 };
 
 const countIssueStatus = ({ issues, status }: { issues: Issue[], status: Status }): number => {
-  return countArray({ arr: filterArray({ arr: issues, filterFunc: (issue) => issue.status === status }) });
+  return pipe(
+    filterArray,
+    (arr) => countArray({ arr })
+  )({ arr: issues, filterFunc: (issue) => issue.status === status });
 };
 
 const renderIssueStatusCount = ({ openCount, closeCount }: { openCount: number, closeCount: number }): void => {
