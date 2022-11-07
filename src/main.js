@@ -1,39 +1,51 @@
 import { fetchIssues } from './service';
 import { getIssueItemTpl, getIssueTpl } from './tpl';
 import { selector as sel } from './constant';
-import { isOpenedIssue, isClosedIssue } from './util';
+import { $, isOpenedIssue, isClosedIssue } from './util';
+import { pipe } from './fp';
+import {
+  setInnerHTML,
+  setInnerText,
+  setEvent,
+  addClass,
+  removeClass,
+} from './curry/dom';
 
-const issues = await fetchIssues();
-const $app = document.querySelector(sel.app);
+async function render() {
+  const issues = await fetchIssues();
+  const openedIssues = issues.filter(isOpenedIssue);
+  const closedIssues = issues.filter(isClosedIssue);
 
-$app.innerHTML = getIssueTpl();
+  const makeTextBold = pipe(addClass('font-bold'));
+  const makeTextThin = pipe(removeClass('font-bold'));
+  const renderLayout = pipe(setInnerHTML(getIssueTpl()));
+  const renderOpenedIssues = pipe(
+    setInnerHTML(openedIssues.map(getIssueItemTpl).join(''))
+  );
+  const renderClosedIssues = pipe(
+    setInnerHTML(closedIssues.map(getIssueItemTpl).join(''))
+  );
+  const renderOpenedButton = pipe(
+    setInnerText(`${openedIssues.length} Opened`),
+    setEvent('click', () => {
+      makeTextBold($(sel.openedButton));
+      makeTextThin($(sel.closedButton));
+      renderOpenedIssues($(sel.issueList));
+    })
+  );
+  const renderClosedButton = pipe(
+    setInnerText(`${closedIssues.length} Closed`),
+    setEvent('click', () => {
+      makeTextBold($(sel.closedButton));
+      makeTextThin($(sel.openedButton));
+      renderClosedIssues($(sel.issueList));
+    })
+  );
 
-const $issueList = document.querySelector(sel.issueList);
-const $openedButton = document.querySelector(sel.openedButton);
-const $closedButton = document.querySelector(sel.closedButton);
+  renderLayout($(sel.app));
+  renderOpenedIssues($(sel.issueList));
+  renderOpenedButton($(sel.openedButton));
+  renderClosedButton($(sel.closedButton));
+}
 
-$issueList.innerHTML = issues
-  .filter(isOpenedIssue)
-  .map(getIssueItemTpl)
-  .join('');
-
-$openedButton.innerText = `${issues.filter(isOpenedIssue).length} Opend`;
-$closedButton.innerText = `${issues.filter(isClosedIssue).length} Closed`;
-
-$openedButton.addEventListener('click', () => {
-  $issueList.innerHTML = issues
-    .filter(isOpenedIssue)
-    .map(getIssueItemTpl)
-    .join('');
-  $openedButton.classList.add('font-bold');
-  $closedButton.classList.remove('font-bold');
-});
-
-$closedButton.addEventListener('click', () => {
-  $issueList.innerHTML = issues
-    .filter(isClosedIssue)
-    .map(getIssueItemTpl)
-    .join('');
-  $closedButton.classList.add('font-bold');
-  $openedButton.classList.remove('font-bold');
-});
+window.addEventListener('DOMContentLoaded', render);
