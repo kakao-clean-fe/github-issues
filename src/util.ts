@@ -16,7 +16,7 @@ export const clickEventListener = (
   eventListener(element, 'click', callback);
 };
 
-const removeUndefinedParam = (obj: object) =>
+export const removeUndefinedParam = (obj: object) =>
   Object.entries(obj).reduce(
     (prev, { keys, values }) =>
       values ? { ...prev, [`${keys}`]: values } : prev,
@@ -65,4 +65,59 @@ export const findElementAll =
 
 export const setInnerHTML = (element: Element) => (innerHTML: string) => {
   if (element.innerHTML !== innerHTML) element.innerHTML = innerHTML;
+};
+
+const primitiveProxyGetter = (target: object, key: string | symbol) => {
+  if (!target.hasOwnProperty(key) && typeof target[key] === 'function') {
+    return function (...args) {
+      return target[key]();
+    };
+  }
+  return target[key];
+};
+export const getNumberProxy = <T = number>(number: T) => {
+  return new Proxy(new Number(number), {
+    get(target, key) {
+      return primitiveProxyGetter(target, key);
+    },
+  });
+};
+
+export const getStringProxy = <T = string>(str: T) =>
+  new Proxy(new String(str), {
+    get(target, key) {
+      return primitiveProxyGetter(target, key);
+    },
+  });
+export const getBooleanProxy = <T = boolean>(bool: T) =>
+  new Proxy(new Boolean(bool), {
+    get(target, key) {
+      return primitiveProxyGetter(target, key);
+    },
+  });
+
+export const getObjectProxy = <T = any>(obj: T) =>
+  new Proxy(obj as unknown as object, {
+    get(target, prop) {
+      return target[prop];
+    },
+  });
+
+export const getProxy = <T = any>(initData: T) => {
+  let _data;
+  switch (typeof initData) {
+    case 'string':
+      _data = getStringProxy(initData);
+      break;
+    case 'number':
+      _data = getNumberProxy(initData);
+      break;
+    case 'boolean':
+      _data = getBooleanProxy(initData);
+      break;
+    default:
+      _data = getObjectProxy(initData);
+      break;
+  }
+  return _data;
 };

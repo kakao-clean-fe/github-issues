@@ -34,22 +34,22 @@ const App = (appElement: Element) => {
   const getOpenFilterEle = () => getFilterEle(STATUS.OPEN);
   const getCloseFilterEle = () => getFilterEle(STATUS.CLOSE);
   const getDataByFiltered = (status: Status | '') =>
-    state().initData.filter((e) => e.status.includes(status));
+    state.initData.filter((e) => e.status.includes(status));
   const setOpenStatusCount = () => {
     const openEle = getOpenFilterEle();
     openEle.innerHTML = `${
-      state().initData.filter((e) => e.status === STATUS.OPEN).length
+      state.initData.filter((e) => e.status === STATUS.OPEN).length
     } Opens`;
   };
   const setCloseStatusCount = () => {
     const closeEle = getCloseFilterEle();
     closeEle.innerHTML = `${
-      state().initData.filter((e) => e.status === STATUS.CLOSE).length
+      state.initData.filter((e) => e.status === STATUS.CLOSE).length
     } Closed`;
   };
 
   const setStatusBold = () => {
-    switch (state().selectedFilter) {
+    switch (state.selectedFilter) {
       case STATUS.OPEN:
         getOpenFilterEle().classList.add('font-bold');
         getCloseFilterEle().classList.remove('font-bold');
@@ -68,7 +68,7 @@ const App = (appElement: Element) => {
   setComponent(
     () =>
       getIssueTpl(
-        getDataByFiltered(state().selectedFilter)
+        getDataByFiltered(state.selectedFilter)
           .map((e) => Issue(e))
           .join('')
       ),
@@ -81,25 +81,25 @@ const App = (appElement: Element) => {
       errorMessage: '초기데이터 로딩에 실패했습니다.',
     });
     setState({
-      ...state(),
+      ...state,
       initData: data,
     });
   });
 
   addEventListener('.open-count', 'click', (e) => {
     setState({
-      ...state(),
+      ...state,
       selectedFilter:
-        state().selectedFilter === '' || state().selectedFilter === STATUS.CLOSE
+        state.selectedFilter === '' || state.selectedFilter === STATUS.CLOSE
           ? STATUS.OPEN
           : '',
     });
   });
   addEventListener('.close-count', 'click', (e) => {
     setState({
-      ...state(),
+      ...state,
       selectedFilter:
-        state().selectedFilter === '' || state().selectedFilter === STATUS.OPEN
+        state.selectedFilter === '' || state.selectedFilter === STATUS.OPEN
           ? STATUS.CLOSE
           : '',
     });

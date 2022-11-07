@@ -1,4 +1,4 @@
-import { findElement, findElementAll } from './util';
+import { findElement, findElementAll, getProxy } from './util';
 
 const FunctionComponent = (...props) => {
   let _element: Element;
@@ -9,13 +9,28 @@ const FunctionComponent = (...props) => {
   const beforeRenderList: (() => void)[] = [];
   const afterRenderList: (() => void)[] = [];
 
-  const useState = <T = any>(initData: T): [() => T, (t: T) => void] => {
-    let _data = initData;
+  const useState = <T = any>(initData: T): [T, (t: T) => void] => {
+    const _data = getProxy(initData);
     const _setData = (newData: T) => {
-      _data = newData;
+      switch (typeof newData) {
+        case 'string':
+          break;
+        case 'number':
+          break;
+        case 'boolean':
+          break;
+
+        default:
+          Object.entries(newData).forEach(([keys, values]) => {
+            if (_data.hasOwnProperty(keys) && _data[keys] !== values) {
+              _data[keys] = values;
+            }
+          });
+          break;
+      }
       render();
     };
-    return [() => _data, _setData];
+    return [_data, _setData];
   };
   const useEffect = (callback: () => void, references?: any[][]) => {
     callback();
