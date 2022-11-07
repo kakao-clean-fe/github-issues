@@ -1,5 +1,6 @@
 import { getIssueTpl, getIssueItemTpl } from '~/tpl.js';
 import { getIssues } from '~/store/action';
+import { findElement } from '~/utils/dom';
 import type { Issue, Status } from '~/types/issue';
 
 const renderIssueList = (issues: Issue[]): void => {
@@ -7,7 +8,7 @@ const renderIssueList = (issues: Issue[]): void => {
     return `${template}${getIssueItemTpl(issue)}`;
   }, '');
 
-  const $issueListParent = document.querySelector('.issue-list > ul');
+  const $issueListParent = findElement({ selector: '.issue-list > ul' });
   if ($issueListParent != null) {
     $issueListParent.innerHTML = issuesTemplate;
   }
@@ -20,8 +21,8 @@ const countIssueStatus = ({ issues, status }: { issues: Issue[], status: Status 
 };
 
 const renderIssueStatusCount = ({ openCount, closeCount }: { openCount: number, closeCount: number }): void => {
-  const $openCount = document.querySelector('.open-count');
-  const $closeCount = document.querySelector('.close-count');
+  const $openCount = findElement({ selector: '.open-count' });
+  const $closeCount = findElement({ selector: '.close-count' });
 
   if ($openCount != null) {
     $openCount.innerHTML = `${openCount} Opens`;
@@ -32,8 +33,8 @@ const renderIssueStatusCount = ({ openCount, closeCount }: { openCount: number, 
 };
 
 const initIssueStatusEventHandler = (issues: Issue[]): void => {
-  const $openCount = document.querySelector('.open-count');
-  const $closeCount = document.querySelector('.close-count');
+  const $openCount = findElement({ selector: '.open-count' });
+  const $closeCount = findElement({ selector: '.close-count' });
 
   if (($openCount == null) || ($closeCount == null)) {
     return;
@@ -52,7 +53,7 @@ const filterIssueByStatus = ({ issues, status }: { issues: Issue[], status: Stat
 };
 
 const main = async () => {
-  const $app = document.querySelector('#app');
+  const $app = findElement({ selector: '#app' });
   if ($app != null) {
     $app.innerHTML = getIssueTpl();
   }
