@@ -2,19 +2,15 @@ import { getIssueTpl, getIssueItemTpl } from '~/tpl.js';
 import { getIssues } from '~/store/action';
 import { findElement, findParentAndRenderInnerHtml, addClickEventListener } from '~/utils/dom';
 import { filterArray, countArray } from '~/utils/array';
-import { filterOpenedIssues, filterClosedIssues } from '~/utils/issue';
+import { filterOpenedIssues, filterClosedIssues, makeIssueTemplate } from '~/utils/issue';
 import { pipe } from '~/utils/functional-util';
 import { ROOT_SELECTOR, ISSUE_CLOSE_COUNT_SELECTOR, ISSUE_LIST_SELECTOR, ISSUE_OPEN_COUNT_SELECTOR } from '~/constants/selector';
 import type { Issue, Status } from '~/types/issue';
 
 const renderIssueList = (issues: Issue[]): void => {
-  const issuesTemplate = issues.reduce((template, issue) => {
-    return `${template}${getIssueItemTpl(issue)}`;
-  }, '');
-
   findParentAndRenderInnerHtml({
     selector: ISSUE_LIST_SELECTOR,
-    html: issuesTemplate
+    html: makeIssueTemplate({ issues, templateFunc: getIssueItemTpl })
   });
 };
 
