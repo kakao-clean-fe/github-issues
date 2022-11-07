@@ -2,6 +2,8 @@ import {$} from '../utils';
 import {Issue} from "../types";
 import {getIssueItemTpl, getIssueTpl} from "../tpl";
 
+const DEFAULT_COUNT = [0, 0];
+
 export type IssueViewType = ReturnType<typeof IssueView>;
 
 export const IssueView = () => {
@@ -12,23 +14,23 @@ export const IssueView = () => {
     let $closeDiv: HTMLDivElement | null = null;
     let $list: HTMLUListElement | null = null;
 
-    const updateCounter = (issues: Array<Issue>) => {
+    const updateCounter = (issues?: Array<Issue>) => {
         if (!$openDiv || !$closeDiv) return;
-        const [open, close] = issues.reduce((acc, issue) => {
+        const [open, close] = issues?.reduce((acc, issue) => {
             if (issue.status === 'open') acc[0]++;
             else acc[1]++;
             return acc;
-            }, [0, 0]);
+            }, [...DEFAULT_COUNT]) ?? [...DEFAULT_COUNT];
         $openDiv.innerHTML = `${open} Opens`;
         $closeDiv.innerHTML = `${close} Closed`;
     }
 
-    const updateList = (issues: Array<Issue>) => {
+    const updateList = (issues?: Array<Issue>) => {
         if (!$list) return;
-        $list.innerHTML = issues.reduce((acc, issue) => `${acc}${getIssueItemTpl(issue)}`, '');
+        $list.innerHTML = issues?.reduce((acc, issue) => `${acc}${getIssueItemTpl(issue)}`, '') ?? '';
     }
 
-    const updateApp = (issues: Array<Issue>) => {
+    const updateApp = (issues?: Array<Issue>) => {
         updateList(issues);
         updateCounter(issues);
     }

@@ -10,9 +10,9 @@ export const LabelView = () => {
 
     let $list: HTMLUListElement | null = null;
 
-    const updateApp = (labels: Array<Label>) => {
+    const updateApp = (labels?: Array<Label>) => {
         if (!$list) return
-        $list.innerHTML = labels.reduce((acc, label) => `${acc}${getLabelItemTpl(label)}`, '');
+        $list.innerHTML = labels?.reduce((acc, label) => `${acc}${getLabelItemTpl(label)}`, '') ?? '';
     }
 
     const attach = () => {
