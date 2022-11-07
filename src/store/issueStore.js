@@ -1,6 +1,6 @@
 import createStore from ".";
 import { ISSUE_STATUS } from "../constant";
-import { fetchBody } from "../utils";
+import { cacheFunction, fetchBody } from "../utils";
 
 const { addChangeListener, getState, setState } = createStore({
   issues: [],
@@ -22,20 +22,23 @@ const initState = async () => {
 
 initState();
 
-const selectIssues = (state) => state.issues;
+const selectIssues = cacheFunction((state) => state.issues);
 
-const selectOpenIssues = (state) =>
-  selectIssues(state).filter((issue) => issue.status === ISSUE_STATUS.OPEN);
+const selectOpenIssues = cacheFunction((state) =>
+  selectIssues(state).filter((issue) => issue.status === ISSUE_STATUS.OPEN)
+);
 
-const selectCloseIssues = (state) =>
-  selectIssues(state).filter((issue) => issue.status === ISSUE_STATUS.CLOSE);
+const selectCloseIssues = cacheFunction((state) =>
+  selectIssues(state).filter((issue) => issue.status === ISSUE_STATUS.CLOSE)
+);
 
-const selectCurrentIssues = (state) =>
+const selectCurrentIssues = cacheFunction((state) =>
   selectIssues(state).filter(
     (issue) => issue.status === selectSelectedStatus(state)
-  );
+  )
+);
 
-const selectSelectedStatus = (state) => state.selectedStatus;
+const selectSelectedStatus = cacheFunction((state) => state.selectedStatus);
 
 export default {
   addChangeListener,

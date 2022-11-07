@@ -17,4 +17,28 @@ const pipe = (...fns) => {
     }, args);
 };
 
-export { render, addEventListener, addClassList, removeClassList, fetchBody, pipe };
+/** 
+ * 함수 호출시, 이전 input과 같은 input이 들어오면 캐시된 값을 리턴한다.
+ */
+const cacheFunction = (fn) => {
+  let prevInput = null;
+  let cachedOutput = null;
+  return (...input) => {
+    if (prevInput === input) {
+      return cachedOutput;
+    }
+    prevInput = input;
+    cachedOutput = fn(...input);
+    return cachedOutput;
+  };
+};
+
+export {
+  render,
+  addEventListener,
+  addClassList,
+  removeClassList,
+  fetchBody,
+  pipe,
+  cacheFunction,
+};
