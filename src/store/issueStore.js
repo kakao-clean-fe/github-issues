@@ -2,11 +2,11 @@ import createStore from ".";
 import { ISSUE_STATUS } from "../constant";
 import { fetchBody } from "../utils";
 
-const {addChangeListener, getState, setState} = createStore( {
+const { addChangeListener, getState, setState } = createStore({
   issues: [],
   labels: [],
   selectedStatus: ISSUE_STATUS.OPEN,
-})
+});
 
 const initState = async () => {
   const [issues, labels] = await Promise.all([
@@ -22,16 +22,20 @@ const initState = async () => {
 
 initState();
 
-const selectIssues = () => getState().issues;
-const selectOpenIssues = () =>
-  selectIssues().filter((issue) => issue.status === ISSUE_STATUS.OPEN);
-const selectCloseIssues = () =>
-  selectIssues().filter((issue) => issue.status === ISSUE_STATUS.CLOSE);
+const selectIssues = (state) => state.issues;
 
-const selectCurrentIssues = () =>
-  selectIssues().filter((issue) => issue.status === selectSelectedStatus());
+const selectOpenIssues = (state) =>
+  selectIssues(state).filter((issue) => issue.status === ISSUE_STATUS.OPEN);
 
-const selectSelectedStatus = () => getState().selectedStatus;
+const selectCloseIssues = (state) =>
+  selectIssues(state).filter((issue) => issue.status === ISSUE_STATUS.CLOSE);
+
+const selectCurrentIssues = (state) =>
+  selectIssues(state).filter(
+    (issue) => issue.status === selectSelectedStatus(state)
+  );
+
+const selectSelectedStatus = (state) => state.selectedStatus;
 
 export default {
   addChangeListener,
