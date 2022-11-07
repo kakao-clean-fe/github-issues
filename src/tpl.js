@@ -76,7 +76,7 @@ export function getIssueItemTpl (item) {
               <div class="issue-title font-bold flex">
                   <div>${item.title}</div>
                   <div class='tags ml-4'>
-                    ${item.tags.reduce((html, { tagName, color, }) => {
+                    ${item.tags.reduce((html, { tagName, color }) => {
                       return `
                         ${html} <span class="rounded-lg border text-white p-1" style="background-color:${color}">${tagName}</span>
                       `;
@@ -224,7 +224,7 @@ export function getLabelTpl () {
   `;
 }
 
-export function getLabelItemTpl ({ name, color, description, }) {
+export function getLabelItemTpl ({ name, color, description }) {
   return /* html */`
             <li class="label-item flex items-center ml-4 py-3 justify-between border-b">
                 <div class="issue-title flex"> 
