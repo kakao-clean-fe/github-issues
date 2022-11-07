@@ -7,11 +7,12 @@ export default class IssueList extends Component {
   constructor ({$target, issueList}){
     super({
       $target,
+      state: {
+        issueList,
+      },
       template: issueTemplate.issueList(),
     })
     this.$listWrapper;
-
-    this.issueList = issueList;
   }
 
   renderListWrapper () {
@@ -20,7 +21,7 @@ export default class IssueList extends Component {
   }
 
   renderIssueItems () {
-    this.issueList.map(item => {
+    this.state.issueList.map(item => {
       return (
         new IssueItem({
           $target: this.$listWrapper,

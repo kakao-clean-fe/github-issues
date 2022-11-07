@@ -11,42 +11,41 @@ class Main extends Component {
   constructor({$target}) {
     super({
       $target,
+      state: {
+        issueListResponse: JSON.parse(JSON.stringify(issueResponse)),
+        selectedIssueStatus: STATUS.OPEN,
+        issueList: () => this.state.issueListResponse.filter(issue => issue.status === this.state.selectedIssueStatus),
+        openedIssueCount: () => this.state.issueListResponse.filter(issue => issue.status === STATUS.OPEN).length,
+        closedIssueCount: () => this.state.issueListResponse.filter(issue => issue.status === STATUS.CLOSE).length,
+      },
       template: issueTemplate.wrapper(),
     })
-
-    this.issueListResponse = JSON.parse(JSON.stringify(issueResponse));
-    this.selectedIssueStatus = STATUS.OPEN;
-    this.issueList = this.issueListResponse.filter(issue => issue.status ===  this.selectedIssueStatus);
-
-    this.openedIssueCount = this.issueListResponse.filter(issue => issue.status === STATUS.OPEN).length;
-    this.closedIssueCount = this.issueListResponse.filter(issue => issue.status === STATUS.CLOSE).length;
+    
   }
 
   onChangeSelectedIssueStatus (issueStatus) {
-    this.selectedIssueStatus = issueStatus;
-    this.issueList = this.issueListResponse.filter(issue => issue.status ===  this.selectedIssueStatus);
-    
-    this.$root.innerHTML = '';
-    this.render();
+    this.setState('selectedIssueStatus', issueStatus)
   }
 
-  render() {  
+  render() {
+    this.clearRoot();
+
     new IssueHeader({
       $target: this.$root,
     }).render();
 
     new IssueInnerWrapper({
       $target: this.$root,
-      selectedIssueStatus: this.selectedIssueStatus,
-      openedIssueCount: this.openedIssueCount,
-      closedIssueCount: this.closedIssueCount,
+      selectedIssueStatus: this.state.selectedIssueStatus,
+      openedIssueCount: this.state.openedIssueCount(),
+      closedIssueCount: this.state.closedIssueCount(),
       onChangeSelectedIssueStatus: (issueStatus) => this.onChangeSelectedIssueStatus(issueStatus),
     }).render();
 
     new IssueList({
       $target: this.$root,
-      issueList: this.issueList,
-      selectedIssueStatus: this.selectedIssueStatus,
+      issueList: this.state.issueList(),
+      selectedIssueStatus: this.state.selectedIssueStatus,
     }).render();
   }
 }
