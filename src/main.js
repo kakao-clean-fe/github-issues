@@ -49,8 +49,4 @@ const evtCloseCountClick = () => {
   renderFilterList(KEY_CLOSE, issues);
 };
 
-export default function App() {
-  init();
-}
-
-App();
+init();
