@@ -3,7 +3,7 @@ interface Tag {
   color: string
 }
 
-type Status = 'open' | 'close';
+export type Status = 'open' | 'close';
 
 export interface Issue {
   title: string
