@@ -20,7 +20,8 @@ module.exports = {
     },
     rules: {
       '@typescript-eslint/semi': ['error', 'always'],
-      '@typescript-eslint/explicit-function-return-type': ['warn']
+      '@typescript-eslint/explicit-function-return-type': ['warn'],
+      '@typescript-eslint/no-unsafe-assignment': 'off'
     }
   }],
   rules: {

@@ -31,17 +31,38 @@ const renderIssueStatusCount = ({ openCount, closeCount }: { openCount: number, 
   }
 };
 
+const initIssueStatusEventHandler = (issues: Issue[]): void => {
+  const $openCount = document.querySelector('.open-count');
+  const $closeCount = document.querySelector('.close-count');
+
+  if (($openCount == null) || ($closeCount == null)) {
+    return;
+  }
+
+  $openCount.addEventListener('click', () => {
+    renderIssueList(filterIssueByStatus({ issues, status: 'open' }));
+  });
+  $closeCount.addEventListener('click', () => {
+    renderIssueList(filterIssueByStatus({ issues, status: 'close' }));
+  });
+};
+
+const filterIssueByStatus = ({ issues, status }: { issues: Issue[], status: Status }): Issue[] => {
+  return issues.filter((issue) => issue.status === status);
+};
+
 const main = async () => {
   const $app = document.querySelector('#app');
   if ($app != null) {
     $app.innerHTML = getIssueTpl();
   }
   const issues: Issue[] = await getIssues();
-  renderIssueList(issues);
+  renderIssueList(filterIssueByStatus({ issues, status: 'open' }));
   renderIssueStatusCount({
     openCount: countIssueStatus({ issues, status: 'open' }),
     closeCount: countIssueStatus({ issues, status: 'close' })
   });
+  initIssueStatusEventHandler(issues);
 };
 
 main().catch((error) => { console.error(error); });
