@@ -1,4 +1,4 @@
-export function getIssueTpl(openCount, closeCount) {
+export function getIssueTpl(statusCount) {
 	return `
     <div id="issue-wrapper" class="w-9/12 m-auto min-w-min">
     <div id="header" class="flex justify-between">
@@ -29,8 +29,8 @@ export function getIssueTpl(openCount, closeCount) {
         </div>
 
         <div class="statusTab flex">
-          <div class="whitespace-nowrap open-count font-bold cursor-pointer">${openCount} Opens</div>
-          <div class="whitespace-nowrap close-count ml-3 cursor-pointer">${closeCount} Closed</div>
+          <div class="whitespace-nowrap open-count font-bold cursor-pointer">${statusCount.open} Opens</div>
+          <div class="whitespace-nowrap close-count ml-3 cursor-pointer">${statusCount.close} Closed</div>
         </div>
 
         <div class="details-list flex ml-auto">
