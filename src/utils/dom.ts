@@ -1,5 +1,4 @@
-import type { FindElementArgs, RenderInnerHtmlArgs, FindParentAndRenderInnerHtmlArgs, AddEventListerArgs } from '~/types/utils/dom';
-import { pipe } from '~/utils/functional-util';
+import type { FindElementArgs, RenderInnerHtmlArgs, AddEventListerArgs } from '~/types/utils/dom';
 
 export const findElement = ({ fromElement = document, selector }: FindElementArgs): Element | null => {
   console.count(selector);
@@ -12,13 +11,6 @@ export const renderInnerHtml = ({ parent, html }: RenderInnerHtmlArgs): void => 
   }
 };
 
-export const findParentAndRenderInnerHtml = ({ fromElement, selector, html }: FindParentAndRenderInnerHtmlArgs): void => {
-  pipe(
-    findElement,
-    (parent: Element | null) => renderInnerHtml({ parent, html })
-  )({ fromElement, selector });
-};
-
 const addEventListener = ({ element, event, eventHandler }: AddEventListerArgs): void => {
   if (element !== null) {
     element.addEventListener(event, eventHandler);
@@ -29,6 +21,6 @@ const setEventToEventListener = (event: string) => (args: Omit<AddEventListerArg
 
 export const addClickEventListener = setEventToEventListener('click');
 
-export const toggleClass = (element: Element | null, style: string) => {
+export const toggleClass = (element: Element | null, style: string): void => {
   element?.classList.toggle(style);
 };
