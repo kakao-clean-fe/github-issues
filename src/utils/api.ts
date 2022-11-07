@@ -1,9 +1,8 @@
-import { ApiArgs } from '~/types/utils/api';
+import { ApiArgs, Method } from '~/types/utils/api';
 
-export const getApi = async <T>({ url, headers = {}, options = {} }: ApiArgs): Promise<T> => {
-  // Default options are marked with *
+const baseFetch = async <T>({ url, headers = {}, options = {}, method }: ApiArgs): Promise<T> => {
   const response = await fetch(url, {
-    method: 'GET',
+    method,
     headers: {
       'Content-Type': 'application/json',
       ...headers
@@ -13,3 +12,10 @@ export const getApi = async <T>({ url, headers = {}, options = {} }: ApiArgs): P
 
   return await (response.json() as Promise<T>);// parses JSON response into native JavaScript objects
 };
+
+const setMethod = (method: Method) => async <T>(args: Omit<ApiArgs, 'method'>): Promise<T> => await baseFetch({ method, ...args });
+
+export const getApi = setMethod('GET');
+export const postApi = setMethod('POST');
+export const putApi = setMethod('PUT');
+export const deleteApi = setMethod('DELETE');
