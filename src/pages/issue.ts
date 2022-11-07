@@ -1,19 +1,12 @@
-import { getIssueItemTpl } from '~/tpl.js';
 import { getIssues } from '~/store/action';
 import { findElement, findParentAndRenderInnerHtml, addClickEventListener } from '~/utils/dom';
 import { filterArray, countArray } from '~/utils/array';
-import { filterOpenedIssues, filterClosedIssues, makeIssueTemplate } from '~/utils/issue';
+import { filterOpenedIssues, filterClosedIssues } from '~/utils/issue';
 import { pipe } from '~/utils/functional-util';
 import { ROOT_SELECTOR, ISSUE_CLOSE_COUNT_SELECTOR, ISSUE_LIST_SELECTOR, ISSUE_OPEN_COUNT_SELECTOR } from '~/constants/selector';
 import type { Issue, Status } from '~/types/issue';
 import { IssuePageLayout } from '~/components/issue-page-layout';
-
-const renderIssueList = (issues: Issue[]): void => {
-  findParentAndRenderInnerHtml({
-    selector: ISSUE_LIST_SELECTOR,
-    html: makeIssueTemplate({ issues, templateFunc: getIssueItemTpl })
-  });
-};
+import { IssueList } from '~/components/issue-list';
 
 const countIssueStatus = ({ issues, status }: { issues: Issue[], status: Status }): number => {
   return pipe(
@@ -51,9 +44,9 @@ const initIssueStatusEventHandler = (issues: Issue[]): void => {
 };
 
 const main = async () => {
-  IssuePageLayout({ parentSelector: ROOT_SELECTOR });
   const issues: Issue[] = await getIssues();
-  renderIssueList(filterOpenedIssues(issues));
+  IssuePageLayout({ parentSelector: ROOT_SELECTOR });
+  IssueList({ parentSelector: ISSUE_LIST_SELECTOR, issues: filterOpenedIssues(issues) });
   renderIssueStatusCount({
     openCount: countIssueStatus({ issues, status: 'open' }),
     closeCount: countIssueStatus({ issues, status: 'close' })
