@@ -1,18 +1,10 @@
-import {IssueView} from "./view/issue";
-import {LabelView} from './view/label';
-import model from './models';
-import {mainController} from "./controller/main";
+import IssueView from "./view/issue";
+import LabelView from './view/label';
 import {GNB} from "./view/gnb";
 
-const main = () => {
-    const issueView = IssueView();
-    const labelView = LabelView();
-    const state = model({ issueView, labelView });
-    const manager = mainController({issueView,labelView, model: state});
-    GNB(manager);
-
-    manager.initModel();
-    manager.displayIssueView();
-}
-
-main();
+(function() {
+    const issueView = new IssueView();
+    const labelView = new LabelView();
+    GNB({issueView, labelView});
+    issueView.attach();
+})();

@@ -1,12 +1,18 @@
 import {$} from '../utils';
-import {MainController} from "../controller/main";
+import IssueView from "./issue";
+import LabelView from "./label";
 
-export const GNB = (controller: MainController) => {
+type Props = {
+    issueView: IssueView;
+    labelView: LabelView;
+}
+
+export const GNB = ({issueView, labelView}: Props) => {
     const $issueBtn = $('.gnb > .btn-issue');
     const $labels = $('.gnb > .btn-label');
 
     if (!$issueBtn || !$labels) throw new Error('hmm.. something wrong');
 
-    $issueBtn.addEventListener('click', () => controller.displayIssueView());
-    $labels.addEventListener('click', () => controller.displayLabelView());
+    $issueBtn.addEventListener('click', () => issueView.attach());
+    $labels.addEventListener('click', () => labelView.attach());
 }

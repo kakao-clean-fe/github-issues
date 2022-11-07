@@ -1,24 +1,39 @@
 import {$} from '../utils';
 import {Label} from "../types";
 import {getLabelItemTpl, getLabelTpl} from "../tpl";
+import LabelPresenter, {LabelPresenterType} from "../presenter/labels";
 
-export type LabelViewType = ReturnType<typeof LabelView>;
+export default class LabelView {
+    private presenter: LabelPresenterType;
+    private readonly $app: HTMLDivElement | null;
+    private $openCount: HTMLDivElement | null = null;
+    private $list: HTMLUListElement | null = null;
 
-export const LabelView = () => {
-    const $app = $('#app');
-    if (!$app) throw new Error('not found #app element, plz reload page');
-
-    let $list: HTMLUListElement | null = null;
-
-    const updateApp = (labels?: Array<Label>) => {
-        if (!$list) return
-        $list.innerHTML = labels?.reduce((acc, label) => `${acc}${getLabelItemTpl(label)}`, '') ?? '';
+    public constructor() {
+        this.$app = $('#app');
+        this.presenter = new LabelPresenter(this);
     }
 
-    const attach = () => {
-        $app.innerHTML = getLabelTpl();
-        $list = $('.label-list', $app);
+    public attach () {
+        if (!this.$app) return;
+        this.$app.innerHTML = getLabelTpl();
+        this.$openCount = $('.label-header > .open-count');
+        this.$list = $('.label-list', this.$app);
+        this.presenter.loadLabelList();
     }
 
-    return {attach, updateApp};
+    public updateLabels (labels: Array<Label>) {
+        this.updateList(labels);
+        this.updateLabelCounts(labels);
+    }
+
+    private updateList (labels: Array<Label>) {
+        if (!this.$list) return;
+        this.$list.innerHTML = labels?.reduce((acc, label) => `${acc}${getLabelItemTpl(label)}`, '') ?? '';
+    }
+
+    private updateLabelCounts (labels: Array<Label>) {
+        if (!this.$openCount) return;
+        this.$openCount.innerHTML = `${labels} Labels`;
+    }
 }
