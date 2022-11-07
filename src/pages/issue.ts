@@ -2,6 +2,7 @@ import { getIssueTpl, getIssueItemTpl } from '~/tpl.js';
 import { getIssues } from '~/store/action';
 import { findElement, findParentAndRenderInnerHtml, addClickEventListener } from '~/utils/dom';
 import { filterArray, countArray } from '~/utils/array';
+import { filterOpenedIssues, filterClosedIssues } from '~/utils/issue';
 import { pipe } from '~/utils/functional-util';
 import { ROOT_SELECTOR, ISSUE_CLOSE_COUNT_SELECTOR, ISSUE_LIST_SELECTOR, ISSUE_OPEN_COUNT_SELECTOR } from '~/constants/selector';
 import type { Issue, Status } from '~/types/issue';
@@ -38,16 +39,12 @@ const initIssueStatusEventHandler = (issues: Issue[]): void => {
 
   addClickEventListener({
     element: $openCount,
-    eventHandler: () => renderIssueList(filterIssueByStatus({ issues, status: 'open' }))
+    eventHandler: () => renderIssueList(filterOpenedIssues(issues))
   });
   addClickEventListener({
     element: $closeCount,
-    eventHandler: () => renderIssueList(filterIssueByStatus({ issues, status: 'close' }))
+    eventHandler: () => renderIssueList(filterClosedIssues(issues))
   });
-};
-
-const filterIssueByStatus = ({ issues, status }: { issues: Issue[], status: Status }): Issue[] => {
-  return filterArray({ arr: issues, filterFunc: (issue) => issue.status === status });
 };
 
 const main = async () => {
@@ -56,7 +53,7 @@ const main = async () => {
     html: getIssueTpl()
   });
   const issues: Issue[] = await getIssues();
-  renderIssueList(filterIssueByStatus({ issues, status: 'open' }));
+  renderIssueList(filterOpenedIssues(issues));
   renderIssueStatusCount({
     openCount: countIssueStatus({ issues, status: 'open' }),
     closeCount: countIssueStatus({ issues, status: 'close' })
