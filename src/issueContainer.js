@@ -13,14 +13,14 @@ export const initIssueContainer = async () => {
 }
 
 const renderIssueContainer = () => {
-    const issueContainer = document.createElement('div');
+    const issueContainer = document.createElement('template');
     issueContainer.innerHTML = getIssueTpl();
     initIssueStatus(issueContainer);
-    document.querySelector('#app').appendChild(issueContainer);
+    document.querySelector('#app').appendChild(issueContainer.content);
 }
 
 const initIssueStatus = (issueContainer) => {
-    const issueStatusTabs = [...issueContainer.querySelector('.statusTab').children];
+    const issueStatusTabs = [...issueContainer.content.querySelector('.statusTab').children];
     issueStatusTabs.forEach((tab) => {
         const isOpenElem = tab.innerText.includes('Open');
         const cnt = filterIssueByStatus(getIssues(), isOpenElem ? ISSUE_STATUS.OPEN : ISSUE_STATUS.CLOSE).length;
