@@ -14,3 +14,14 @@ export const setListTemplate = (issues) => {
   });
   ULElement.innerHTML = innerHTML;
 }
+/**
+ * 
+ * @param {Element[]} statusButtons
+ * @param {Element} target 
+ */
+export const setButtonTemplate = (statusButtons, target = null) => {
+  statusButtons.forEach(statusBtn => statusBtn.classList.remove('font-bold'));
+  if(target){
+    target.classList.add('font-bold');
+  }
+}
