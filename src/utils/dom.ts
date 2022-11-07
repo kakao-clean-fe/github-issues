@@ -27,3 +27,7 @@ const addEventListener = ({ element, event, eventHandler }: AddEventListerArgs):
 const setEventToEventListener = (event: string) => (args: Omit<AddEventListerArgs, 'event'>) => addEventListener({ event, ...args });
 
 export const addClickEventListener = setEventToEventListener('click');
+
+export const toggleClass = (element: Element | null, style: string) => {
+  element?.classList.toggle(style);
+};
