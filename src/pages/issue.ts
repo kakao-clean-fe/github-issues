@@ -25,14 +25,11 @@ const countIssueStatus = ({ issues, status }: { issues: Issue[], status: Status 
 };
 
 const renderIssueStatusCount = ({ openCount, closeCount }: { openCount: number, closeCount: number }): void => {
-  findParentAndRenderInnerHtml({
-    selector: ISSUE_OPEN_COUNT_SELECTOR,
-    html: `${openCount} Opens`
-  });
-  findParentAndRenderInnerHtml({
-    selector: ISSUE_CLOSE_COUNT_SELECTOR,
-    html: `${closeCount} Closed`
-  });
+  const data = [
+    { selector: ISSUE_OPEN_COUNT_SELECTOR, html: `${openCount} Opens` },
+    { selector: ISSUE_CLOSE_COUNT_SELECTOR, html: `${closeCount} Closed` }
+  ];
+  data.forEach(({ selector, html }) => findParentAndRenderInnerHtml({ selector, html }));
 };
 
 const initIssueStatusEventHandler = (issues: Issue[]): void => {
