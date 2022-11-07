@@ -10,8 +10,8 @@ export const renderInnerHtml = ({ parent, html }: RenderInnerHtmlArgs): void => 
 };
 
 export const findParentAndRenderInnerHtml = ({ fromElement, selector, html }: FindParentAndRenderInnerHtmlArgs): void => {
-  renderInnerHtml({
-    parent: findElement({ fromElement, selector }),
-    html
-  });
+  pipe(
+    findElement,
+    (parent: Element | null) => renderInnerHtml({ parent, html })
+  )({ fromElement, selector });
 };
