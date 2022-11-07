@@ -1,13 +1,14 @@
+import { getElement } from '~/store/element-store';
 import { getIssueTpl } from '~/tpl.js';
-import { findParentAndRenderInnerHtml } from '~/utils/dom';
+import { renderInnerHtml } from '~/utils/dom';
 
-const render = ({ parentSelector }: { parentSelector: string }): void => {
-  findParentAndRenderInnerHtml({
-    selector: parentSelector,
+const render = ({ parent }: { parent: Element | null }): void => {
+  renderInnerHtml({
+    parent,
     html: getIssueTpl()
   });
 };
 
 export const IssuePageLayout = ({ parentSelector }: { parentSelector: string }): void => {
-  render({ parentSelector });
+  render({ parent: getElement(parentSelector) });
 };
