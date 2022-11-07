@@ -10,11 +10,12 @@ const setIssueItems = (showData) => {
   showData.forEach((data) => (target.innerHTML += getIssueItemTpl(data)));
 };
 
-const toggleOpenCloseTab = (openCloseTab, isOpen) => {
-  const [t1, t2] = isOpen ? openCloseTab : openCloseTab.reverse();
+const toggleOpenCloseTab = (issueData, openCloseTab, isOpen) => {
+  const [t1, t2] = isOpen ? openCloseTab : [...openCloseTab].reverse();
   t1.classList.add("font-bold");
   t2.classList.remove("font-bold");
-  setIssueItems(getIssueWith(issueData, isOpen ? "open" : "close"));
+  const data = getIssueWith(issueData, isOpen ? "open" : "close");
+  setIssueItems(data);
 };
 
 const issueUtils = { getIssueWith, setIssueItems, toggleOpenCloseTab };
