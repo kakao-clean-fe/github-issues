@@ -1,4 +1,4 @@
-import {fetchIssueData, filterIssueByStatus, getIssueTplStr, pipe} from "../util.js";
+import {fetchIssueData, filterIssueByStatus, getIssueTplStr, pipe} from "../utils.js";
 import {getIssueTpl} from "../tpl.js";
 import {CSS, ISSUE_STATUS} from "../const.js";
 import {getIssueStatusStore, getIssueStore} from "../store.js";
