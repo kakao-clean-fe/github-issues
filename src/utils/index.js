@@ -1,7 +1,7 @@
 const render = (selector, html) =>
   (document.querySelector(selector).innerHTML = html);
 
-const addEventListener = (selector, eventType, callback) =>
+const on = (selector, eventType, callback) =>
   document.querySelector(selector).addEventListener(eventType, callback);
 
 const addClassList = (selector, classes) =>
@@ -35,7 +35,7 @@ const cacheFunction = (fn) => {
 
 export {
   render,
-  addEventListener,
+  on ,
   addClassList,
   removeClassList,
   fetchBody,

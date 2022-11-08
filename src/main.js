@@ -5,7 +5,7 @@ import {
 
 import issueStore from "./store/issueStore.js";
 import { ISSUE_STATUS } from "./constant.js";
-import { addClassList, addEventListener, removeClassList, render } from "./utils/index.js";
+import { addClassList, on, cacheFunction, removeClassList, render } from "./utils/index.js";
 
 const SELECTORS = {
   APP: '#app',
@@ -23,8 +23,8 @@ const clickOpenHandler = () => setSelectedStatus(ISSUE_STATUS.OPEN);
 const clickCloseHandler = () => setSelectedStatus(ISSUE_STATUS.CLOSE);
 
 const initEventListeners = () => {
-  addEventListener(SELECTORS.OEPN_COUNT, "click", clickOpenHandler);
-  addEventListener(SELECTORS.CLOSE_COUNT, "click", clickCloseHandler);
+  on(SELECTORS.OEPN_COUNT, "click", clickOpenHandler);
+  on(SELECTORS.CLOSE_COUNT, "click", clickCloseHandler);
 }
 
 const renderOpenIssuesCount = (openIssues) =>
@@ -49,16 +49,16 @@ const boldByIssueStatus = (status) => {
 const initStateChangeListeners =() => {
   issueStore.addChangeListener(
     issueStore.selectOpenIssues,
-    renderOpenIssuesCount
+    cacheFunction(renderOpenIssuesCount)
   );
   
   issueStore.addChangeListener(
     issueStore.selectCloseIssues,
-    renderCloseIssuesCount
+    cacheFunction(renderCloseIssuesCount)
   );
   
-  issueStore.addChangeListener(issueStore.selectSelectedStatus, boldByIssueStatus);
-  issueStore.addChangeListener(issueStore.selectCurrentIssues, renderIssues);
+  issueStore.addChangeListener(issueStore.selectSelectedStatus, cacheFunction(boldByIssueStatus));
+  issueStore.addChangeListener(issueStore.selectCurrentIssues, cacheFunction(renderIssues));
 }
 
 render(SELECTORS.APP, getIssueTpl());
