@@ -1,4 +1,4 @@
-import type { FindElementArgs, RenderInnerHtmlArgs, AddEventListerArgs } from '~/types/utils/dom';
+import type { FindElementArgs, RenderInnerHtmlArgs, SetEventListenerToElementArgs } from '~/types/utils/dom';
 
 export const findElement = ({ fromElement = document, selector }: FindElementArgs): Element | null => {
   return fromElement.querySelector(selector);
@@ -10,13 +10,13 @@ export const renderInnerHtml = ({ parent, html }: RenderInnerHtmlArgs): void => 
   }
 };
 
-const addEventListener = ({ element, event, eventHandler }: AddEventListerArgs): void => {
+const setEventListenerToElement = ({ element, event, eventHandler }: SetEventListenerToElementArgs): void => {
   if (element !== null) {
     element.addEventListener(event, eventHandler);
   }
 };
 
-const setEventToEventListener = (event: string) => (args: Omit<AddEventListerArgs, 'event'>) => addEventListener({ event, ...args });
+const setEventToEventListener = (event: string) => (args: Omit<SetEventListenerToElementArgs, 'event'>) => setEventListenerToElement({ event, ...args });
 
 export const addClickEventListener = setEventToEventListener('click');
 

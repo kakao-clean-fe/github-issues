@@ -9,7 +9,7 @@ export interface RenderInnerHtmlArgs {
   html: string
 }
 
-export interface AddEventListerArgs {
+export interface SetEventListenerToElementArgs {
   element: Element | null
   event: string
   eventHandler: Parameters<typeof addEventListener>[1]
