@@ -1,36 +1,58 @@
-import { getIssueItemTpl, getIssueTpl, getLabelItemTpl, getLabelTpl } from './tpl';
+import { getIssueItemTpl, getIssueTpl } from './tpl';
 import { fetchIssues } from './common/api';
 import { OPEN, CLOSED } from './constants/status';
 import { SELECTOR } from './constants/selector';
-import { EVENT } from './constants/event';
 import { getIssuesWithStatus } from './utils/status';
-import { createIssue, createIssueList, updateIssuesTemplate, updateIssueList, boldToStatusButton } from './utils/template';
-import { selectAllElement } from './utils/dom';
+import { createIssue, createIssueList, updateIssueList, boldToStatusButton } from './utils/template';
+import { hasClass } from './utils/dom';
+import { pipe } from './utils/pipe';
+import { bindClickEvent } from './utils/event';
 
+const renderIssue = (issues) => {
+  /** 데이터 가져오기 */
+  const getIssues = getIssuesWithStatus(issues);
+  const openIssues = getIssues(OPEN);
+  const closedIssues = getIssues(CLOSED);
+
+  /** issueTemplate 그리기 */
+  pipe(getIssueTpl, createIssue)({openIssueCount: openIssues.length, closedIssueCount: closedIssues.length});
+
+  /** issueItemTemplate 그리기 */
+  const getIssueListTableTemplate = issues => issues
+    .map(issue => getIssueItemTpl(issue))
+    .join('');
+
+  pipe(getIssueListTableTemplate, createIssueList)(issues);
+};
+
+const clickStatusTab = e => {
+  const OPEN_COUNT_CLASS = '_open_count';
+  const isOpenCountButton = hasClass(OPEN_COUNT_CLASS);
+  const status = isOpenCountButton(e.target) ? OPEN : CLOSED;
+  boldToStatusButton(status);
+
+  return status; // status가 문맥에 맞는 반환인지 고려해야함
+};
+
+const setStatusTabEvent = issues => {
+  /** 이벤트 바인딩 */
+  const bindTabClickEvent = bindClickEvent(SELECTOR.STATUS_TAB);
+  bindTabClickEvent(
+    clickStatusTab,
+    getIssuesWithStatus(issues), // currying 함수
+    updateIssueList,
+  );
+};
+
+const init = async (issues) => {
+  await renderIssue(issues);
+  setStatusTabEvent(issues);
+}
 
 const main = async () => {
   const issues = await fetchIssues();
-  const openIssues = getIssuesWithStatus(issues, OPEN);
-  const closedIssues = getIssuesWithStatus(issues, CLOSED);
 
-  const openIssueCount = openIssues.length;
-  const closedIssueCount = closedIssues.length;
-  const getIssueListTableTemplate = issues => issues.map(issue => getIssueItemTpl(issue)).join('');
-
-  createIssue(getIssueTpl({openIssueCount, closedIssueCount}));
-
-  const elements = selectAllElement(SELECTOR.STATUS_TAB);
-  const OPEN_COUNT_CLASS = '_open_count'
-  elements.forEach(element => {
-    element.addEventListener(EVENT.CLICK, e => {
-      const status = e.target.classList.contains(OPEN_COUNT_CLASS) ? OPEN : CLOSED;
-      const clickedIssues = getIssuesWithStatus(issues, status);
-      boldToStatusButton(status)
-      updateIssueList(clickedIssues);
-    });
-  });
-
-  createIssueList(getIssueListTableTemplate(issues));
+  init(issues);
 };
 
 main();

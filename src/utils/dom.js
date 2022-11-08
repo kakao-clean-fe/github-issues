@@ -13,3 +13,7 @@ export const addClass = className => selector => {
 export const removeClass = className => selector => {
   selectElement(selector).classList.remove(className);
 };
+
+export const hasClass = className => element => {
+  return element.classList.contains(className);
+};
