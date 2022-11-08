@@ -11,12 +11,16 @@ const setElement = ({ selector, element }: { selector: Selector, element: Elemen
   elementMap.set(selector, element);
 };
 
+const findAndSetElement = (selector: Selector): void => {
+  pipe(
+    findElement,
+    (element: Element | null) => setElement({ selector, element })
+  )({ selector });
+};
+
 export const getElement = (selector: Selector): Element | null => {
   if (!hasElement(selector)) {
-    pipe(
-      findElement,
-      (element: Element | null) => setElement({ selector, element })
-    )({ selector });
+    findAndSetElement(selector);
   }
   return elementMap.get(selector) ?? null;
 };

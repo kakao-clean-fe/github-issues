@@ -34,11 +34,15 @@ const setActiveFilterStyle = () => {
   toggleClass(getElement(ISSUE_CLOSE_COUNT_SELECTOR), style);
 };
 
+const filterIssuesAndRender = ({ filterFunction, issues }: { filterFunction: (...args: unknown[]) => unknown[], issues: Issue[] }): void => {
+  pipe(filterFunction, (issues: Issue[]) => IssueList({ issues }))(issues);
+};
+
 const getOpenIssueEventData = (issues: Issue[]) => {
   return {
     element: getElement(ISSUE_OPEN_COUNT_SELECTOR),
     eventHandler: () => {
-      pipe(filterOpenedIssues, (issues: Issue[]) => IssueList({ issues }))(issues);
+      filterIssuesAndRender({ filterFunction: filterOpenedIssues, issues });
       setActiveFilterStyle();
     }
   };
@@ -48,7 +52,7 @@ const getClosedIssueEventData = (issues: Issue[]) => {
   return {
     element: getElement(ISSUE_CLOSE_COUNT_SELECTOR),
     eventHandler: () => {
-      pipe(filterClosedIssues, (issues: Issue[]) => IssueList({ issues }))(issues);
+      filterIssuesAndRender({ filterFunction: filterClosedIssues, issues });
       setActiveFilterStyle();
     }
   };
