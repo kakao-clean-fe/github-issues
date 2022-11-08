@@ -1,21 +1,15 @@
 import {getIssueTpl} from './tpl';
 import {filterData, loadData, setItemCounts} from './init';
-import {renderItems, setEventListener} from './render';
+import {getAppDiv, renderItems, setEventListener} from './render';
+import {pipe} from './utils';
 
 const main = () => {
-    let listData = [];
-    
-    document.getElementById('app').innerHTML = getIssueTpl();
+    getAppDiv().innerHTML = getIssueTpl();
 
     loadData()
-        .then((response) => response.json())
-        .then((json) => listData = json)
-        .then(() => {
-            renderItems(listData);
-            setItemCounts(listData);
-            filterData(listData);
-            setEventListener(listData);
-        })
+        .then((data) => 
+            pipe(renderItems, setItemCounts, setEventListener, filterData)(data));
+    
 }
 
 main();

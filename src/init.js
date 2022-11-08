@@ -1,32 +1,20 @@
 import {STATUS} from './const';
 import {renderCount, renderItems} from './render';
+import { filter } from './utils';
 
-export const loadData = () => {
-    return fetch('../data-sources/issues.json')
-};
+export const loadData = () => fetch('../data-sources/issues.json').then((response) => response.json());
 
 export const setItemCounts = (listData) => {
-    let openedItemCount = 0;
-    let closedItemCount = 0;
+    const openedItemCount = filter(listData, (item) => item.status === STATUS.OPEN).length;
+    const closedItemCount = filter(listData, (item) => item.status === STATUS.CLOSE).length;
 
-    listData.forEach((item) => {
-        openedItemCount += item.status === STATUS.OPEN ? 1 : 0;
-        closedItemCount += item.status === STATUS.CLOSE ? 1 : 0;
-    });
-    
     renderCount(openedItemCount, closedItemCount);
+
+    return listData;
 }
 
 export const filterData = (listData, status = STATUS.OPEN) => {
-    const result = [];
-
-    listData.forEach((item) => {
-        if (item.status === status) {
-            result.push(item);
-        }
-    })
-    
-    renderItems(result);
+    renderItems(filter(listData, (item) => item.status === status));
 }
 
 
