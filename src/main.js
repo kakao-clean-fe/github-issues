@@ -18,33 +18,40 @@ import {getData, createRenderer, createEventBinder, asyncPipe, getClassList} fro
 
     /* 각 페이지별 렌더링 정의 */
     const pages = {
-      issue: () => {
+      issue() {
         const openedIssues = data.issues.filter(({status}) => status === STATUS.OPEN);
         const closedIssues = data.issues.filter(({status}) => status === STATUS.CLOSE);
         const filteredIssues = activeStatus === STATUS.OPEN ? openedIssues : closedIssues;
-
-        // attach app(clear)
-        appRenderer(
-          getIssueTpl({
+        const templates = {
+          app: getIssueTpl({
             numOpened: openedIssues.length,
             numClosed: closedIssues.length,
             activeStatus: activeStatus,
-          })
-        );
+          }),
+          issueList: filteredIssues.map((item) => getIssueItemTpl(item))
+        }
+
+        // attach app(clear)
+        appRenderer(templates.app);
+
         // attach issueList
-        issueListRenderer(filteredIssues.map((item) => getIssueItemTpl(item)));
+        issueListRenderer(templates.issueList);
 
         // bind events
         statusTabEventBinder("click")(getClassList, events.clickStatus, render);
       },
-      label: () => {
+      label() {
         const filteredLabels = data.labels;
+        const templates = {
+          app: getLabelTpl({numLabels: filteredLabels.length}),
+          labelList: filteredLabels.map((item) => getLabelItemTpl(item))
+        }
 
         // attach app(clear)
-        appRenderer(getLabelTpl({numLabels: filteredLabels.length}));
+        appRenderer(templates.app);
 
         // attach labelList
-        labelListRenderer(filteredLabels.map((item) => getLabelItemTpl(item)));
+        labelListRenderer(templates.labelList);
       },
     };
 

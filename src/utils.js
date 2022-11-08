@@ -1,4 +1,4 @@
-/** defineuseful Function files */
+/** define useful Function files */
 
 export const selectOne = (selector) => document.querySelector(selector)
 export const selectAll = (selector) => document.querySelectorAll(selector)
@@ -18,7 +18,7 @@ export const getClassList = (e) => e.target.classList
 export const getData = (url) => fetch(url)
   .then((res) => res.json())
   .catch((err) => {
-    console.log("Fetch Failed", err)
+    console.error("Fetch Failed", err)
     throw err
   })
 
