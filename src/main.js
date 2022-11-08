@@ -17,8 +17,8 @@ import {getData, createRenderer, createEventBinder, asyncPipe, getClassList} fro
     let activeStatus = STATUS.OPEN;
 
     /* 각 페이지별 렌더링 정의 */
-    const pages = {
-      issue() {
+    const render = {
+      issuePage() {
         const openedIssues = data.issues.filter(({status}) => status === STATUS.OPEN);
         const closedIssues = data.issues.filter(({status}) => status === STATUS.CLOSE);
         const filteredIssues = activeStatus === STATUS.OPEN ? openedIssues : closedIssues;
@@ -40,7 +40,7 @@ import {getData, createRenderer, createEventBinder, asyncPipe, getClassList} fro
         // bind events
         statusTabEventBinder("click")(getClassList, events.clickStatus, render);
       },
-      label() {
+      labelPage() {
         const filteredLabels = data.labels;
         const templates = {
           app: getLabelTpl({numLabels: filteredLabels.length}),
@@ -53,17 +53,17 @@ import {getData, createRenderer, createEventBinder, asyncPipe, getClassList} fro
         // attach labelList
         labelListRenderer(templates.labelList);
       },
-    };
 
-    /* render: #app 하위의 html을 clear하고 새롭게 렌더링 */
-    const render = () => {
-      switch (activeTab) {
-        case TAB.ISSUE:
-          pages.issue(activeStatus);
-          break;
-        case TAB.LABEL:
-          pages.label();
-          break;
+      /* render: #app 하위의 html을 clear하고 새롭게 렌더링 */
+      main() {
+        switch (activeTab) {
+          case TAB.ISSUE:
+            render.issuePage(activeStatus);
+            break;
+          case TAB.LABEL:
+            render.labelPage();
+            break;
+        }
       }
     };
 
@@ -90,7 +90,7 @@ import {getData, createRenderer, createEventBinder, asyncPipe, getClassList} fro
     /* init: 페이지 진입시 초기 세팅(nav 이벤트, 데이터 로드) */
     const init = async () => {
       // nav event
-      createEventBinder("nav button.tab")("click")(getClassList, events.clickTab, render);
+      createEventBinder("nav button.tab")("click")(getClassList, events.clickTab, render.main);
 
       // load data
       data.issues = await getData("data-sources/issues.json");
@@ -98,7 +98,7 @@ import {getData, createRenderer, createEventBinder, asyncPipe, getClassList} fro
     };
 
     /* main: 전체 실행 함수 */
-    const main = asyncPipe(init, render)
+    const main = asyncPipe(init, render.main)
 
     /* 실행 */
     main();
