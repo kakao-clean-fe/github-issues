@@ -1,5 +1,5 @@
-export function getIssueTpl() {
-	return `
+export function getIssueTpl () {
+  return /* html */`
     <div id="issue-wrapper" class="w-9/12 m-auto min-w-min">
     <div id="header" class="flex justify-between">
 
@@ -66,8 +66,8 @@ export function getIssueTpl() {
     `;
 }
 
-export function getIssueItemTpl(item) {
-    return `
+export function getIssueItemTpl (item) {
+  return /* html */`
         <li> 
           <div class="py-4">
               <input type="checkbox">
@@ -80,7 +80,7 @@ export function getIssueItemTpl(item) {
                       return `
                         ${html} <span class="rounded-lg border text-white p-1" style="background-color:${color}">${tagName}</span>
                       `;
-                    }, ``)}
+                    }, '')}
                   </div>
               </div>
               <div class="issue-description text-xs mt-2">
@@ -90,8 +90,8 @@ export function getIssueItemTpl(item) {
         </li>`;
 }
 
-export function getLabelTpl() {
-  return `
+export function getLabelTpl () {
+  return /* html */`
   <div id="label-wrapper" class="w-9/12 m-auto min-w-min">
 
   <div id="header" class="flex justify-between">
@@ -221,12 +221,12 @@ export function getLabelTpl() {
   </div>
     <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
 </div>
-  `
+  `;
 }
 
-export function getLabelItemTpl({ name, color, description }) {
-		return `
-            <li class="label-item flex items-center ml-4 py-3 justify-between border-b ">
+export function getLabelItemTpl ({ name, color, description }) {
+  return /* html */`
+            <li class="label-item flex items-center ml-4 py-3 justify-between border-b">
                 <div class="issue-title flex"> 
                     <span class="rounded-lg border p-1 px-2" style="background-color:#${color}">${name}</span> 
                 </div>
