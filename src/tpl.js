@@ -1,5 +1,5 @@
-export function getIssueTpl() {
-	return `
+export function getIssueTpl(openItemsCount = 0 , closedItemsCount= 0 ) {
+    return `
     <div id="issue-wrapper" class="w-9/12 m-auto min-w-min">
     <div id="header" class="flex justify-between">
 
@@ -29,8 +29,8 @@ export function getIssueTpl() {
         </div>
 
         <div class="statusTab flex">
-          <div class="whitespace-nowrap open-count font-bold cursor-pointer">0 Opens</div>
-          <div class="whitespace-nowrap close-count ml-3 cursor-pointer">0 Closed</div>
+          <div class="whitespace-nowrap open-count font-bold cursor-pointer">${openItemsCount} Opens</div>
+          <div class="whitespace-nowrap close-count ml-3 cursor-pointer">${closedItemsCount} Closed</div>
         </div>
 
         <div class="details-list flex ml-auto">
