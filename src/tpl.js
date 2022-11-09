@@ -1,5 +1,6 @@
-export function getIssueTpl() {
-	return `
+export function getIssueTpl(openCount = 0, closedCount = 0) {
+  /* html */
+  return `
     <div id="issue-wrapper" class="w-9/12 m-auto min-w-min">
     <div id="header" class="flex justify-between">
 
@@ -29,8 +30,8 @@ export function getIssueTpl() {
         </div>
 
         <div class="statusTab flex">
-          <div class="whitespace-nowrap open-count font-bold cursor-pointer">0 Opens</div>
-          <div class="whitespace-nowrap close-count ml-3 cursor-pointer">0 Closed</div>
+          <div id="openTab" class="whitespace-nowrap open-count font-bold cursor-pointer">${openCount} Opens</div>
+          <div id="closedTab" class="whitespace-nowrap close-count ml-3 cursor-pointer">${closedCount} Closed</div>
         </div>
 
         <div class="details-list flex ml-auto">
@@ -67,7 +68,8 @@ export function getIssueTpl() {
 }
 
 export function getIssueItemTpl(item) {
-    return `
+  /* html */
+  return `
         <li> 
           <div class="py-4">
               <input type="checkbox">
@@ -84,13 +86,16 @@ export function getIssueItemTpl(item) {
                   </div>
               </div>
               <div class="issue-description text-xs mt-2">
-                ${item._id} ${item.status}ed ${item['open-date']} ${item.milestones}
+                ${item._id} ${item.status}ed ${item['open-date']} ${
+    item.milestones
+  }
               </div>
           </div>
         </li>`;
 }
 
 export function getLabelTpl() {
+  /* html */
   return `
   <div id="label-wrapper" class="w-9/12 m-auto min-w-min">
 
@@ -221,11 +226,11 @@ export function getLabelTpl() {
   </div>
     <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
 </div>
-  `
+  `;
 }
 
 export function getLabelItemTpl({ name, color, description }) {
-		return `
+  return `
             <li class="label-item flex items-center ml-4 py-3 justify-between border-b ">
                 <div class="issue-title flex"> 
                     <span class="rounded-lg border p-1 px-2" style="background-color:#${color}">${name}</span> 
