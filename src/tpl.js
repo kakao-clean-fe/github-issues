@@ -1,4 +1,9 @@
-export function getIssueTpl() {
+import { CLOSED, OPEN } from './constants/status';
+
+export function getIssueTpl({openIssueCount = 0, closedIssueCount = 0, clickedStatus = ''}) {
+  const FONT_BOLD = 'font-bold';
+  const boldOpen = clickedStatus === OPEN ? FONT_BOLD : '';
+  const boldClosed = clickedStatus === CLOSED ? FONT_BOLD : '';
 	return `
     <div id="issue-wrapper" class="w-9/12 m-auto min-w-min">
     <div id="header" class="flex justify-between">
@@ -29,8 +34,8 @@ export function getIssueTpl() {
         </div>
 
         <div class="statusTab flex">
-          <div class="whitespace-nowrap open-count font-bold cursor-pointer">0 Opens</div>
-          <div class="whitespace-nowrap close-count ml-3 cursor-pointer">0 Closed</div>
+          <div class="whitespace-nowrap open-count ${boldOpen} cursor-pointer _open_count">${openIssueCount} Opens</div>
+          <div class="whitespace-nowrap close-count ml-3 ${boldClosed} cursor-pointer _closed_count">${closedIssueCount} Closed</div>
         </div>
 
         <div class="details-list flex ml-auto">
@@ -59,7 +64,7 @@ export function getIssueTpl() {
 
       </div>
       <div class="issue-list flex ml-auto">
-        <ul></ul>
+        <ul class="_issue_list_table"></ul>
       </div>
     </div>
   </div>
@@ -68,7 +73,7 @@ export function getIssueTpl() {
 
 export function getIssueItemTpl(item) {
     return `
-        <li> 
+        <li>
           <div class="py-4">
               <input type="checkbox">
           </div>
@@ -153,7 +158,7 @@ export function getLabelTpl() {
         <dd class="mt-2">
           <input type="text" id="label-description-input" name="label[description]"
             class="w-full p-2 base-outer focus:outline-none"
-            placeholder="Description" value="" 
+            placeholder="Description" value=""
             maxlength="100">
         </dd>
         <dd class="" hidden="" id="label--description-error"></dd>
@@ -215,7 +220,7 @@ export function getLabelTpl() {
       </div>
 
     </div>
-    <ul class="label-list ml-auto text-sm bg-white">
+    <ul class="label-list ml-auto text-sm bg-white _label_list_table">
 
     </ul>
   </div>
@@ -227,8 +232,8 @@ export function getLabelTpl() {
 export function getLabelItemTpl({ name, color, description }) {
 		return `
             <li class="label-item flex items-center ml-4 py-3 justify-between border-b ">
-                <div class="issue-title flex"> 
-                    <span class="rounded-lg border p-1 px-2" style="background-color:#${color}">${name}</span> 
+                <div class="issue-title flex">
+                    <span class="rounded-lg border p-1 px-2" style="background-color:#${color}">${name}</span>
                 </div>
                 <div class="issue-description ">${description}</div>
                 <div class="issue-description ">3 issues </div>
