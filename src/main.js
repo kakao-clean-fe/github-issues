@@ -5,13 +5,11 @@ import {getStatusCount} from './utils/status';
 import {setEventListerElement} from './utils/event';
 import {pipe} from './utils/pipe';
 
-const main = async () => {
+(async () => {
   const issuesData = IssuesData();
   const issues = await getFetchData('issues')
   issuesData.setIssues(issues);
   pipe(getStatusCount, setDefaultTemplate)(issues);
   setEventListerElement(issues);
   setListTemplate(issues);
-}
-
-main();
+})();
