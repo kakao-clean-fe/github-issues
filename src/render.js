@@ -1,4 +1,4 @@
-import { OPEN_COUNT, CLOSE_COUNT, FONT_BOLD, STATUS} from './const';
+import { FONT_BOLD, STATUS} from './const';
 import { getIssueItemTpl } from './tpl';
 import { filterData } from './init';
 
@@ -27,19 +27,20 @@ export const renderCount = (openCount, closeCount) => {
     getCloseCountDiv().innerHTML = `${closeCount} Closed`;
 }
 
+const clickEventCallback = (listData, status) => {
+    getOpenCountDiv().classList.add(FONT_BOLD);
+    getCloseCountDiv().classList.remove(FONT_BOLD);
+
+    filterData(listData, status);
+}
+
 export const setEventListener = (listData) => {
     getOpenCountDiv().addEventListener('click', () => {
-        getOpenCountDiv().classList.add(FONT_BOLD);
-        getCloseCountDiv().classList.remove(FONT_BOLD);
-        
-        filterData(listData, STATUS.OPEN);
+        clickEventCallback(listData, STATUS.OPEN);
     });
 
     getCloseCountDiv().addEventListener('click', () => {
-        getOpenCountDiv().classList.remove(FONT_BOLD);
-        getCloseCountDiv().classList.add(FONT_BOLD);
-        
-        filterData(listData, STATUS.CLOSE);
+        clickEventCallback(listData, STATUS.CLOSE);
     })
 
     return listData;
