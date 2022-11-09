@@ -1,10 +1,10 @@
 export const IssuesData = () => {
   let issues = null;
   return {
-    getIssues: function () {
+    getIssues() {
       return issues;
     },
-    setIssues: function (_issues) {
+    setIssues(_issues) {
       issues = _issues;
     },
   };
