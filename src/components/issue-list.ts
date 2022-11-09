@@ -20,6 +20,6 @@ const render = ({ parent, issues }: { issues: Issue[], parent: Element | null })
   });
 };
 
-export const IssueList = ({ parentSelector = ISSUE_LIST_SELECTOR, issues }: { issues: Issue[], parentSelector?: string }): void => {
+export const initIssueListComponent = ({ parentSelector = ISSUE_LIST_SELECTOR, issues }: { issues: Issue[], parentSelector?: string }): void => {
   render({ parent: getElement(parentSelector), issues });
 };

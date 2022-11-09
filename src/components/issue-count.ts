@@ -3,7 +3,7 @@ import { filterArray, countArray } from '~/utils/array';
 import { pipe } from '~/utils/functional-util';
 import { ISSUE_CLOSE_COUNT_SELECTOR, ISSUE_OPEN_COUNT_SELECTOR } from '~/constants/selector';
 import { filterOpenedIssues, filterClosedIssues } from '~/utils/issue';
-import { IssueList } from './issue-list';
+import { initIssueListComponent } from './issue-list';
 import { getElement } from '~/store/element-store';
 
 import type { Issue, Status } from '~/types/issue';
@@ -35,7 +35,7 @@ const setActiveFilterStyle = () => {
 };
 
 const filterIssuesAndRender = ({ filterFunction, issues }: { filterFunction: (...args: unknown[]) => unknown[], issues: Issue[] }): void => {
-  pipe(filterFunction, (issues: Issue[]) => IssueList({ issues }))(issues);
+  pipe(filterFunction, (issues: Issue[]) => initIssueListComponent({ issues }))(issues);
 };
 
 const getOpenIssueEventData = (issues: Issue[]) => {
@@ -66,7 +66,7 @@ const initEventHandler = (issues: Issue[]): void => {
   getIssueStatusEventData(issues).forEach(addClickEventListener);
 };
 
-export const IssueCount = ({ issues }: { issues: Issue[] }): void => {
+export const initIssueCountComponent = ({ issues }: { issues: Issue[] }): void => {
   render(issues);
   initEventHandler(issues);
 };

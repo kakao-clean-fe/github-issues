@@ -9,6 +9,6 @@ const render = ({ parent }: { parent: Element | null }): void => {
   });
 };
 
-export const IssuePageLayout = ({ parentSelector }: { parentSelector: string }): void => {
+export const initIssuePageLayout = ({ parentSelector }: { parentSelector: string }): void => {
   render({ parent: getElement(parentSelector) });
 };
