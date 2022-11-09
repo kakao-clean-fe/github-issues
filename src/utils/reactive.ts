@@ -6,7 +6,7 @@ import type { EffectFunction, Ref } from '~/types/utils/reactive';
  * @note
  * - 상태 변경을 추적하는 반응형 값입니다.
  * - .value로 값에 접근할 수 있습니다.
- * - (ex) const numRef = ref<number>(0); num.value = 10;
+ * - (ex) const numRef = ref<number>(0); numRef.value = 10;
  */
 export const ref = <T>(initValue: T): Ref<T> => new Proxy(
   {
@@ -20,7 +20,10 @@ export const ref = <T>(initValue: T): Ref<T> => new Proxy(
     }
   }, {
     set (target: Ref<T>, prop: string, newValue: T, ...args) { // 내부 메서드 : [[Set]], 프로퍼티를 쓸 때
-      target._runEffect(newValue);
+      const oldValue = target[prop];
+      if (oldValue !== newValue) {
+        target._runEffect(newValue);
+      }
       return Reflect.set(target, prop, newValue, ...args);
     }
   });
