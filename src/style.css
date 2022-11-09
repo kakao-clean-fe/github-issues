@@ -53,6 +53,7 @@ li {
   }
   
   .issue-list li {
+    display: flex;
     @apply border-b p-4
   }
 
