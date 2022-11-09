@@ -1,8 +1,9 @@
+import { querySelectorAll } from './dom-selector';
 import {filterByStatus} from './status';
 import {setListTemplate, setButtonTemplate} from './template';
 
 export const setEventListerElement = (issues) => {
-  const statusButtons = document.querySelectorAll('.statusTab>div');
+  const statusButtons = querySelectorAll('.statusTab>div');
   // 버튼 class 초기화
   setButtonTemplate(statusButtons);
   statusButtons.forEach(statusBtn => {

@@ -1,13 +1,14 @@
 import {getIssueTpl, getIssueItemTpl} from '../tpl';
+import { querySelector } from './dom-selector';
 
 export const setDefaultTemplate = (statusCount) => {
   const htmlData = getIssueTpl(statusCount);
-  const appElement = document.querySelector('#app');
+  const appElement = querySelector('#app');
   appElement.innerHTML = htmlData;
 }
 
 export const setListTemplate = (issues) => {
-  const ULElement = document.querySelector('.issue-list>ul');
+  const ULElement = querySelector('.issue-list>ul');
   const innerHTML = issues.reduce((preValue, currValue) => preValue + getIssueItemTpl(currValue), '');
   ULElement.innerHTML = innerHTML;
 }
