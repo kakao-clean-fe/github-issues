@@ -7,7 +7,7 @@ import type { Issue, Status } from '~/types/issue';
 import type { EffectFunction } from '~/types/utils/reactive';
 
 // ==========================
-// state, getter, watche helper, action
+// state, getter, watcher helper, action
 // - 반응형 값(ref)을 선언합니다.
 // - 반응형 값은 getter를 통해서만 접근할 수 있습니다.
 // - 반응형 값이 변경되면 실행할 watcher를 등록할 함수를 제공합니다.

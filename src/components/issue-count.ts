@@ -1,30 +1,22 @@
 import { addClickEventListener, toggleClass, renderInnerHtml } from '~/utils/dom';
-import { filterArray, countArray } from '~/utils/array';
-import { pipe } from '~/utils/functional-util';
+import { countArray } from '~/utils/array';
 import { ISSUE_CLOSE_COUNT_SELECTOR, ISSUE_OPEN_COUNT_SELECTOR } from '~/constants/selector';
-import { filterOpenedIssues, filterClosedIssues } from '~/utils/issue';
-import { initIssueListComponent } from './issue-list';
 import { getElement } from '~/store/element-store';
-
-import type { Issue, Status } from '~/types/issue';
+import { setIssueQuery, openedIssues, closedIssues, setIssuesWatcher } from '~/store/issue-store';
+import type { Issue } from '~/types/issue';
 
 // 렌더링
-const countIssueStatus = ({ issues, status }: { issues: Issue[], status: Status }): number => {
-  return pipe(
-    filterArray,
-    (arr) => countArray({ arr })
-  )({ arr: issues, filterFunc: (issue: Issue) => issue.status === status });
-};
+const countIssueStatus = ({ issues }: { issues: Issue[] }): number => countArray({ arr: issues });
 
-const getIssueStatusCountData = (issues: Issue[]) => {
+const getIssueStatusCountData = () => {
   return [
-    { parent: getElement(ISSUE_OPEN_COUNT_SELECTOR), html: `${countIssueStatus({ issues, status: 'open' })} Opens` },
-    { parent: getElement(ISSUE_CLOSE_COUNT_SELECTOR), html: `${countIssueStatus({ issues, status: 'close' })} Closed` }
+    { parent: getElement(ISSUE_OPEN_COUNT_SELECTOR), html: `${countIssueStatus({ issues: openedIssues() })} Opens` },
+    { parent: getElement(ISSUE_CLOSE_COUNT_SELECTOR), html: `${countIssueStatus({ issues: closedIssues() })} Closed` }
   ];
 };
 
-const render = (issues: Issue[]): void => {
-  getIssueStatusCountData(issues).forEach(renderInnerHtml);
+const render = (): void => {
+  getIssueStatusCountData().forEach(renderInnerHtml);
 };
 
 // 이벤트 핸들러
@@ -34,39 +26,37 @@ const setActiveFilterStyle = () => {
   toggleClass(getElement(ISSUE_CLOSE_COUNT_SELECTOR), style);
 };
 
-const filterIssuesAndRender = ({ filterFunction, issues }: { filterFunction: (...args: unknown[]) => unknown[], issues: Issue[] }): void => {
-  pipe(filterFunction, (issues: Issue[]) => initIssueListComponent({ issues }))(issues);
-};
-
-const getOpenIssueEventData = (issues: Issue[]) => {
+const getOpenIssueEventData = () => {
   return {
     element: getElement(ISSUE_OPEN_COUNT_SELECTOR),
     eventHandler: () => {
-      filterIssuesAndRender({ filterFunction: filterOpenedIssues, issues });
+      setIssueQuery({ status: 'open' });
       setActiveFilterStyle();
     }
   };
 };
 
-const getClosedIssueEventData = (issues: Issue[]) => {
+const getClosedIssueEventData = () => {
   return {
     element: getElement(ISSUE_CLOSE_COUNT_SELECTOR),
     eventHandler: () => {
-      filterIssuesAndRender({ filterFunction: filterClosedIssues, issues });
+      setIssueQuery({ status: 'close' });
       setActiveFilterStyle();
     }
   };
 };
 
-const getIssueStatusEventData = (issues: Issue[]) => {
-  return [getOpenIssueEventData(issues), getClosedIssueEventData(issues)];
+const getIssueStatusEventData = () => {
+  return [getOpenIssueEventData(), getClosedIssueEventData()];
 };
 
-const initEventHandler = (issues: Issue[]): void => {
-  getIssueStatusEventData(issues).forEach(addClickEventListener);
+const initEventHandler = (): void => {
+  getIssueStatusEventData().forEach(addClickEventListener);
 };
 
-export const initIssueCountComponent = ({ issues }: { issues: Issue[] }): void => {
-  render(issues);
-  initEventHandler(issues);
+export const initIssueCountComponent = (): void => {
+  setIssuesWatcher(() => {
+    render();
+    initEventHandler();
+  });
 };
