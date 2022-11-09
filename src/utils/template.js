@@ -3,7 +3,6 @@ import { getIssueItemTpl, getIssueTpl } from '../tpl';
 import { SELECTOR } from '../constants/selector';
 import { OPEN } from '../constants/status';
 
-/** 템플릿 생성 */
 export const createIssue = renderElement(SELECTOR.APP);
 
 export const createIssueList = renderElement(SELECTOR.ISSUE_LIST_TABLE);

@@ -25,10 +25,10 @@ const renderIssue = (issues) => {
   pipe(getIssueListTableTemplate, createIssueList)(issues);
 };
 
-const clickStatusTab = e => {
+const clickStatusTab = ({target}) => {
   const OPEN_COUNT_CLASS = '_open_count';
   const isOpenCountButton = hasClass(OPEN_COUNT_CLASS);
-  const status = isOpenCountButton(e.target) ? OPEN : CLOSED;
+  const status = isOpenCountButton(target) ? OPEN : CLOSED;
   boldToStatusButton(status);
 
   return status; // status가 문맥에 맞는 반환인지 고려해야함
