@@ -1,3 +1,10 @@
+export const openCountSelector = '.open-count .num-open';
+export const closeCountSelector = '.close-count .num-close'
+export const openIssueTabSelector = '.open-count';
+export const closeIssueTabSelector = '.close-count';
+export const activateTabClass = 'font-bold';
+export const issueContainerSelector = '#issues-wrapper div.issue-list ul';
+
 export function getIssueTpl() {
 	return `
     <div id="issue-wrapper" class="w-9/12 m-auto min-w-min">
@@ -29,8 +36,8 @@ export function getIssueTpl() {
         </div>
 
         <div class="statusTab flex">
-          <div class="whitespace-nowrap open-count font-bold cursor-pointer">0 Opens</div>
-          <div class="whitespace-nowrap close-count ml-3 cursor-pointer">0 Closed</div>
+          <div class="whitespace-nowrap open-count font-bold cursor-pointer"><span class="num-open">0</span> Opens</div>
+          <div class="whitespace-nowrap close-count ml-3 cursor-pointer"><span class="num-close">0</span> Closed</div>
         </div>
 
         <div class="details-list flex ml-auto">
