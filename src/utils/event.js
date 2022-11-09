@@ -10,8 +10,8 @@ export const setEventListerElement = (issues) => {
       // close 버튼인 경우
       const status = e.target.classList.contains('close-count') ? 'close' : 'open';
       const newIssues = await filterByStatus(issues, status);
-      setButtonTemplate(statusButtons, e.target);
       setListTemplate(newIssues);
+      setButtonTemplate(statusButtons, e.target);
     })
   });
 }
