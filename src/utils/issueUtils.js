@@ -1,8 +1,7 @@
 import { getIssueItemTpl } from "../template";
 
-const getIssueWith = (data, status) => {
-  return data.filter((d) => d.status === status);
-};
+const getIssueWith = (issueData, status) =>
+  issueData.filter((d) => d.status === status);
 
 const setIssueItems = (showData) => {
   const target = document.querySelector("ul");
