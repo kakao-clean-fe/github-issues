@@ -10,14 +10,20 @@ import { issueUtils } from "./utils";
   const app = document.querySelector("#app");
   app.innerHTML = getIssueTpl(opens.length, closed.length);
 
-  const openCloseTab = [
-    document.querySelector(".open-count"),
-    document.querySelector(".close-count"),
-  ];
-  openCloseTab.forEach((tab, idx) => {
-    tab.addEventListener("click", () => {
-      issueUtils.toggleOpenCloseTab(issueData, openCloseTab, idx === 0);
-    });
+  const removeAllClass = (paths, className) =>
+    paths.forEach((path) => path.classList?.remove(className));
+
+  const openCloseMenu = document.querySelector(".statusTab");
+
+  openCloseMenu.addEventListener("click", function (e) {
+    removeAllClass(openCloseMenu.childNodes, "font-bold");
+    const target = e.target;
+    if (
+      target.classList.contains("open-count") ||
+      target.classList.contains("close-count")
+    ) {
+      target.classList.add("font-bold");
+    }
   });
 
   issueUtils.setIssueItems(opens);
