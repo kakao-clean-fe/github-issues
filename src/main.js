@@ -1,6 +1,7 @@
 import { getIssueTpl, getIssueItemTpl } from "./template";
 import { getData } from "./api";
 import { classUtils, issueUtils } from "./utils";
+import { FONT_BOLD } from "./constants";
 
 (async () => {
   const issueData = await getData("issues");
@@ -12,7 +13,7 @@ import { classUtils, issueUtils } from "./utils";
 
   const openCloseMenu = document.querySelector(".statusTab");
   openCloseMenu.addEventListener("click", function (e) {
-    classUtils.removeAll(openCloseMenu.childNodes, "font-bold");
+    classUtils.removeAll(openCloseMenu.childNodes, FONT_BOLD);
     const target = e.target;
     if (
       target.classList.contains("open-count") ||
