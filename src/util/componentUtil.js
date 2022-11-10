@@ -18,6 +18,9 @@ export const renderTemplate = (parent, template) => {
 
 export const setRenderTarget = (parent) => (template) => parent?.insertAdjacentHTML('beforeend', template);
 
+export const removeClass = (className) => target => target.classList.remove(className);
+export const addClass = className => target => target.classList.add(className);
+
 // args2는 배열 아닌 인자
 export const compose = (...args1) => {
   return (args2) => args1.reduceRight((acc, fn) => fn(acc), args2);

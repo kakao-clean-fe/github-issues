@@ -1,35 +1,24 @@
 import {getIssueTpl, getIssueItemTpl, openCountSelector, closeCountSelector, openIssueTabSelector, closeIssueTabSelector, issueContainerSelector, activateTabClass} from './tpl';
-import {$, clearElement, setRenderTarget, compose, pipe} from './util/componentUtil';
+import {$, clearElement, setRenderTarget, compose, pipe, removeClass, addClass} from './util/componentUtil';
 import {issueStore$,statusStore$, activatedIssuesStore$, loadIssueData } from './store.js'
 
-const getOpenIssues = (issues) => {
-  return issues.filter(issue => issue.status === 'open');
-}
-
-const getCloseIssues = (issues) => {
-  return issues.filter(issue => issue.status === 'close');
-}
-
 const renderOpenCloseCount = (issues) => {
-  $(openCountSelector).textContent = getOpenIssues(issues).length;
-  $(closeCountSelector).textContent = getCloseIssues(issues).length;
+  const getfilteredLength = (issues) => status => issues.filter(issue => issue.status === status).length;
+  const getFilteredLengthByStatus = getfilteredLength(issues);
+
+  $(openCountSelector).textContent = getFilteredLengthByStatus('open');
+  $(closeCountSelector).textContent = getFilteredLengthByStatus('close');
 }
 
 /**
  * check if removeEventListener need
  */
 const addIssueTabClickListener = () => {
-  $(openIssueTabSelector).addEventListener('click', clickOpenTabHandler);
-  $(closeIssueTabSelector).addEventListener('click', clickCloseTabHandler);
+  $(openIssueTabSelector).addEventListener('click', clickTabHandler('open'));
+  $(closeIssueTabSelector).addEventListener('click', clickTabHandler('close'));
 }
 
-const clickOpenTabHandler = () => {
-  statusStore$.setValue('open')
-}
-
-const clickCloseTabHandler = () => {
-  statusStore$.setValue('close')
-}
+const clickTabHandler = (status) => () => statusStore$.setValue(status);
 
 const renderIssues = (issues) => {
   clearElement(issueContainerSelector);
@@ -39,12 +28,15 @@ const renderIssues = (issues) => {
 }
 
 const activateTab = (status) => {
+  const removeTabClass = removeClass(activateTabClass)
+  const addTabClass = addClass(activateTabClass);
+
   if (status === 'open') {
-    $(openIssueTabSelector).classList.add(activateTabClass);
-    $(closeIssueTabSelector).classList.remove(activateTabClass);
+    addTabClass($(openIssueTabSelector))
+    removeTabClass($(closeIssueTabSelector))
   } else if (status === 'close') {
-    $(openIssueTabSelector).classList.remove(activateTabClass);
-    $(closeIssueTabSelector).classList.add(activateTabClass);
+    addTabClass($(closeIssueTabSelector))
+    removeTabClass($(openIssueTabSelector))
   }
 }
 
