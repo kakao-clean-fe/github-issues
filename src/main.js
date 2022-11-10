@@ -1,6 +1,6 @@
 import { getIssueTpl, getIssueItemTpl } from "./template";
 import { getData } from "./api";
-import { issueUtils } from "./utils";
+import { classUtils, issueUtils } from "./utils";
 
 (async () => {
   const issueData = await getData("issues");
@@ -10,13 +10,9 @@ import { issueUtils } from "./utils";
   const app = document.querySelector("#app");
   app.innerHTML = getIssueTpl(opens.length, closed.length);
 
-  const removeAllClass = (paths, className) =>
-    paths.forEach((path) => path.classList?.remove(className));
-
   const openCloseMenu = document.querySelector(".statusTab");
-
   openCloseMenu.addEventListener("click", function (e) {
-    removeAllClass(openCloseMenu.childNodes, "font-bold");
+    classUtils.removeAll(openCloseMenu.childNodes, "font-bold");
     const target = e.target;
     if (
       target.classList.contains("open-count") ||
