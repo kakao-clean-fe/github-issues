@@ -1,10 +1,11 @@
 import {filterIssueByStatus} from "../../utils.js";
 import {CSS, ISSUE_STATUS} from "../../const.js";
 import {updateIssueItems} from "./issueItem.js";
-import {issueStatusStore, issueStore} from "../../store.js";
+import {issuesAtom, issueStatusAtom} from "../../store/atom.js";
+import {useAtom, useAtomValue} from "../../store/atomHooks.js";
 
-const {getIssues} = issueStore();
-const {setIssueStatus} = issueStatusStore();
+const getIssues = useAtomValue(issuesAtom);
+const [getIssueStatus, setIssueStatus] = useAtom(issueStatusAtom);
 
 export const initIssueStatus = () => {
     const issueStatusTabs = [...document.querySelector('.statusTab').children];
@@ -18,7 +19,7 @@ export const initIssueStatus = () => {
 }
 
 const onClickIssueStatus = (issueStatusTabs) => ({target}) => {
-    setIssueStatus();
+    setIssueStatus(getIssueStatus() === ISSUE_STATUS.OPEN ? ISSUE_STATUS.CLOSE : ISSUE_STATUS.OPEN);
     changeIssueStatusStyle(target, issueStatusTabs);
     updateIssueItems();
 }
