@@ -1,6 +1,6 @@
 import {fetchIssueData, filterIssueByStatus, getIssueTplStr, pipe} from "../utils.js";
 import {getIssueTpl} from "../tpl.js";
-import {CSS, ISSUE_STATUS} from "../const.js";
+import {CSS, ISSUE_STATUS, SELECTOR} from "../const.js";
 import {getIssueStatusStore, getIssueStore} from "../store.js";
 
 const {getIssues, setIssues} = getIssueStore();
@@ -16,7 +16,7 @@ const renderIssueContainer = () => {
     const issueContainer = document.createElement('template');
     issueContainer.innerHTML = getIssueTpl();
     initIssueStatus(issueContainer);
-    document.querySelector('#app').appendChild(issueContainer.content);
+    document.querySelector(SELECTOR.ROOT).appendChild(issueContainer.content);
 }
 
 const initIssueStatus = (issueContainer) => {
@@ -42,7 +42,7 @@ const changeIssueStatusStyle = (target, issueStatusTabs) => {
 }
 
 const renderIssueItems = (issues) => {
-    document.querySelector('.issue-list ul').innerHTML = getIssueTplStr(issues);
+    document.querySelector(SELECTOR.ISSUE_LIST).innerHTML = getIssueTplStr(issues);
 }
 
 await initIssueContainer();
