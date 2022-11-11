@@ -4,12 +4,14 @@ import {SELECTOR} from "../const.js";
 import {issuesAtom} from "../store/atom.js";
 import {initIssueItems} from "../components/Issue/issueItem.js";
 import {initIssueStatus} from "../components/Issue/issueStatus.js";
-import {useSetAtom} from "../store/atomHooks.js";
+import {useSetAtomListener, useSetAtomValue} from "../store/atomHooks.js";
 
-const setIssues = useSetAtom(issuesAtom);
+const setIssues = useSetAtomValue(issuesAtom);
+const setIssuesListener = useSetAtomListener(issuesAtom);
 
 export const initIssuePage = async () => {
-    setIssues(await fetchIssueData(), fetchIssueAtomListeners);
+    setIssuesListener(fetchIssueAtomListeners);
+    setIssues(await fetchIssueData());
     initIssueLayout();
     initIssueStatus();
     initIssueItems();
