@@ -1,48 +1,23 @@
-import {fetchIssueData, filterIssueByStatus, getIssueTplStr, pipe} from "../utils.js";
+import {fetchIssueData} from "../utils.js";
 import {getIssueTpl} from "../tpl.js";
-import {CSS, ISSUE_STATUS, SELECTOR} from "../const.js";
-import {getIssueStatusStore, getIssueStore} from "../store.js";
+import {SELECTOR} from "../const.js";
+import {issueStore} from "../store.js";
+import {initIssueItems} from "../components/Issue/issueItem.js";
+import {initIssueStatus} from "../components/Issue/issueStatus.js";
 
-const {getIssues, setIssues} = getIssueStore();
-const {getIssueStatus, setIssueStatus} = getIssueStatusStore();
+const {setIssues} = issueStore();
 
-export const initIssueContainer = async () => {
+export const initIssuePage = async () => {
     setIssues(await fetchIssueData());
-    renderIssueContainer();
-    pipe(filterIssueByStatus, renderIssueItems)(getIssues(), getIssueStatus())
+    initIssueLayout();
+    initIssueStatus();
+    initIssueItems();
 }
 
-const renderIssueContainer = () => {
+const initIssueLayout = () => {
     const issueContainer = document.createElement('template');
     issueContainer.innerHTML = getIssueTpl();
-    initIssueStatus(issueContainer);
     document.querySelector(SELECTOR.ROOT).appendChild(issueContainer.content);
 }
 
-const initIssueStatus = (issueContainer) => {
-    const issueStatusTabs = [...issueContainer.content.querySelector('.statusTab').children];
-    issueStatusTabs.forEach((tab) => {
-        const isOpenElem = tab.innerText.includes('Open');
-        const cnt = filterIssueByStatus(getIssues(), isOpenElem ? ISSUE_STATUS.OPEN : ISSUE_STATUS.CLOSE).length;
-        tab.textContent = `${cnt} ${isOpenElem ? 'Opens' : 'Closed'}`;
-        tab.addEventListener('click', onClickIssueStatus(issueStatusTabs));
-    });
-    changeIssueStatusStyle(issueStatusTabs[0], issueStatusTabs);
-}
-
-const onClickIssueStatus = (issueStatusTabs) => ({target}) => {
-    setIssueStatus();
-    changeIssueStatusStyle(target, issueStatusTabs);
-    pipe(filterIssueByStatus, renderIssueItems)(getIssues(), getIssueStatus());
-}
-
-const changeIssueStatusStyle = (target, issueStatusTabs) => {
-    target.classList.add(CSS.FONT_BOLD);
-    issueStatusTabs.filter((tab) => tab !== target)[0].classList.remove(CSS.FONT_BOLD);
-}
-
-const renderIssueItems = (issues) => {
-    document.querySelector(SELECTOR.ISSUE_LIST).innerHTML = getIssueTplStr(issues);
-}
-
-await initIssueContainer();
+await initIssuePage();
