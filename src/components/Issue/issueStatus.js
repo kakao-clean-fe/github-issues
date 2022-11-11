@@ -19,10 +19,12 @@ export const initIssueStatus = () => {
 }
 
 const onClickIssueStatus = (issueStatusTabs) => ({target}) => {
-    setIssueStatus(getIssueStatus() === ISSUE_STATUS.OPEN ? ISSUE_STATUS.CLOSE : ISSUE_STATUS.OPEN);
+    setIssueStatus(getIssueStatus() === ISSUE_STATUS.OPEN ? ISSUE_STATUS.CLOSE : ISSUE_STATUS.OPEN, onClickAtomListener);
     changeIssueStatusStyle(target, issueStatusTabs);
     updateIssueItems();
 }
+
+export const onClickAtomListener = () => console.log("onClickIssueStatus");
 
 const changeIssueStatusStyle = (target, issueStatusTabs) => {
     target.classList.add(CSS.FONT_BOLD);
