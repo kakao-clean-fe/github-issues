@@ -1,11 +1,12 @@
 import {fetchIssueData} from "../utils.js";
 import {getIssueTpl} from "../tpl.js";
 import {SELECTOR} from "../const.js";
-import {issueStore} from "../store.js";
+import {issuesAtom} from "../store/atom.js";
 import {initIssueItems} from "../components/Issue/issueItem.js";
 import {initIssueStatus} from "../components/Issue/issueStatus.js";
+import {useSetAtom} from "../store/atomHooks.js";
 
-const {setIssues} = issueStore();
+const setIssues = useSetAtom(issuesAtom);
 
 export const initIssuePage = async () => {
     setIssues(await fetchIssueData());

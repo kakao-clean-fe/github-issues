@@ -1,9 +1,10 @@
 import {SELECTOR} from "../../const.js";
 import {filterIssueByStatus, getIssueTplStr, pipe} from "../../utils.js";
-import {issueStatusStore, issueStore} from "../../store.js";
+import {issuesAtom, issueStatusAtom} from "../../store/atom.js";
+import {useAtomValue} from "../../store/atomHooks.js";
 
-const {getIssues} = issueStore();
-const {getIssueStatus} = issueStatusStore();
+const getIssues = useAtomValue(issuesAtom);
+const getIssueStatus = useAtomValue(issueStatusAtom);
 
 export const updateIssueItems = () => pipe(filterIssueByStatus, renderIssueItems)(getIssues(), getIssueStatus());
 export const initIssueItems = updateIssueItems;
