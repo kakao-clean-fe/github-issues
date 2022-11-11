@@ -1,4 +1,4 @@
-import {fetchIssueData} from "../utils.js";
+import {fetchIssueData} from "../utils/fetch.js";
 import {getIssueTpl} from "../tpl.js";
 import {SELECTOR} from "../const.js";
 import {issuesAtom} from "../store/atom.js";

@@ -1,4 +1,4 @@
-import {filterIssueByStatus} from "../../utils.js";
+import {filterIssueByStatus} from "../../utils/util.js";
 import {CSS, ISSUE_STATUS} from "../../const.js";
 import {updateIssueItems} from "./issueItem.js";
 import {issuesAtom, issueStatusAtom} from "../../store/atom.js";
