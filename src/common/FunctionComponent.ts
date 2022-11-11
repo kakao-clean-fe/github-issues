@@ -6,7 +6,7 @@ import {
   pipe,
 } from './util';
 export interface IFunctionComponent {
-  useState: <T = any>(initData: T) => [T, (t: T) => void];
+  useState: <T = any>(initData: T) => [() => T, (t: T) => void];
   useEffect: (callback: () => void, references?: any[][]) => void;
   setComponent: (innerHTML: () => string, element: Element) => void;
   addEventListener: (
@@ -30,29 +30,13 @@ const FunctionComponent = (...props): IFunctionComponent => {
   const beforeRenderList: (() => void)[] = [];
   const afterRenderList: (() => void)[] = [];
 
-  const useState = <T = any>(initData: T): [T, (t: T) => void] => {
-    const _data = getProxy(initData);
+  const useState = <T = any>(initData: T): [() => T, (t: T) => void] => {
+    let _data = initData;
     const _setData = (newData: T) => {
-      switch (typeof newData) {
-        case 'string':
-          break;
-        case 'number':
-          console.log(_data);
-          break;
-        case 'boolean':
-          break;
-
-        default:
-          Object.entries(newData).forEach(([keys, values]) => {
-            if (_data.hasOwnProperty(keys) && _data[keys] !== values) {
-              _data[keys] = values;
-            }
-          });
-          break;
-      }
+      _data = newData;
       render();
     };
-    return [_data, _setData];
+    return [() => _data, _setData];
   };
   const useEffect = (callback: () => void, references?: any[][]) => {
     callback();

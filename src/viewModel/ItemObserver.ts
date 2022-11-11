@@ -1,8 +1,8 @@
 import Observable from './Observable';
-import { itemStore } from '../model/ItemStore';
 import { Item, Status } from '../../types';
 import { STATUS } from '../common/constants';
-import { API } from '../common/util';
+import { API, pipe } from '../common/util';
+import { itemStore } from '../store/ItemStore';
 
 const ItemObservable = () => {
   const observer = Observable(itemStore);
@@ -21,6 +21,7 @@ const ItemObservable = () => {
   const changeSelectedFilterToAll = () => {
     changeSelectedFilter('');
   };
+
   const getFilteredData = () => {
     const { initData, selectedFilter } = observer.getData();
     return initData.filter((data) => data.status.includes(selectedFilter));

@@ -1,9 +1,5 @@
-import FunctionComponent, {
-  IFunctionComponent,
-} from '../common/FunctionComponent';
-import { pipe } from '../common/util';
-import { IItemStore } from '../model/ItemStore';
-import { IStore } from '../model/Store';
+import { IFunctionComponent } from '../common/FunctionComponent';
+import { IStore } from '../store/Store';
 
 export default <T = any>(store: IStore<T>) => {
   const _subscribeList: IFunctionComponent[] = [];

@@ -1,13 +1,11 @@
-import { Item, Status } from '../../types';
+import { Status } from '../../types';
 import Issue from './Issue';
-import { IItemStore, itemStore } from '../model/ItemStore';
 import { getIssueTpl } from '../common/tpl';
-import { API } from '../common/util';
 import { STATUS } from '../common/constants';
 import FunctionComponent from '../common/FunctionComponent';
-import Observable from '../viewModel/Observable';
 import { itemObserver } from '../viewModel/ItemObserver';
 
+// app의 view에 관한 로직만
 const App = (appElement: Element) => {
   const app = FunctionComponent();
   const {
