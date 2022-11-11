@@ -1,1 +1,3 @@
-import '~/pages/issue';
+import { initIssuePage } from '~/pages/issue-page';
+
+initIssuePage();
