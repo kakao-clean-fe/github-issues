@@ -1,6 +1,6 @@
 const localStorageKey = 'github-issues';
 
-const GlobalStore = () => {
+export const GlobalStore = () => {
   let store = {};
 
   const initStore = () => {
@@ -30,5 +30,3 @@ const GlobalStore = () => {
     getStore,
   };
 };
-
-export default GlobalStore;
