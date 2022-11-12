@@ -40,12 +40,15 @@ const selectCurrentIssues = cacheFunction((state) =>
 
 const selectSelectedStatus = cacheFunction((state) => state.selectedStatus);
 
+const selectLabels = cacheFunction(state => state.labels);
+
 export default {
   addChangeListener,
   selectOpenIssues,
   selectCloseIssues,
   selectCurrentIssues,
   selectSelectedStatus,
+  selectLabels,
   getState,
   setState,
 };

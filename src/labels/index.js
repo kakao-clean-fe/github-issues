@@ -1,0 +1,15 @@
+import Labels from '../component/Label/Labels';
+import store from '../store/issueStore'
+
+const initLabels = () => {
+  const app = document.querySelector('#app');
+  const labels = store.selectLabels(store.getState());
+  const LabelComponent = new Labels({
+    target: app, 
+    state: { labels }
+  })
+  store.addChangeListener(store.selectLabels, (labels) => LabelComponent.setState({labels}));
+
+}
+
+export default initLabels;

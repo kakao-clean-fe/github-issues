@@ -17,6 +17,12 @@ const pipe = (...fns) => {
     }, args);
 };
 
+const MAX_VALUE = 16777216;
+const getRandomColor = () => {
+  const number = Math.round(Math.random() * MAX_VALUE);
+  return `#${number.toString(16)}`;
+}
+
 /** 
  * 함수 호출시, 이전 input과 같은 input이 들어오면 캐시된 값을 리턴한다.
  */
@@ -41,4 +47,5 @@ export {
   fetchBody,
   pipe,
   cacheFunction,
+  getRandomColor,
 };
