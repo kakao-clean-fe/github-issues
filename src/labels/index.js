@@ -6,9 +6,11 @@ const initLabels = () => {
   const labels = store.selectLabels(store.getState());
   const LabelComponent = new Labels({
     target: app, 
-    state: { labels }
+    store,
   })
-  store.addChangeListener(store.selectLabels, (labels) => LabelComponent.setState({labels}));
+
+
+  // store.addChangeListener(store.selectLabels, (labels) => LabelComponent.setState({labels}));
 
 }
 
