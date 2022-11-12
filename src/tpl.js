@@ -218,9 +218,6 @@ export function getLabelTpl() {
     <ul class="label-list ml-auto text-sm bg-white">
 
     </ul>
-  </div>
-    <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
-</div>
   `
 }
 

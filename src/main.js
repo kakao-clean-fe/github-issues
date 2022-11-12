@@ -1,14 +1,20 @@
 import { GlobalStore } from "./store.js";
-import { getIssueTpl } from "./tpl.js";
+import { getIssueTpl, getLabelTpl } from "./tpl.js";
 import { getIssuesData } from "./api.js";
 import {
   CLASS_APP,
   CLASS_CLOSE_BTN,
+  CLASS_ISSUE_TAB_BTN,
+  CLASS_LABEL_TAB_BTN,
   CLASS_OPEN_BTN,
   KEY_CLOSE,
   KEY_OPEN,
 } from "./constants.js";
 import { renderList, renderFilterList } from "./Issue/render.js";
+import ListLabelModel from "./Label/ListLabelModel.js";
+import ListLabelView from "./Label/ListLabelView.js";
+
+const labelsModel = new ListLabelModel();
 
 const store = GlobalStore();
 
@@ -35,6 +41,12 @@ const addEventHandler = () => {
   document
     .querySelector(CLASS_CLOSE_BTN)
     .addEventListener("click", evtCloseCountClick);
+  document
+    .querySelector(CLASS_ISSUE_TAB_BTN)
+    .addEventListener("click", evtIssueTabClick);
+  document
+    .querySelector(CLASS_LABEL_TAB_BTN)
+    .addEventListener("click", evtLabelTabClick);
 };
 
 const evtOpenCountClick = () => {
@@ -48,5 +60,17 @@ const evtCloseCountClick = () => {
   if (!issues) return;
   renderFilterList(KEY_CLOSE, issues);
 };
+
+const evtIssueTabClick = () => {
+  document.querySelector(CLASS_APP).innerHTML = getIssueTpl();
+  const issues = store.getStore().issues;
+  renderList(issues);
+}
+
+const evtLabelTabClick = async () => {
+  document.querySelector(CLASS_APP).innerHTML = getLabelTpl();
+  const labelsView = new ListLabelView({model: labelsModel});
+  await labelsModel.getInitialData();
+}
 
 init();
