@@ -4,19 +4,14 @@ import { cacheFunction, fetchBody } from "../utils";
 
 const { addChangeListener, getState, setState } = createStore({
   issues: [],
-  labels: [],
   selectedStatus: ISSUE_STATUS.OPEN,
 });
 
 const initState = async () => {
-  const [issues, labels] = await Promise.all([
-    fetchBody("/data-sources/issues.json"),
-    fetchBody("/data-sources/labels.json"),
-  ]);
+  const issues = fetchBody("/data-sources/issues.json");
   setState({
     ...getState(),
     issues,
-    labels,
   });
 };
 
@@ -40,7 +35,6 @@ const selectCurrentIssues = cacheFunction((state) =>
 
 const selectSelectedStatus = cacheFunction((state) => state.selectedStatus);
 
-const selectLabels = cacheFunction(state => state.labels);
 
 export default {
   addChangeListener,
@@ -48,7 +42,6 @@ export default {
   selectCloseIssues,
   selectCurrentIssues,
   selectSelectedStatus,
-  selectLabels,
   getState,
   setState,
 };

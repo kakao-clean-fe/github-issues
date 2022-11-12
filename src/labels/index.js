@@ -1,5 +1,5 @@
 import Labels from '../component/Label/Labels';
-import store from '../store/issueStore'
+import store from '../store/labelStore'
 
 const initLabels = () => {
   const app = document.querySelector('#app');
