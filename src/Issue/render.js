@@ -4,8 +4,8 @@ import {
   CLASS_OPEN_COUNT_VALUE,
   CLASS_CLOSE_COUNT_VALUE,
   CLASS_ISSUE_LIST,
-} from "./constants";
-import { getIssueItemTpl } from "./tpl";
+} from "../constants";
+import { getIssueItemTpl } from "../tpl";
 
 export const renderFilterList = (key, items) => {
   document.querySelector(".issue-list-ul").innerHTML = "";

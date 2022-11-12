@@ -1,7 +1,6 @@
 import { GlobalStore } from "./store.js";
 import { getIssueTpl } from "./tpl.js";
 import { getIssuesData } from "./api.js";
-import { renderFilterList, renderList } from "./render.js";
 import {
   CLASS_APP,
   CLASS_CLOSE_BTN,
@@ -9,6 +8,7 @@ import {
   KEY_CLOSE,
   KEY_OPEN,
 } from "./constants.js";
+import { renderList, renderFilterList } from "./Issue/render.js";
 
 const store = GlobalStore();
 
