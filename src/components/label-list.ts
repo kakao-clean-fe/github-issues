@@ -1,23 +1,14 @@
 import { getLabelItemTpl } from '~/tpl';
 import { renderInnerHtml } from '~/utils/dom';
-import { reduceArray } from '~/utils/array';
+import { makeTemplate } from '~/utils/page';
 import { LABEL_LIST_SELECTOR } from '~/constants/selector';
 import { getElement } from '~/store/element-store';
-import type { Label } from '~/types/label';
 import type { InitLabelListComponentArgs, RenderLabelListArgs, MakeLabelTemplateArgs } from 'types/label-page';
-
-const makeLabelTemplate = ({ labels, templateFunc }: MakeLabelTemplateArgs): string => {
-  return reduceArray({
-    arr: labels,
-    initValue: '',
-    reducer: (template: string, label: Label) => `${template}${templateFunc(label)}`
-  });
-};
 
 const render = ({ parent, labels }: RenderLabelListArgs): void => {
   renderInnerHtml({
     parent,
-    html: makeLabelTemplate({ labels, templateFunc: getLabelItemTpl })
+    html: makeTemplate({ arr: labels, templateFunc: getLabelItemTpl })
   });
 };
 
