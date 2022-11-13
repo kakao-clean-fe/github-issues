@@ -16,6 +16,12 @@ export declare interface Item {
   subtask: string[];
   'comments-count': number;
 }
+
+export declare interface Label {
+  name: string;
+  color: string;
+  description: string;
+}
 export declare interface Api {
   url: string;
   method?: string;

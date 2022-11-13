@@ -96,7 +96,7 @@ export function getIssueItemTplByItemList(itemList) {
   return itemList.reduce((prev, next) => prev + getIssueItemTpl(next), '');
 }
 
-export function getLabelTpl() {
+export function getLabelTpl(hidden, labelCnt, labels) {
   return `
   <div id="label-wrapper" class="w-9/12 m-auto min-w-min">
 
@@ -115,7 +115,9 @@ export function getLabelTpl() {
   </div>
 
 
-  <form class="hidden p-3 mb-3 mt-6 border rounded-sm font-bold" id="new-label-form" action="/labels" accept-charset="UTF-8" method="post">
+  <form class="${
+    hidden ? 'hidden' : ''
+  } p-3 mb-3 mt-6 border rounded-sm font-bold" id="new-label-form" action="/labels" accept-charset="UTF-8" method="post">
     <div class="form-group mt-0 mb-2"
       data-url-template="/labels/preview/" data-default-name="Label preview">
 
@@ -185,7 +187,7 @@ export function getLabelTpl() {
           <div class="ml-2">
             <input type="text" id="label-color-value" name="label-color[description]"
             class="w-full p-2 base-outer focus:outline-none"
-            placeholder="#color" value="" maxlength="100">
+            placeholder="#color" value="" maxlength="100" disabled>
           </div>
 
         </dd>
@@ -197,7 +199,7 @@ export function getLabelTpl() {
         class="form-group my-2 flex mt-10">
         <button type="button" class="base-outer p-2 mr-4"> Cancel
         </button>
-        <button id="label-create-button" type="submit" class="base-outer p-2 mr-4 bg-green-700 opacity-50 text-white" disabled=""> Create label
+        <button id="label-create-button" class="base-outer p-2 mr-4 bg-green-700 opacity-50 text-white" disabled=""> Create label
         </button>
       </div>
       <!--END new label actions-->
@@ -211,7 +213,7 @@ export function getLabelTpl() {
     <div class="label-header h-16 flex justify-between items-center border-b">
 
       <div class="mr-3 d-none pl-4">
-        <div class="whitespace-nowrap open-count font-bold cursor-pointer">6 Labels</div>
+        <div class="whitespace-nowrap open-count font-bold cursor-pointer">${labelCnt} Labels</div>
       </div>
 
       <div class="details-list flex ml-auto">
@@ -222,7 +224,7 @@ export function getLabelTpl() {
 
     </div>
     <ul class="label-list ml-auto text-sm bg-white">
-
+      ${labels}
     </ul>
   </div>
     <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>

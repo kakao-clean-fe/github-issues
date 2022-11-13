@@ -66,6 +66,7 @@ const FunctionComponent = (...props): IFunctionComponent => {
     _element = element;
     _innerHTML = innerHTML;
     render();
+    return _element.innerHTML;
   };
 
   const addBeforeRender = (event: () => void) => {

@@ -2,8 +2,8 @@ import { Api } from '../../types';
 import { API_METHOD } from './constants';
 
 export const pipe =
-  <P = any, R = any | void>(...fns: ((args: P | R) => R)[]) =>
-  (args?: P | R) =>
+  (...fns) =>
+  (args?: any) =>
     fns.reduce((prev, next) => next(prev), args);
 
 export const eventListener = (

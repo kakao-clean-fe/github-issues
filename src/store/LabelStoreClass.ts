@@ -1,18 +1,80 @@
-import { IStore } from './Store';
+import { Label } from '../../types';
+import { clickEventListener } from '../common/util';
+import Store, { IStore } from './Store';
 
-
-class LabelStore<T = any> implements IStore<T> {
-  #initData: T;
-
-  constructor(initData: T) {
-    this.#initData = initData;
+export interface ILabelCls {
+  name: string;
+  color: string;
+  description: string;
+  isEmpty: () => boolean;
+  isFull: () => boolean;
+}
+class LabelCls implements ILabelCls {
+  #name: string;
+  #color: string;
+  #description: string;
+  constructor({ name, color, description }) {
+    this.#name = name;
+    this.#color = color;
+    this.#description = description;
   }
-  getData() {
-    return this.#initData;
+
+  get name() {
+    return this.#name;
   }
-  setData(initData: T) {
-    this.#initData = initData;
+  get color() {
+    return this.#color;
+  }
+  get description() {
+    return this.#description;
+  }
+  isEmpty() {
+    return this.#name === '' && this.#color === '' && this.#description === '';
+  }
+  isFull() {
+    return this.#name !== '' && this.#color !== '' && this.#description !== '';
   }
 }
 
-const labelStore = new LabelStore()
+export class LabelBuilder {
+  #name: string;
+  #color: string;
+  #description: string;
+  constructor(label?: Label) {
+    if (label) {
+      this.#name = label.name;
+      this.#color = label.color;
+      this.#description = label.description;
+    } else {
+      this.#name = '';
+      this.#color = '';
+      this.#description = '';
+    }
+  }
+  setName(name: string) {
+    this.#name = name;
+    return this;
+  }
+  setColor(color: string) {
+    this.#color = color;
+    return this;
+  }
+  setDescription(description: string) {
+    this.#description = description;
+    return this;
+  }
+  build() {
+    return new LabelCls({
+      name: this.#name,
+      color: this.#color,
+      description: this.#description,
+    });
+  }
+}
+
+const labelStore = Store({
+  createHidden: true,
+  labelList: [],
+});
+
+export { labelStore };

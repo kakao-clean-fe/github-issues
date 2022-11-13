@@ -64,16 +64,6 @@ const App = (appElement: Element) => {
     }
   };
 
-  setComponent(
-    () =>
-      getIssueTpl(
-        getFilteredData()
-          .map((e) => Issue(e))
-          .join('')
-      ),
-    appElement
-  );
-
   addEventListener('.open-count', 'click', (e) => {
     getSelectedFilter() === '' || getSelectedFilter() === STATUS.CLOSE
       ? changeSelectedFilterToOpen()
@@ -84,6 +74,14 @@ const App = (appElement: Element) => {
       ? changeSelectedFilterToClose()
       : changeSelectedFilterToAll();
   });
-  return getRoot().innerHTML;
+  return setComponent(
+    () =>
+      getIssueTpl(
+        getFilteredData()
+          .map((e) => Issue(e))
+          .join('')
+      ),
+    appElement
+  );
 };
 export default App;
