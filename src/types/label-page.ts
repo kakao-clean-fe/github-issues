@@ -6,7 +6,7 @@ export interface LabelPageLayoutArgs {
   templateFunction?: () => string
 }
 
-// 라벨 릭스트 컴포넌트
+// 라벨 리스트 컴포넌트
 export interface LabelListComponentArgs {
   parentSelector?: string
   labelItemTemplateFunction?: (label: Label) => string
@@ -14,12 +14,8 @@ export interface LabelListComponentArgs {
 }
 
 // 라벨 카운트 컴포넌트
-export interface InitLabelCountComponentArgs {
+export interface LabelCountComponentArgs {
   parentSelector?: string
+  templateFunction?: (count: number) => string
   labels: Labels
-}
-
-export interface RenderLabelCountArgs {
-  parent: Element | null
-  html: string
 }
