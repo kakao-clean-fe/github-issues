@@ -34,8 +34,7 @@ const evtCreateLabelClick = (event) => {
   labelsModel.addLabel({name: labelNameValue, color: labelColorValue.replace('#',''), description: labelDescValue});
 }
 
-export const LabelPageInit = async () => {
-  document.querySelector(CLASS_APP).innerHTML = getLabelTpl();
+const addEventHandler = () => {
   document
     .querySelector(".new-label-button")
     .addEventListener("click", evtNewLabelClick);
@@ -48,6 +47,11 @@ export const LabelPageInit = async () => {
   document
     .querySelector("#label-create-button")
     .addEventListener("click", evtCreateLabelClick);
+}
+
+export const LabelPageInit = async () => {
+  document.querySelector(CLASS_APP).innerHTML = getLabelTpl();
+  addEventHandler();
   await labelsModel.getInitialData();
   const labelsView = new ListLabelView({ model: labelsModel });
 }
