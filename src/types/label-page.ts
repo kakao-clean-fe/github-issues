@@ -1,4 +1,4 @@
-import type { Labels, Label } from '~/types/label';
+import type { Labels } from '~/types/label';
 export interface InitLabelPageLayoutArgs {
   parentSelector?: string
 }
@@ -11,9 +11,4 @@ export interface InitLabelListComponentArgs {
 export interface RenderLabelListArgs {
   parent: Element | null
   labels: Labels
-}
-
-export interface MakeLabelTemplateArgs {
-  labels: Labels
-  templateFunc: (label: Label) => string
 }
