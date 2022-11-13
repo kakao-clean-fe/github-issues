@@ -2,7 +2,7 @@ import { getElement } from '~/store/element-store';
 import { getLabelTpl } from '~/tpl';
 import { renderInnerHtml } from '~/utils/dom';
 import { ROOT_SELECTOR } from '~/constants/selector';
-import { InitLabelPageLayoutArgs } from '~/types/label-page';
+import { LabelPageLayoutArgs } from '~/types/label-page';
 import { Component } from '~/types/component-interface';
 
 export class LabelPageLayout implements Component {
@@ -12,7 +12,7 @@ export class LabelPageLayout implements Component {
   constructor ({
     parentSelector = ROOT_SELECTOR,
     templateFunction = getLabelTpl
-  }: InitLabelPageLayoutArgs = {}) {
+  }: LabelPageLayoutArgs = {}) {
     this.parent = getElement(parentSelector);
     this.templateFunction = templateFunction;
   }
@@ -21,10 +21,14 @@ export class LabelPageLayout implements Component {
     this.render();
   }
 
+  private get template (): string {
+    return this.templateFunction();
+  }
+
   render (): void {
     renderInnerHtml({
       parent: this.parent,
-      html: this.templateFunction()
+      html: this.template
     });
   }
 }
