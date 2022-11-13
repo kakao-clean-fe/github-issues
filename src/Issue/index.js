@@ -1,9 +1,7 @@
 import { getIssuesData } from "../api";
 import {
-  CLASS_APP,
+  ID_APP,
   CLASS_CLOSE_BTN,
-  CLASS_ISSUE_TAB_BTN,
-  CLASS_LABEL_TAB_BTN,
   CLASS_OPEN_BTN,
   KEY_CLOSE,
   KEY_OPEN,
@@ -39,7 +37,7 @@ const evtCloseCountClick = () => {
 
 export const IssuePageinit = async () => {
   // 템플릿 그리기
-  document.querySelector(CLASS_APP).innerHTML = getIssueTpl();
+  document.querySelector(ID_APP).innerHTML = getIssueTpl();
   // 이벤트 핸들러 구현
   addEventHandler();
   // 데이터 조회

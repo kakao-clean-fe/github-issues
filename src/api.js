@@ -24,7 +24,6 @@ export const getLabelsData = async () => {
     if (response) {
       const data = await response.json();
       if (data) {
-        console.log('getLabelsData', data);
         return data;
       }
     }
