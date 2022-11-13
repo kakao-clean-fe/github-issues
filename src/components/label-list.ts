@@ -5,7 +5,7 @@ import { LABEL_LIST_SELECTOR } from '~/constants/selector';
 import { getElement } from '~/store/element-store';
 import type { Labels } from '~/types/label';
 import type { LabelListComponentArgs } from '~/types/label-page';
-import { Component } from '~/types/component-interface';
+import type { Component } from '~/types/component-interface';
 
 export class LabelList implements Component {
   parent: Element | null = null;

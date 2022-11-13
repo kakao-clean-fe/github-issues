@@ -2,8 +2,8 @@ import { getElement } from '~/store/element-store';
 import { getLabelTpl } from '~/tpl';
 import { renderInnerHtml } from '~/utils/dom';
 import { ROOT_SELECTOR } from '~/constants/selector';
-import { LabelPageLayoutArgs } from '~/types/label-page';
-import { Component } from '~/types/component-interface';
+import type { LabelPageLayoutArgs } from '~/types/label-page';
+import type { Component } from '~/types/component-interface';
 
 export class LabelPageLayout implements Component {
   parent: Element | null = null;
