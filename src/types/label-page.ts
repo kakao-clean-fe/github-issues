@@ -1,19 +1,15 @@
-import type { Labels } from '~/types/label';
+import type { Labels, Label } from '~/types/label';
 
 // 라벨 페이지
-export interface InitLabelPageLayoutArgs {
+export interface LabelPageLayoutArgs {
   parentSelector?: string
   templateFunction?: () => string
 }
 
-export interface InitLabelListComponentArgs {
+// 라벨 릭스트 컴포넌트
+export interface LabelListComponentArgs {
   parentSelector?: string
-  labels: Labels
-}
-
-// 라벨 리스트 컴포넌트
-export interface RenderLabelListArgs {
-  parent: Element | null
+  labelItemTemplateFunction?: (label: Label) => string
   labels: Labels
 }
 
