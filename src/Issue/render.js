@@ -9,16 +9,8 @@ import { getIssueItemTpl } from "../tpl";
 
 export const renderFilterList = (key, items) => {
   document.querySelector(".issue-list-ul").innerHTML = "";
-  switch (key) {
-    case KEY_OPEN:
-      const openItems = items.filter((issue) => issue.status === KEY_OPEN);
-      renderItems(openItems);
-      break;
-    case KEY_CLOSE:
-      const closeItems = items.filter((issue) => issue.status === KEY_CLOSE);
-      renderItems(closeItems);
-      break;
-  }
+  const statusItems = items.filter((issue) => issue.status === key);
+  renderItems(statusItems);
 };
 
 export const renderList = (items) => {

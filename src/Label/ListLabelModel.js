@@ -1,5 +1,5 @@
 import { getLabelsData } from "../api";
-import { Observable } from "../utils";
+import { Observable } from "../lib/observable";
 
 export default class ListLabelModel extends Observable {
   constructor() {
