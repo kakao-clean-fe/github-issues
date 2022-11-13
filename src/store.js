@@ -14,7 +14,7 @@ export const GlobalStore = () => {
 
   const getStoreKey = (key) => {
     return store[key] || null;
-  }
+  };
 
   return {
     setStore,
@@ -22,3 +22,5 @@ export const GlobalStore = () => {
     getStoreKey,
   };
 };
+
+export default GlobalStore;
