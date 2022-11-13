@@ -3,6 +3,7 @@ import type { Labels } from '~/types/label';
 // 라벨 페이지
 export interface InitLabelPageLayoutArgs {
   parentSelector?: string
+  templateFunction?: () => string
 }
 
 export interface InitLabelListComponentArgs {

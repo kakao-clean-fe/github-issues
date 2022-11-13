@@ -3,14 +3,28 @@ import { getLabelTpl } from '~/tpl';
 import { renderInnerHtml } from '~/utils/dom';
 import { ROOT_SELECTOR } from '~/constants/selector';
 import { InitLabelPageLayoutArgs } from '~/types/label-page';
+import { Component } from '~/types/component-interface';
 
-const render = ({ parent }: { parent: Element | null }): void => {
-  renderInnerHtml({
-    parent,
-    html: getLabelTpl()
-  });
-};
+export class LabelPageLayout implements Component {
+  parent: Element | null = null;
+  templateFunction = getLabelTpl;
 
-export const initLabelPageLayout = ({ parentSelector = ROOT_SELECTOR }: InitLabelPageLayoutArgs = {}): void => {
-  render({ parent: getElement(parentSelector) });
-};
+  constructor ({
+    parentSelector = ROOT_SELECTOR,
+    templateFunction = getLabelTpl
+  }: InitLabelPageLayoutArgs = {}) {
+    this.parent = getElement(parentSelector);
+    this.templateFunction = templateFunction;
+  }
+
+  init (): void {
+    this.render();
+  }
+
+  render (): void {
+    renderInnerHtml({
+      parent: this.parent,
+      html: this.templateFunction()
+    });
+  }
+}
