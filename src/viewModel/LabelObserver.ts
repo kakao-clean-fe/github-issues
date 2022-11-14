@@ -10,7 +10,6 @@ const LabelObservable = () => {
   const subscribe = observer.subscribe;
 
   const setCreateHidden = (hidden: boolean) => {
-    console.log('setCreateHidden', hidden);
     observer.setData({
       ...observer.getData(),
       createHidden: hidden,

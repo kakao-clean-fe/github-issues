@@ -7,5 +7,4 @@ const labelBtn = document.querySelector('nav button:nth-child(2)');
 
 clickEventListener(issueBtn, () => App(appDiv));
 clickEventListener(labelBtn, () => Label(appDiv));
-
 Label(appDiv);

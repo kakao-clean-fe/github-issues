@@ -6,7 +6,9 @@ export default <T = any>(store: IStore<T>) => {
 
   const notifyData = () => {
     _subscribeList.forEach((component) => {
-      component.render();
+      try {
+        component.render();
+      } catch (error) {}
     });
   };
 

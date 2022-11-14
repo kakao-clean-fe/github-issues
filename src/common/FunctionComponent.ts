@@ -8,7 +8,11 @@ import {
 export interface IFunctionComponent {
   useState: <T = any>(initData: T) => [() => T, (t: T) => void];
   useEffect: (callback: () => void, references?: any[][]) => void;
-  setComponent: (innerHTML: () => string, element: Element) => void;
+  setComponent: (
+    innerHTML: () => string,
+    element: Element,
+    ...children: Element[]
+  ) => string;
   addEventListener: (
     querySelector: string,
     event: string,
@@ -27,6 +31,7 @@ const FunctionComponent = (...props): IFunctionComponent => {
   const _eventList = [];
   let _referencesList = [];
   let _referencesId = 0;
+  let _children: Element[];
   const beforeRenderList: (() => void)[] = [];
   const afterRenderList: (() => void)[] = [];
 
@@ -43,12 +48,15 @@ const FunctionComponent = (...props): IFunctionComponent => {
     render();
   };
   const render = () => {
-    beforeRenderList.forEach((event) => event());
-    _element.innerHTML = _innerHTML();
-    _eventList.forEach((event) => {
-      event();
-    });
-    afterRenderList.forEach((event) => event());
+    if (_element) {
+      beforeRenderList.forEach((event) => event());
+      _element.innerHTML = _innerHTML();
+      _eventList.forEach((event) => {
+        event();
+      });
+      afterRenderList.forEach((event) => event());
+      _children.forEach((child) => _element.appendChild(child));
+    }
   };
   const addEventListener = (
     querySelector: string,
@@ -58,13 +66,16 @@ const FunctionComponent = (...props): IFunctionComponent => {
     _eventList.push(() => {
       eventListener(findElement(_element)(querySelector), event, callback);
     });
+    render();
   };
   const setComponent = (
     innerHTML: (props?: any) => string,
-    element: Element
+    element: Element,
+    ...children: Element[]
   ) => {
     _element = element;
     _innerHTML = innerHTML;
+    _children = children;
     render();
     return _element.innerHTML;
   };
