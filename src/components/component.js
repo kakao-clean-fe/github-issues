@@ -2,13 +2,15 @@ import {RENDER_TYPE} from "../consts/const.js";
 
 export class Component {
     _key = null;
-    _index = 0;
     _props = {}
-    _parentSelector = null;
+    _index = 0; // child 컴포넌트 렌더링에 활용할 seq한 값
     _children = [];
+    /* component mount와 제어할 이벤트 */
+    _isMounted = false;
     _afterMountEvent = null;
     _mountEvent = null;
-    _isMounted = false;
+    /* render에 활용 목적 */
+    _parentSelector = null;
     _selector = null; // replace 할 때 사용
 
     constructor(key, props, parentSelector) {
