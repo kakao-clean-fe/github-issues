@@ -1,5 +1,5 @@
 export interface Component {
-  parent: Element | null
+  parent?: Element | null
   init: () => void
   render: () => void
   setEventHandler?: () => void
