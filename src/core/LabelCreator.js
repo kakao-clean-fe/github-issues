@@ -1,3 +1,4 @@
+import { LABEL_CREATOR_EVENT } from "../events";
 import Item from "../lib/Item";
 
 // ref : https://css-tricks.com/snippets/javascript/random-hex-color/
@@ -12,72 +13,8 @@ export default class LabelCreator {
     this._description = new Item("");
     this._labelStore = labelStore;
 
-    this._color.subscribe((store) => {
-      const target = this._getElement();
-      const el = this._getElement("label-preview", target);
-
-      if (!el || !store.value) {
-        return;
-      }
-      el.style = `background-color:${store.value};`;
-    });
-
-    this._color.subscribe((store) => {
-      const target = this._getElement();
-      const el = this._getElement("label-color-value", target);
-      if (!el || !store.value) {
-        return;
-      }
-
-      el.value = store.value;
-    });
-
-    this._color.subscribe((store) => {
-      const target = this._getElement();
-      const el = this._getElement("new-label-color", target);
-      if (!el || !store.value) {
-        return;
-      }
-      el.style = `background-color:${store.value};`;
-    });
-
-    this._name.subscribe((store) => {
-      const target = this._getElement();
-      const el = this._getElement("label-preview", target);
-      if (!el) {
-        return;
-      }
-      el.innerText = store.value || "Label preview";
-    });
-    this._name.subscribe((store) => {
-      const target = this._getElement();
-      const el = this._getElement("label-name-input", target);
-      if (!el) {
-        return;
-      }
-      el.value = store.value;
-    });
-    this._name.subscribe((store) => {
-      const target = this._getElement();
-      const el = this._getElement("label-create-button", target);
-      if (!el) {
-        return;
-      }
-      el.classList.toggle("opacity-50", !store.value);
-      if (store.value) {
-        el.removeAttribute("disabled");
-        return;
-      }
-      el.setAttribute("disabled", "true");
-    });
-    this._description.subscribe((store) => {
-      const target = this._getElement();
-      const el = this._getElement("label-description-input", target);
-      if (!el) {
-        return;
-      }
-      el.value = store.value;
-    });
+    this.addEvent();
+    this.subscribe();
 
     this._color.value = this._createColor();
   }
@@ -116,7 +53,30 @@ export default class LabelCreator {
     this._description.value = "";
   }
 
-  render() {
+  _action(id, action) {
+    return (store) => {
+      const target = this._getElement();
+      const el = this._getElement(id, target);
+
+      if (!el) {
+        return;
+      }
+
+      action(el, store);
+    };
+  }
+
+  subscribe() {
+    Object.keys(LABEL_CREATOR_EVENT).forEach((key) =>
+      LABEL_CREATOR_EVENT[key]
+        .map(([id, callback]) => this._action(id, callback))
+        .forEach((callback) => {
+          this[key].subscribe(callback);
+        })
+    );
+  }
+
+  addEvent() {
     const target = this._getElement();
     const labelNameInput = this._getElement("label-name-input", target);
     const labelColorValue = this._getElement("label-color-value", target);

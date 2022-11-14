@@ -26,7 +26,6 @@ const initializeLabel = async (target) => {
   const newLabelButton = find("new-label-button");
 
   const ui = new LabelCreateUI("new-label-form", label);
-  ui.render();
 
   newLabelButton.addEventListener("click", (e) => {
     e.preventDefault();
