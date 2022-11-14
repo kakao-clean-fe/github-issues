@@ -113,8 +113,35 @@ export function getLabelTpl() {
     </div>
   </div>
 
+  <div class="_label_creator_wrapper">
+  </div>
 
-  <form class="hidden p-3 mb-3 mt-6 border rounded-sm font-bold" id="new-label-form" action="/labels" accept-charset="UTF-8" method="post">
+  <div id="labels-wrapper" class="m-auto  base-outer mt-6 bg-slate-100">
+    <div class="label-header h-16 flex justify-between items-center border-b">
+
+      <div class="mr-3 d-none pl-4">
+        <div class="whitespace-nowrap open-count font-bold cursor-pointer">6 Labels</div>
+      </div>
+
+      <div class="details-list flex ml-auto">
+        <details>
+          <summary>Sort</summary>
+        </details>
+      </div>
+
+    </div>
+    <ul class="label-list ml-auto text-sm bg-white _label_list_table">
+
+    </ul>
+  </div>
+    <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
+</div>
+  `
+}
+
+export function getLabelCreator() {
+  return `
+    <form class="hidden p-3 mb-3 mt-6 border rounded-sm font-bold" id="new-label-form" action="/labels" accept-charset="UTF-8" method="post">
     <div class="form-group mt-0 mb-2"
       data-url-template="/labels/preview/" data-default-name="Label preview">
 
@@ -204,29 +231,7 @@ export function getLabelTpl() {
     </div>
 
   </form>
-
-
-  <div id="labels-wrapper" class="m-auto  base-outer mt-6 bg-slate-100">
-    <div class="label-header h-16 flex justify-between items-center border-b">
-
-      <div class="mr-3 d-none pl-4">
-        <div class="whitespace-nowrap open-count font-bold cursor-pointer">6 Labels</div>
-      </div>
-
-      <div class="details-list flex ml-auto">
-        <details>
-          <summary>Sort</summary>
-        </details>
-      </div>
-
-    </div>
-    <ul class="label-list ml-auto text-sm bg-white _label_list_table">
-
-    </ul>
-  </div>
-    <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
-</div>
-  `
+  `;
 }
 
 export function getLabelItemTpl({ name, color, description }) {

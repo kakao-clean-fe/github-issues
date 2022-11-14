@@ -16,4 +16,12 @@ export const LabelList = class {
     this.labelDesc = labelDesc;
     this.issueCount = issueCount;
   }
+
+  initData () {
+
+  }
+
+  initTemplate () {
+
+  }
 }

@@ -3,11 +3,11 @@ import { getIssueItemTpl, getIssueTpl } from '../tpl';
 import { SELECTOR } from '../constants/selector';
 import { OPEN } from '../constants/status';
 
-export const createIssue = renderElement(SELECTOR.APP);
+export const createApp = renderElement(SELECTOR.APP);
 
 export const createIssueList = renderElement(SELECTOR.ISSUE_LIST_TABLE);
 
-export const updateIssuesTemplate = (openIssueCount, closedIssueCount, clickedStatus) => createIssue(getIssueTpl({openIssueCount, closedIssueCount, clickedStatus}));
+export const updateIssuesTemplate = (openIssueCount, closedIssueCount, clickedStatus) => createApp(getIssueTpl({openIssueCount, closedIssueCount, clickedStatus}));
 
 export const getIssueListTableTemplate = issues => issues.map(issue => getIssueItemTpl(issue)).join('');
 
