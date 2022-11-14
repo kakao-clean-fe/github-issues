@@ -1,4 +1,4 @@
-import Element from "../Element";
+import Component from "..";
 import NewLabelButton from "./NewLabelButton";
 
 const headerStr = `
@@ -12,7 +12,7 @@ const headerStr = `
   </div>
 `;
 
-export default class Header extends Element{
+export default class Header extends Component{
   constructor(model){
     super();
     this.template = this.convertElement(headerStr);

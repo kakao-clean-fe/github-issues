@@ -1,6 +1,6 @@
-import Element from "./Element";
+import Component from "..";
 
-export default class LabelListHeader extends Element{
+export default class LabelListHeader extends Component{
   constructor(labelDataList){
     super();
     this.labelDataList = labelDataList;

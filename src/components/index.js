@@ -1,6 +1,5 @@
-export default class Element{
+export default class Component{
   constructor(model){
-    console.log('model', model);
     this.formStateModel = model;
   }
   getTemplate(){

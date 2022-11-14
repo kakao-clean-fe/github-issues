@@ -1,7 +1,7 @@
 import { getLabelItemTpl } from "../tpl";
-import Element from "./Element";
+import Component from "..";
 
-export default class LabelListRow extends Element{
+export default class LabelListRow extends Component{
   constructor(labelData){
     super();
     this.labelData = labelData;

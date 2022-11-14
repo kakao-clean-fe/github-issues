@@ -1,7 +1,7 @@
-import Element from "./Element";
+import Component from "..";
 import LabelListRow from "./LabelListRow";
 
-export default class LabelListBody extends Element{
+export default class LabelListBody extends Component{
   constructor(labelDataList){
     super();
     this.template = `
@@ -9,6 +9,6 @@ export default class LabelListBody extends Element{
       ${labelDataList.map(labelData => new LabelListRow(labelData).getTemplate())}
       </ul>
     `;
-    this.element = null;
+    this.Component = null;
   }
 }

@@ -1,8 +1,8 @@
-import Element from "../Element";
+import Component from "..";
 import LabelListBody from "./LabelListBody";
 import LabelListHeader from "./LabelListHeader";
 
-export default class LabelList extends Element{
+export default class LabelList extends Component{
   constructor(labelDataList){
     super();
     this.labelDataList = labelDataList;
