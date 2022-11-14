@@ -1,3 +1,4 @@
+import { isEquals } from './../common/util';
 export interface IStore<T> {
   getData: () => T;
   setData: (data: T) => void;

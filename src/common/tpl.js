@@ -73,8 +73,7 @@ export function getIssueListTpl(items) {
   `;
 }
 
-export function getIssueBodyTpl(items){
-
+export function getIssueBodyTpl(items) {
   return `
   <div id="issues-wrapper" class="m-auto  base-outer mt-6 bg-slate-100">
       <div class="issue-header h-16 flex justify-between items-center border-b">
@@ -117,7 +116,7 @@ export function getIssueBodyTpl(items){
         <ul>${items}</ul>
       </div>
     </div>
-  `
+  `;
 }
 
 export function getIssueTpl(items) {

@@ -1,4 +1,4 @@
-import FunctionComponent from '../common/FunctionComponent';
+import FunctionComponent from '../../common/FunctionComponent';
 import IssueHeader from './IssueHeader';
 import IssueBody from './IssueBody';
 

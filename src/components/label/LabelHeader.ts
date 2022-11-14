@@ -1,6 +1,6 @@
-import FunctionComponent from '../common/FunctionComponent';
-import { getLabelHeaderTpl } from '../common/tpl';
-import { labelObserver } from '../viewModel/LabelObserver';
+import FunctionComponent from '../../common/FunctionComponent';
+import { getLabelHeaderTpl } from '../../common/tpl';
+import { labelObserver } from '../../viewModel/LabelObserver';
 
 const LabelHeader = () => {
   const app = FunctionComponent();

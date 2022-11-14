@@ -1,5 +1,5 @@
-import FunctionComponent from '../common/FunctionComponent';
-import { getIssueHeaderTpl } from '../common/tpl';
+import FunctionComponent from '../../common/FunctionComponent';
+import { getIssueHeaderTpl } from '../../common/tpl';
 
 const IssueHeader = () => {
   const app = FunctionComponent();

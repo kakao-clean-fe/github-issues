@@ -1,6 +1,6 @@
-import FunctionComponent from '../common/FunctionComponent';
-import { getLabelItemTpl, getLabelListTpl } from '../common/tpl';
-import { labelObserver } from '../viewModel/LabelObserver';
+import FunctionComponent from '../../common/FunctionComponent';
+import { getLabelItemTpl, getLabelListTpl } from '../../common/tpl';
+import { labelObserver } from '../../viewModel/LabelObserver';
 
 const LabelList = () => {
   const app = FunctionComponent();

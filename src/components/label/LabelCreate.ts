@@ -1,14 +1,13 @@
-import { COLORS } from '../common/constants';
-import FunctionComponent from '../common/FunctionComponent';
-import { getLabelCreateTpl } from '../common/tpl';
-import { pipe } from '../common/util';
-import { ILabelCls, LabelBuilder } from '../store/LabelStoreClass';
-import { labelObserver } from '../viewModel/LabelObserver';
+import { COLORS } from '../../common/constants';
+import FunctionComponent from '../../common/FunctionComponent';
+import { getLabelCreateTpl } from '../../common/tpl';
+import { pipe } from '../../common/util';
+import { ILabelCls, LabelBuilder } from '../../store/LabelStoreClass';
+import { labelObserver } from '../../viewModel/LabelObserver';
 
 const LabelCreate = () => {
   const app = FunctionComponent();
   const { getRoot, setComponent, addEventListener, getElement, useState } = app;
-  const appDiv = document.createElement('div');
   const { subscribe, setCreateHidden, getCreateHidden, addLabel } =
     labelObserver;
   subscribe(app);
@@ -93,7 +92,10 @@ const LabelCreate = () => {
     });
   } catch (error) {}
 
-  return setComponent(() => getLabelCreateTpl(getCreateHidden()), appDiv);
+  return setComponent(
+    () => getLabelCreateTpl(getCreateHidden()),
+    document.createElement('div')
+  );
 };
 
 export default LabelCreate;

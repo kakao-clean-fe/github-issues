@@ -1,8 +1,8 @@
-import { Status } from '../../types';
-import { STATUS } from '../common/constants';
-import FunctionComponent from '../common/FunctionComponent';
-import { getIssueBodyTpl, getIssueItemTpl } from '../common/tpl';
-import { itemObserver } from '../viewModel/ItemObserver';
+import { Status } from '../../../types';
+import { STATUS } from '../../common/constants';
+import FunctionComponent from '../../common/FunctionComponent';
+import { getIssueBodyTpl, getIssueItemTpl } from '../../common/tpl';
+import { itemObserver } from '../../viewModel/ItemObserver';
 
 const IssueBody = () => {
   const app = FunctionComponent();

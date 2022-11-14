@@ -1,4 +1,4 @@
-import FunctionComponent from '../common/FunctionComponent';
+import FunctionComponent from '../../common/FunctionComponent';
 import LabelCreate from './LabelCreate';
 import LabelHeader from './LabelHeader';
 import LabelList from './LabelList';
