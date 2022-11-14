@@ -40,8 +40,7 @@ export class LabelPage extends Component {
     }
 
     #updateChild() {
-        const newLabels = getLabels();
-        this._appendChild(new LabelItem(`${COMPONENT_KEY.LABEL_ITEM}-${this._index++}`, newLabels[newLabels.length - 1], SELECTOR.LABEL_LIST));
+        this._initChild(this.#initChild());
     }
 
     #updateLabelsCount() {

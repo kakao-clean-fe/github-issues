@@ -45,12 +45,13 @@ export class Component {
         const children = this._children;
         if (!children?.length) return;
         const filteredChildren = children.filter((child) => !skipChildren.includes(child._key));
-        if(isClear) document.querySelector(filteredChildren[0]._parentSelector).innerHTML = '';
+        if(isClear) this._removeChild(filteredChildren[0]?._parentSelector);
         filteredChildren.forEach((child) => child.render());
     }
 
-    _appendChild(childComponent) {
-        this._children.push(childComponent);
+    _removeChild(parentSelector) {
+        const target = document.querySelector(parentSelector)
+        if(target) document.querySelector(parentSelector).innerHTML = '';
     }
 
     _initChild(childComponents) {
