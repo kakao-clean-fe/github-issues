@@ -1,4 +1,4 @@
-import { getLabelCreator } from "../tpl"
+import { getLabelCreatorTpl } from "../tpl"
 import { selectElement } from '../utils/dom';
 import { SELECTOR } from '../constants/selector';
 
@@ -10,7 +10,7 @@ export const LabelCreator = class {
 
   // 데이터 초기화 -> 템플릿 생성 -> 이벤트 등록
   get template () {
-    return getLabelCreator();
+    return getLabelCreatorTpl();
   }
 
   constructor () {

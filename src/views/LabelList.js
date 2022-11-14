@@ -4,10 +4,6 @@ import { SELECTOR } from '../constants/selector';
 
 export const LabelList = class {
 
-  get event () {
-
-  }
-
   get template () {
     const refinedLabelListTemplate = this.labelData.map(
       labelItem => getLabelItemTpl(labelItem)).join('');

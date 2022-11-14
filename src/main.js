@@ -16,3 +16,5 @@ labelTabButton.addEventListener(EVENT.CLICK, async () => {
   const labelData = await fetchLabelsData();
   new LabelPage(labelData);
 });
+
+createIssuePage();
