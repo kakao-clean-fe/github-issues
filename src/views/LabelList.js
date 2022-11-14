@@ -1,4 +1,6 @@
-
+import { getLabelItemTpl } from '../tpl';
+import { selectElement } from '../utils/dom';
+import { SELECTOR } from '../constants/selector';
 
 export const LabelList = class {
 
@@ -7,14 +9,19 @@ export const LabelList = class {
   }
 
   get template () {
+    const refinedLabelListTemplate = this.labelData.map(
+      labelItem => getLabelItemTpl(labelItem)).join('');
 
+    return refinedLabelListTemplate;
   }
 
-  constructor ({labelName, labelColor, labelDesc, issueCount}) {
-    this.labelName = labelName;
-    this.labelColor = labelColor;
-    this.labelDesc = labelDesc;
-    this.issueCount = issueCount;
+  constructor (labelData) {
+    this.element = selectElement(SELECTOR.LABEL_LIST_TABLE);
+
+    this.labelData = labelData;
+
+    this.initData();
+    this.initTemplate();
   }
 
   initData () {
@@ -22,6 +29,8 @@ export const LabelList = class {
   }
 
   initTemplate () {
+    if (!this.element) { return; }
 
+    this.element.innerHTML = this.template;
   }
 }

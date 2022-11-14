@@ -1,5 +1,7 @@
 import { getLabelTpl } from '../tpl';
 import { createApp } from '../utils/template';
+import { LabelList } from '../views/LabelList';
+import { fetchLabelsData } from '../common/api';
 
 export const LabelPage = class {
 
@@ -7,16 +9,22 @@ export const LabelPage = class {
     return getLabelTpl();
   }
 
-  constructor () {
+  constructor (labelData) {
+    this.labelData = labelData;
 
     this.initTemplate();
+    this.initLabelList();
   }
 
-  initData () {
-
+  async initData () {
+    this.labelData = await fetchLabelsData();
   }
 
   initTemplate () {
     createApp(this.template);
+  }
+
+  initLabelList () {
+    new LabelList(this.labelData);
   }
 }

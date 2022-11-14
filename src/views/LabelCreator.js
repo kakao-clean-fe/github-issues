@@ -1,5 +1,6 @@
 import { getLabelCreator } from "../tpl"
 import { selectElement } from '../utils/dom';
+import { SELECTOR } from '../constants/selector';
 
 export const LabelCreator = class {
 
@@ -13,7 +14,7 @@ export const LabelCreator = class {
   }
 
   constructor () {
-    this.element = selectElement('._label_creator_wrapper');
+    this.element = selectElement(SELECTOR.LABEL_CREATOR_WRAPPER);
 
     this.initData();
     this.initTemplate();

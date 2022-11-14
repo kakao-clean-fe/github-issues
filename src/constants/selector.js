@@ -10,4 +10,5 @@ export const SELECTOR = {
 
   LABEL_TAB: '._label_tab',
   LABEL_LIST_TABLE: '._label_list_table',
+  LABEL_CREATOR_WRAPPER: '._label_creator_wrapper',
 };
