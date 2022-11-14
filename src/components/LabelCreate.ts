@@ -9,14 +9,8 @@ const LabelCreate = () => {
   const app = FunctionComponent();
   const { getRoot, setComponent, addEventListener, getElement, useState } = app;
   const appDiv = document.createElement('div');
-  const {
-    subscribe,
-    setCreateHidden,
-    getCreateHidden,
-    getLabelCount,
-    getLabelList,
-    addLabel,
-  } = labelObserver;
+  const { subscribe, setCreateHidden, getCreateHidden, addLabel } =
+    labelObserver;
   subscribe(app);
   try {
     let newLabel: ILabelCls = new LabelBuilder().build();
@@ -41,15 +35,16 @@ const LabelCreate = () => {
         enabled
       );
 
+    const getEventTargetValue = (e: Event) =>
+      (e.target as HTMLInputElement).value;
+
     addEventListener('#label-name-input', 'input', (e) => {
-      const target = e.target as HTMLInputElement;
-      const name = target.value;
+      const name = getEventTargetValue(e);
       newLabel = new LabelBuilder(newLabel).setName(name).build();
       createLabelBtnEnabled(!newLabel.isFull());
     });
     addEventListener('#label-description-input', 'input', (e) => {
-      const target = e.target as HTMLInputElement;
-      const description = target.value;
+      const description = getEventTargetValue(e);
 
       newLabel = new LabelBuilder(newLabel).setDescription(description).build();
       createLabelBtnEnabled(!newLabel.isFull());
@@ -59,25 +54,26 @@ const LabelCreate = () => {
     });
 
     const getRandomNumber = () => {
-      let random = Math.random() * 100;
+      let random = Math.random() * 50;
       while (random > 41) {
-        random = Math.random() * 100;
+        random = Math.random() * 50;
       }
       return Math.floor(random);
     };
+
+    const setBackgroundColor = (querySelector: string) => (color: string) =>
+      getElement(querySelector).setAttribute(
+        'style',
+        `background-color:${color}`
+      );
+
     addEventListener('#new-label-color', 'click', () => {
-      let remainSec = 3;
+      let remainSec = 5;
       const interval = setInterval(() => {
         remainSec--;
         const randomColor = COLORS[getRandomNumber()];
-        getElement('#label-preview').setAttribute(
-          'style',
-          `background-color:${randomColor}`
-        );
-        getElement('#new-label-color').setAttribute(
-          'style',
-          `background-color:${randomColor}`
-        );
+        setBackgroundColor('#label-preview')(randomColor);
+        setBackgroundColor('#new-label-color')(randomColor);
         const labelColor = getElement('#label-color-value') as HTMLInputElement;
         labelColor.value = randomColor;
 
@@ -88,11 +84,10 @@ const LabelCreate = () => {
         if (remainSec === 0) {
           clearInterval(interval);
         }
-      }, 200);
+      }, 100);
     });
 
     addEventListener('#label-create-button', 'click', (e) => {
-      e.preventDefault();
       addLabel(newLabel);
       newLabel = new LabelBuilder().build();
     });

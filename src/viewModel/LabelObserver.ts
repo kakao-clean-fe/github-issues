@@ -1,8 +1,6 @@
-import { LabelBuilder } from './../store/LabelStoreClass';
 import Observable from './Observable';
-import { Item, Label, Status } from '../../types';
-import { STATUS } from '../common/constants';
-import { API, pipe } from '../common/util';
+import { Item, Label } from '../../types';
+import { API } from '../common/util';
 import { labelStore } from '../store/LabelStoreClass';
 
 const LabelObservable = () => {

@@ -18,15 +18,7 @@ const IssueBody = () => {
     getSelectedFilter,
   } = itemObserver;
   subscribe(app);
-  const {
-    addAfterRender,
-    useState,
-    useEffect,
-    setComponent,
-    addEventListener,
-    getRoot,
-    getElement,
-  } = app;
+  const { addAfterRender, setComponent, addEventListener, getElement } = app;
 
   addAfterRender(() => {
     setOpenStatusCount();

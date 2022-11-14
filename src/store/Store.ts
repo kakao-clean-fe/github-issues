@@ -1,5 +1,3 @@
-import { IFunctionComponent } from '../common/FunctionComponent';
-
 export interface IStore<T> {
   getData: () => T;
   setData: (data: T) => void;

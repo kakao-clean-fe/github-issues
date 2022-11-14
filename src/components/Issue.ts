@@ -1,8 +1,4 @@
-import { Status } from '../../types';
-import { getIssueTpl } from '../common/tpl';
-import { STATUS } from '../common/constants';
 import FunctionComponent from '../common/FunctionComponent';
-import { itemObserver } from '../viewModel/ItemObserver';
 import IssueHeader from './IssueHeader';
 import IssueBody from './IssueBody';
 

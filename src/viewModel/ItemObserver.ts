@@ -1,7 +1,7 @@
 import Observable from './Observable';
 import { Item, Status } from '../../types';
 import { STATUS } from '../common/constants';
-import { API, pipe } from '../common/util';
+import { API } from '../common/util';
 import { itemStore } from '../store/ItemStore';
 
 const ItemObservable = () => {

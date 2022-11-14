@@ -1,6 +1,4 @@
-import { LabelBuilder, ILabelCls } from '../store/LabelStoreClass';
 import FunctionComponent from '../common/FunctionComponent';
-import { getLabelContainerTpl } from '../common/tpl';
 import LabelCreate from './LabelCreate';
 import LabelHeader from './LabelHeader';
 import LabelList from './LabelList';
@@ -14,7 +12,7 @@ const Label = (appDiv: Element) => {
   wrapper.className = 'w-9/12 m-auto min-w-min';
   appDiv.appendChild(wrapper);
 
-  const { getRoot, setComponent, addEventListener, getElement, useState } = app;
+  const { setComponent } = app;
   const labelHeader = LabelHeader();
   const labelCreate = LabelCreate();
   const labelList = LabelList();

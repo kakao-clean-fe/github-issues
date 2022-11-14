@@ -1,6 +1,5 @@
 import { Label } from '../../types';
-import { clickEventListener } from '../common/util';
-import Store, { IStore } from './Store';
+import Store from './Store';
 
 export interface ILabelCls {
   name: string;

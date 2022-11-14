@@ -1,11 +1,10 @@
-import { eventListener } from './../common/util';
 import FunctionComponent from '../common/FunctionComponent';
 import { getLabelHeaderTpl } from '../common/tpl';
 import { labelObserver } from '../viewModel/LabelObserver';
 
 const LabelHeader = () => {
   const app = FunctionComponent();
-  const { getRoot, setComponent, addEventListener, getElement, useState } = app;
+  const { setComponent, addEventListener } = app;
   const appDiv = document.createElement('div');
   const { subscribe, setCreateHidden } = labelObserver;
   subscribe(app);

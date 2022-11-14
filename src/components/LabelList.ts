@@ -1,23 +1,12 @@
 import FunctionComponent from '../common/FunctionComponent';
-import {
-  getLabelHeaderTpl,
-  getLabelItemTpl,
-  getLabelListTpl,
-} from '../common/tpl';
+import { getLabelItemTpl, getLabelListTpl } from '../common/tpl';
 import { labelObserver } from '../viewModel/LabelObserver';
 
 const LabelList = () => {
   const app = FunctionComponent();
-  const { getRoot, setComponent, addEventListener, getElement, useState } = app;
+  const { setComponent } = app;
   const appDiv = document.createElement('div');
-  const {
-    subscribe,
-    setCreateHidden,
-    getCreateHidden,
-    getLabelCount,
-    getLabelList,
-    addLabel,
-  } = labelObserver;
+  const { subscribe, getLabelCount, getLabelList } = labelObserver;
   subscribe(app);
 
   return setComponent(
