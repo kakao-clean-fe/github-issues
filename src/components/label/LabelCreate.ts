@@ -2,7 +2,7 @@ import { COLORS } from '../../common/constants';
 import FunctionComponent from '../../common/FunctionComponent';
 import { getLabelCreateTpl } from '../../common/tpl';
 import { pipe } from '../../common/util';
-import { ILabelCls, LabelBuilder } from '../../store/LabelStoreClass';
+import { ILabelCls, LabelBuilder, LabelCls } from '../../store/LabelStoreClass';
 import { labelObserver } from '../../viewModel/LabelObserver';
 
 const LabelCreate = () => {
@@ -39,13 +39,21 @@ const LabelCreate = () => {
 
     addEventListener('#label-name-input', 'input', (e) => {
       const name = getEventTargetValue(e);
-      newLabel = new LabelBuilder(newLabel).setName(name).build();
+      // newLabel = new LabelBuilder(newLabel).setName(name).build();
+
+      newLabel = new LabelCls.builder(newLabel).setData('name', name).build();
+
       createLabelBtnEnabled(!newLabel.isFull());
     });
     addEventListener('#label-description-input', 'input', (e) => {
       const description = getEventTargetValue(e);
 
-      newLabel = new LabelBuilder(newLabel).setDescription(description).build();
+      // newLabel = new LabelBuilder(newLabel).setDescription(description).build();
+
+      newLabel = new LabelCls.builder(newLabel)
+        .setData('description', description)
+        .build();
+
       createLabelBtnEnabled(!newLabel.isFull());
     });
     addEventListener('.base-outer.p-2.mr-4', 'click', (e) => {
@@ -75,10 +83,13 @@ const LabelCreate = () => {
         setBackgroundColor('#new-label-color')(randomColor);
         const labelColor = getElement('#label-color-value') as HTMLInputElement;
         labelColor.value = randomColor;
+        const replacedColor = labelColor.value.replace('#', '');
 
-        newLabel = new LabelBuilder(newLabel)
-          .setColor(labelColor.value.replace('#', ''))
+        newLabel = new LabelCls.builder(newLabel)
+          .setData('color', replacedColor)
           .build();
+
+        // newLabel = new LabelBuilder(newLabel).setColor(replacedColor).build();
         createLabelBtnEnabled(!newLabel.isFull());
         if (remainSec === 0) {
           clearInterval(interval);

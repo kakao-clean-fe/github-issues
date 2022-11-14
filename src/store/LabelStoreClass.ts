@@ -1,4 +1,5 @@
 import { Label } from '../../types';
+import { builder } from '../common/decorator';
 import Store from './Store';
 
 export interface ILabelCls {
@@ -8,7 +9,8 @@ export interface ILabelCls {
   isEmpty: () => boolean;
   isFull: () => boolean;
 }
-class LabelCls implements ILabelCls {
+@builder('name', 'color', 'description')
+export class LabelCls implements ILabelCls {
   #name: string;
   #color: string;
   #description: string;
