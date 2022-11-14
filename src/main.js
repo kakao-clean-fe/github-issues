@@ -1,56 +1,30 @@
-import { fetchIssues } from './service';
-import { getIssueItemTpl, getIssueTpl } from './tpl';
-import { selector as sel } from './constant';
-import { $, isOpenedIssue, isClosedIssue } from './util';
-import { pipe } from './fp';
-import {
-  setInnerHTML,
-  setInnerText,
-  setEvent,
-  addClass,
-  removeClass,
-} from './curry/dom';
+import { fetchIssues, fetchLabels } from './service';
+import { storeKey, pageType } from './constant';
+import { Store, EventBus } from './store';
+import { renderHeader } from './components/Header';
+import { renderIssuePage } from './components/IssuePage';
+import { renderLabelPage } from './components/LabelPage';
 
-async function App() {
-  const issues = await fetchIssues();
-  const openedIssues = issues.filter(isOpenedIssue);
-  const closedIssues = issues.filter(isClosedIssue);
-
-  const makeTextBold = pipe(addClass('font-bold'));
-  const makeTextThin = pipe(removeClass('font-bold'));
-  const renderLayout = pipe(setInnerHTML(getIssueTpl()));
-  const renderOpenedIssues = pipe(
-    setInnerHTML(openedIssues.map(getIssueItemTpl).join(''))
-  );
-  const renderClosedIssues = pipe(
-    setInnerHTML(closedIssues.map(getIssueItemTpl).join(''))
-  );
-  const renderOpenedButton = pipe(
-    setInnerText(`${openedIssues.length} Opened`),
-    setEvent('click', () => {
-      makeTextBold($(sel.openedButton));
-      makeTextThin($(sel.closedButton));
-      renderOpenedIssues($(sel.issueList));
-    })
-  );
-  const renderClosedButton = pipe(
-    setInnerText(`${closedIssues.length} Closed`),
-    setEvent('click', () => {
-      makeTextBold($(sel.closedButton));
-      makeTextThin($(sel.openedButton));
-      renderClosedIssues($(sel.issueList));
-    })
-  );
-
+async function createApp({ store }) {
   function render() {
-    renderLayout($(sel.app));
-    renderOpenedIssues($(sel.issueList));
-    renderOpenedButton($(sel.openedButton));
-    renderClosedButton($(sel.closedButton));
+    renderHeader({ store });
+    renderIssuePage({ store });
+    renderLabelPage({ store });
   }
 
   return { render };
 }
 
-const app = await App();
-window.addEventListener('DOMContentLoaded', app.render());
+window.addEventListener('DOMContentLoaded', async () => {
+  const [issues, labels] = await Promise.all([fetchIssues(), fetchLabels()]);
+  const store = new Store({
+    eventBus: new EventBus(),
+    initialState: {
+      [storeKey.page]: pageType.issue,
+      [storeKey.issues]: issues,
+      [storeKey.labels]: labels,
+    },
+  });
+  const app = await createApp({ store });
+  app.render();
+});
