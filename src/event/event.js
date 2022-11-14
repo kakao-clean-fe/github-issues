@@ -1,21 +1,10 @@
-import { labelUtils, renderUtils } from "../utils";
+import { classUtils, labelUtils, renderUtils } from "../utils";
 import { MENU, COMMON, LABEL, LABEL_CLASS } from "../constants";
+import Label from "../components/Label";
 
-class Label {
-  constructor() {
-    this.name = "";
-    this.description = "";
-    this.color = "000000";
-  }
-}
+const app = document.querySelector("#app");
 
-export const label = {
-  name: "",
-  description: "",
-  color: "",
-};
-
-export const labelInputEvent = (app) =>
+export const inputEvent = () =>
   app.addEventListener("input", (e) => {
     const target = e.target;
     const targetInput = LABEL_CLASS.INPUT.every((className) =>
@@ -26,14 +15,14 @@ export const labelInputEvent = (app) =>
     }
   });
 
-export const labelClickEvent = (app) =>
+export const clickEvent = () =>
   app.addEventListener("click", (e) => {
     const target = e.target;
     if (
       target.classList.contains(LABEL.NEW_BTN) ||
       target.parentNode.classList.contains(LABEL.NEW_BTN)
     ) {
-      app.querySelector(LABEL.NEW_FORM).classList.remove(COMMON.HIDDEN);
+      classUtils.remove(app.querySelector(LABEL.NEW_FORM), COMMON.HIDDEN);
     } else if (target.id === LABEL.NEW_COLOR) {
       const color = labelUtils.rancomColor();
       app.querySelector(LABEL.COLOR_VALUE).value = color;
@@ -41,9 +30,7 @@ export const labelClickEvent = (app) =>
         LABEL.COLOR_PREVIEW
       ).style.backgroundColor = `#${color}`;
       target.style.backgroundColor = `#${color}`;
-      if (labelUtils.checkInput()) {
-        labelUtils.uselabelBtn();
-      }
+      labelUtils.checkInput() && labelUtils.uselabelBtn();
     } else if (target.id === LABEL.CREATE_BTN) {
       const label = new Label();
       app.querySelectorAll("dl.form-group.my-2 input").forEach((target) => {
