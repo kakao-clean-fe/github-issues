@@ -16,7 +16,7 @@ export default class Store extends Observer {
       items.forEach((item) => this.add(item));
     } catch {
       this._status = "error";
-      this.items = [];
+      this._items = [];
     }
     this.notify(this);
     this._status = "success";
