@@ -1,6 +1,20 @@
 import { Api } from '../../types';
 import { API_METHOD } from './constants';
 
+export const isEquals = <T = any>(a: T, b: T) => {
+  try {
+    if (typeof a === 'string') {
+      return a === b;
+    } else {
+      return Object.keys(a).reduce((prev, key) => {
+        return prev && a[key] === b[key];
+      }, true);
+    }
+  } catch (error) {
+    return false;
+  }
+};
+
 export const pipe =
   (...fns) =>
   (args?: any) =>

@@ -6,6 +6,7 @@ import { itemObserver } from '../viewModel/ItemObserver';
 
 const IssueBody = () => {
   const app = FunctionComponent();
+  const appDiv = document.createElement('div');
   const {
     getFilteredData,
     getOpensCount,
@@ -72,10 +73,11 @@ const IssueBody = () => {
       ? changeSelectedFilterToClose()
       : changeSelectedFilterToAll();
   });
+
   return setComponent(
     () =>
       getIssueBodyTpl(getFilteredData().map((data) => getIssueItemTpl(data))),
-    document.createElement('div')
+    appDiv
   );
 };
 

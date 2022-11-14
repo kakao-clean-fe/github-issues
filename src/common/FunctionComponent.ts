@@ -4,6 +4,7 @@ import {
   findElement,
   findElementAll,
   pipe,
+  isEquals,
 } from './util';
 export interface IFunctionComponent {
   useState: <T = any>(initData: T) => [() => T, (t: T) => void];
@@ -47,15 +48,21 @@ const FunctionComponent = (...props): IFunctionComponent => {
     callback();
     render();
   };
+
   const render = () => {
     if (_element) {
-      beforeRenderList.forEach((event) => event());
-      _element.innerHTML = _innerHTML();
-      _eventList.forEach((event) => {
-        event();
-      });
-      afterRenderList.forEach((event) => event());
-      _children.forEach((child) => _element.appendChild(child));
+      if (
+        _element.innerHTML === '' ||
+        !isEquals<string>(_element.innerHTML, _innerHTML())
+      ) {
+        beforeRenderList.forEach((event) => event());
+        _element.innerHTML = _innerHTML();
+        _eventList.forEach((event) => {
+          event();
+        });
+        afterRenderList.forEach((event) => event());
+        _children.forEach((child) => _element.appendChild(child));
+      }
     }
   };
   const addEventListener = (
