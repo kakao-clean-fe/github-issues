@@ -6,6 +6,10 @@ import {useAtomValue, useSetAtomListener, useSetAtomValue} from "../store/atomHo
 import {labelsAtom} from "../store/atom.js";
 import {LabelForm} from "../components/label/labelForm.js";
 import {pipe} from "../utils/functional.js";
+import {RENDER_TYPE} from "../consts/const.js";
+import {STYLE} from "../consts/style.js";
+import {SELECTOR} from "../consts/selector.js";
+import {COMPONENT_KEY} from "../consts/key.js";
 
 const setLabels = useSetAtomValue(labelsAtom);
 const getLabels = useAtomValue(labelsAtom);
@@ -13,20 +17,20 @@ const setLabelsListener = useSetAtomListener(labelsAtom);
 
 export class LabelPage extends Component {
     constructor(props, parentSelector) {
-        super('label-page', props, parentSelector);
+        super(COMPONENT_KEY.LABEL_PAGE, props, parentSelector);
         this._mountEvent = this.#initLabels.bind(this);
         this._afterMountEvent = pipe(this.#addEventToNewLabelBtn, this.#updateLabelsCount.bind(this));
-        setLabelsListener(pipe(this.#updateChildAndLabelsCount.bind(this), this._renderChild.bind(this, ['label-form'], true)));
+        setLabelsListener(pipe(this.#updateChildAndLabelsCount.bind(this), this._renderChild.bind(this, [COMPONENT_KEY.LABEL_FORM], true)));
     }
 
     render() {
         let renderContent = getLabelTpl();
-        super.render(renderContent, 'override');
+        super.render(renderContent, RENDER_TYPE.OVERRIDE);
     }
 
     #addEventToNewLabelBtn() {
-        document.querySelector('.new-label-button')?.addEventListener('click', () => {
-            document.querySelector('#new-label-form').classList.toggle('hidden');
+        document.querySelector(SELECTOR.LABEL_NEW_LABEL_BUTTON)?.addEventListener('click', () => {
+            document.querySelector(SELECTOR.LABEL_FORM).classList.toggle(STYLE.HIDDEN);
         });
     }
 
@@ -38,7 +42,7 @@ export class LabelPage extends Component {
 
     #updateChild(){
         const newLabels = getLabels();
-        this._appendChild(new LabelItem(`label-item-${this._index++}`, newLabels[newLabels.length-1], '.label-list'));
+        this._appendChild(new LabelItem(`${COMPONENT_KEY.LABEL_ITEM}-${this._index++}`, newLabels[newLabels.length-1], SELECTOR.LABEL_LIST));
     }
 
     #updateLabelsCount(){
@@ -51,8 +55,8 @@ export class LabelPage extends Component {
     }
 
     #initChild() {
-        const labelForm = new LabelForm('label-form', {}, '#label-wrapper');
-        const labelItems = getLabels().map((label) => new LabelItem(`label-item-${this._index++}`, label, '.label-list'));
+        const labelForm = new LabelForm(COMPONENT_KEY.LABEL_FORM, {}, SELECTOR.LABEL_WRAPPER);
+        const labelItems = getLabels().map((label) => new LabelItem(`${COMPONENT_KEY.LABEL_ITEM}-${this._index++}`, label, SELECTOR.LABEL_LIST));
         return [labelForm, ...labelItems];
     }
 }

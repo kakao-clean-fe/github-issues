@@ -1,8 +1,9 @@
 import initIssuePage from "./pages/issue.js";
 import {useAtom, useAtomValue} from "./store/atomHooks.js";
 import {labelsAtom, navBtnStatusAtom} from "./store/atom.js";
-import {NAV_BTN_STATUS, SELECTOR} from "./const.js";
+import {NAV_BTN_STATUS} from "./consts/const.js";
 import {LabelPage} from "./pages/label.js";
+import {SELECTOR} from "./consts/selector.js";
 
 const [getNavBtnStatus, setNavBtnStatus] = useAtom(navBtnStatusAtom);
 const getLabels = useAtomValue(labelsAtom);

@@ -1,4 +1,4 @@
-import {ISSUE_STATUS, NAV_BTN_STATUS} from "../const.js";
+import {ISSUE_STATUS, NAV_BTN_STATUS} from "../consts/const.js";
 import {atom} from "./atomHooks.js";
 
 export const issueStatusAtom = atom(ISSUE_STATUS.OPEN);

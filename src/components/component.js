@@ -1,3 +1,5 @@
+import {RENDER_TYPE} from "../consts/const.js";
+
 export class Component {
     _key = null;
     _index = 0;
@@ -7,7 +9,7 @@ export class Component {
     _afterMountEvent = null;
     _mountEvent = null;
     _isMounted = false;
-    _selector = null;
+    _selector = null; // replace 할 때 사용
 
     constructor(key, props, parentSelector) {
         this._key = key;
@@ -25,11 +27,11 @@ export class Component {
         const tpl = document.createElement('template');
         tpl.innerHTML = content;
         if (!parent) throw Error('parent is not exist!');
-        if (type === 'override') {
+        if (type === RENDER_TYPE.OVERRIDE) {
             parent.innerHTML = tpl.innerHTML;
-        } else if (type === 'add') {
+        } else if (type === RENDER_TYPE.ADD) {
             parent.appendChild(tpl.content);
-        } else if (type === 'replace') {
+        } else if (type === RENDER_TYPE.REPLACE) {
             parent.replaceChild(tpl.content, parent.querySelector(this._selector));
         }
         this._renderChild();
@@ -37,12 +39,12 @@ export class Component {
         if (!this._isMounted) this._isMounted = true;
     }
 
-    _renderChild(skipChilds = [], isClear = false) {
+    _renderChild(skipChildren = [], isClear = false) {
         const children = this._children;
         if (!children?.length) return;
-        const filteredChilds = children.filter((child) => !skipChilds.includes(child._key));
-        if(isClear) document.querySelector(filteredChilds[0]._parentSelector).innerHTML = '';
-        filteredChilds.forEach((child) => child.render());
+        const filteredChildren = children.filter((child) => !skipChildren.includes(child._key));
+        if(isClear) document.querySelector(filteredChildren[0]._parentSelector).innerHTML = '';
+        filteredChildren.forEach((child) => child.render());
     }
 
     _appendChild(childComponent) {

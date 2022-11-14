@@ -1,5 +1,6 @@
 import {Component} from "../component.js";
 import {getLabelItemTpl} from "../../tpl.js";
+import {RENDER_TYPE} from "../../consts/const.js";
 
 export class LabelItem extends Component {
     constructor(key, props, parentSelector) {
@@ -8,6 +9,6 @@ export class LabelItem extends Component {
 
     render() {
         const content = getLabelItemTpl(this._props);
-        super.render(content, 'add');
+        super.render(content, RENDER_TYPE.ADD);
     }
 }

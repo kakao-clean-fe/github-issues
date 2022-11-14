@@ -1,6 +1,6 @@
 /* WeakMap은 일반 Map과 다르게 key를 object로 받으며 해당 참조가 없어지는 순간 GC에 의해 자동으로 제거된다고 합니다
    ref: https://ko.javascript.info/weakmap-weakset */
-import {ATOM_PROP} from "../const.js";
+import {ATOM_PROP} from "../consts/const.js";
 
 let atomMap = new WeakMap();
 

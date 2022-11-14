@@ -1,8 +1,9 @@
 import {filterIssueByStatus} from "../../utils/util.js";
-import {CSS, ISSUE_STATUS} from "../../const.js";
+import {ISSUE_STATUS} from "../../consts/const.js";
 import {updateIssueItems} from "./issueItem.js";
 import {issuesAtom, issueStatusAtom} from "../../store/atom.js";
 import {useAtom, useAtomValue, useSetAtomListener} from "../../store/atomHooks.js";
+import {STYLE} from "../../consts/style.js";
 
 const getIssues = useAtomValue(issuesAtom);
 const [getIssueStatus, setIssueStatus] = useAtom(issueStatusAtom);
@@ -29,6 +30,6 @@ const onClickIssueStatus = (issueStatusTabs) => ({target}) => {
 export const onClickAtomListener = () => console.log("onClickIssueStatus");
 
 const changeIssueStatusStyle = (target, issueStatusTabs) => {
-    target.classList.add(CSS.FONT_BOLD);
-    issueStatusTabs.filter((tab) => tab !== target)[0].classList.remove(CSS.FONT_BOLD);
+    target.classList.add(STYLE.FONT_BOLD);
+    issueStatusTabs.filter((tab) => tab !== target)[0].classList.remove(STYLE.FONT_BOLD);
 }
