@@ -2,7 +2,7 @@ import { COLORS } from '../../common/constants';
 import FunctionComponent from '../../common/FunctionComponent';
 import { getLabelCreateTpl } from '../../common/tpl';
 import { pipe } from '../../common/util';
-import { ILabelCls, LabelBuilder, LabelCls } from '../../store/LabelStoreClass';
+import { ILabelCls, LabelCls } from '../../store/LabelStoreClass';
 import { labelObserver } from '../../viewModel/LabelObserver';
 
 const LabelCreate = () => {
@@ -12,7 +12,7 @@ const LabelCreate = () => {
     labelObserver;
   subscribe(app);
   try {
-    let newLabel: ILabelCls = new LabelBuilder().build();
+    let newLabel: ILabelCls = new LabelCls.builder().build();
 
     const setCreateLabelBtnEnabled =
       (createLabelBtn: HTMLButtonElement) => (hidden: boolean) => {
@@ -99,9 +99,11 @@ const LabelCreate = () => {
 
     addEventListener('#label-create-button', 'click', (e) => {
       addLabel(newLabel);
-      newLabel = new LabelBuilder().build();
+      newLabel = new LabelCls.builder().build();
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 
   return setComponent(
     () => getLabelCreateTpl(getCreateHidden()),
