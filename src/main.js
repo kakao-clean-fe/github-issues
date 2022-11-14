@@ -1,5 +1,5 @@
 import { getIssueItemTpl, getIssueTpl } from './tpl';
-import { fetchIssues } from './common/api';
+import { fetchIssuesData } from './common/api';
 import { OPEN, CLOSED } from './constants/status';
 import { SELECTOR } from './constants/selector';
 import { getIssuesWithStatus } from './utils/status';
@@ -44,15 +44,15 @@ const setStatusTabEvent = issues => {
   );
 };
 
-const init = async (issues) => {
+const initApp = async (issues) => {
   await renderIssue(issues);
   setStatusTabEvent(issues);
 }
 
 const main = async () => {
-  const issues = await fetchIssues();
+  const issuesData = await fetchIssuesData();
 
-  init(issues);
+  initApp(issuesData);
 };
 
 main();
