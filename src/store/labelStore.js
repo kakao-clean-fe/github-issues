@@ -30,6 +30,10 @@ const removeLabel = (labelName) => {
   })
 }
 
+/** 
+ * @deprecated
+ * LabelModel.js 로 대체한다.
+ */
 export default {
   addChangeListener,
   selectLabels,

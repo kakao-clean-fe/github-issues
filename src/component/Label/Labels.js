@@ -27,16 +27,16 @@ const initialForm = {
 };
 
 export default class Labels extends Component {
-  constructor({ store, ...args }) {
+  constructor({ model, ...args }) {
     super({ ...args });
-    this.store = store;
+    this.model = model;
     this.setState({
-      labels: this.store.selectLabels(this.store.getState()),
+      labels: this.model.labels,
       showForm: false,
       labelForm: initialForm,
     }),
-      this.store.addChangeListener(this.setState);
-    this._bindMethod();
+      this._bindMethod();
+    this.model.subscribe(this.setLabel);
   }
 
   _bindMethod() {
@@ -47,6 +47,11 @@ export default class Labels extends Component {
     this.addNewLabel = this.addNewLabel.bind(this);
     this.removeLabel = this.removeLabel.bind(this);
     this.render = this.render.bind(this);
+    this.setLabel = this.setLabel.bind(this);
+  }
+
+  setLabel(labels) {
+    this.setState({ labels });
   }
 
   toggleForm() {
@@ -85,7 +90,7 @@ export default class Labels extends Component {
 
   /** 라벨 추가 */
   addNewLabel() {
-    this.store.addLabel({
+    this.model.addLabel({
       ...this.state.labelForm,
       color: this.state.labelForm.color.replace("#", ""),
     });
@@ -95,11 +100,12 @@ export default class Labels extends Component {
   /** 라벨 제거 */
   removeLabel(e) {
     const { name } = e.target.dataset;
-    console.log(name);
     if (!name) {
       throw new Error("삭제하려는 name값을 찾지 못했습니다.");
     }
-    this.store.removeLabel(name);
+    this.model.removeLabel(
+      this.state.labels.find(({ name: _name }) => _name === name)
+    );
   }
 
   initForm() {
@@ -135,7 +141,7 @@ export default class Labels extends Component {
       button.disabled = false;
       button.classList.remove(CLASS_DISABLED);
     }
-    
+
     this.select(SELECTORS.LABEL_PREVIEW).style.backgroundColor = color;
     this.select(SELECTORS.NEW_LABEL_COLOR).style.backgroundColor = color;
     this.select(SELECTORS.LABEL_COLOR_INPUT).value = color;
