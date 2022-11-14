@@ -22,7 +22,7 @@ export class LabelPageLayout implements Component {
 
   init (): void {
     this.render();
-    this.setEventHandler();
+    this.initEventHandler();
   }
 
   private get template (): string {
@@ -36,14 +36,14 @@ export class LabelPageLayout implements Component {
     });
   }
 
-  private setNewLabelButtonHandler (): void {
+  private addNewLabelButtonHandler (): void {
     addClickEventListener({
       element: getElement(NEW_LABEL_BUTTON_SELECTOR),
       eventHandler: this.labelFormComponent.init.bind(this.labelFormComponent)
     });
   }
 
-  setEventHandler (): void {
-    this.setNewLabelButtonHandler();
+  initEventHandler (): void {
+    this.addNewLabelButtonHandler();
   }
 }
