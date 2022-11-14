@@ -23,8 +23,16 @@ const clickOpenHandler = () => setSelectedStatus(ISSUE_STATUS.OPEN);
 const clickCloseHandler = () => setSelectedStatus(ISSUE_STATUS.CLOSE);
 
 const initEventListeners = () => {
-  on(SELECTORS.OEPN_COUNT, "click", clickOpenHandler);
-  on(SELECTORS.CLOSE_COUNT, "click", clickCloseHandler);
+  on({
+    selector: SELECTORS.OEPN_COUNT, 
+    event: "click", 
+    callback: clickOpenHandler
+  });
+  on({
+    selector: SELECTORS.CLOSE_COUNT, 
+    event: "click", 
+    callback: clickCloseHandler
+  });
 }
 
 const renderOpenIssuesCount = (openIssues) =>
@@ -38,8 +46,20 @@ const renderIssues = (issues) =>
     issues.map((issue) => getIssueItemTpl(issue)).join("")
   );
 
-const boldOpen = (isOpen) => isOpen ? addClassList(SELECTORS.OEPN_COUNT, CLASS_BOLD) : removeClassList(SELECTORS.OEPN_COUNT, CLASS_BOLD);
-const boldClose = (isClose) => isClose ? addClassList(SELECTORS.CLOSE_COUNT, CLASS_BOLD) : removeClassList(SELECTORS.CLOSE_COUNT, CLASS_BOLD);
+const boldOpen = (isOpen) => isOpen ? addClassList({
+  selector: SELECTORS.OEPN_COUNT, 
+  classes: CLASS_BOLD
+}) : removeClassList({
+  selector: SELECTORS.OEPN_COUNT, 
+  classes: CLASS_BOLD
+});
+const boldClose = (isClose) => isClose ? addClassList({
+  selector: SELECTORS.CLOSE_COUNT, 
+  classes: CLASS_BOLD
+}) : removeClassList({
+  selector: SELECTORS.CLOSE_COUNT, 
+  classes: CLASS_BOLD
+});
 const boldByIssueStatus = (status) => {
   const isOpen = status === ISSUE_STATUS.OPEN;
   boldOpen(isOpen);

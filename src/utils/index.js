@@ -1,13 +1,26 @@
 const render = (selector, html) =>
   (document.querySelector(selector).innerHTML = html);
 
-const on = (selector, eventType, callback) =>
-  document.querySelector(selector).addEventListener(eventType, callback);
+const on = ({
+  element = document,
+  selector, 
+  eventType, 
+  callback
+}) =>
+element.querySelector(selector).addEventListener(eventType, callback);
 
-const addClassList = (selector, classes) =>
-  document.querySelector(selector).classList.add(classes);
-const removeClassList = (selector, classes) =>
-  document.querySelector(selector).classList.remove(classes);
+const addClassList = ({
+  element = document,
+  selector, 
+  classes
+}) =>
+element.querySelector(selector).classList.add(classes);
+const removeClassList = ({
+  element = document,
+  selector, 
+  classes
+}) =>
+element.querySelector(selector).classList.remove(classes);
 
 const fetchBody = (url) => fetch(url).then((response) => response.json());
 const pipe = (...fns) => {
