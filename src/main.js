@@ -1,18 +1,18 @@
-import {getIssueTpl} from './tpl';
-import {filterData, loadData, setItemCounts} from './init';
-import {getAppDiv, renderItems, setEventListener} from './render';
-import {pipe, fetchData} from './utils';
+import { fetchIssues, fetchLabels} from './init';
+import { Label } from './components/label';
 
 const main = () => {
-    getAppDiv().innerHTML = getIssueTpl();
 
     const loadData = async () => {
         const [issues, labels] = await Promise.all([
-            fetchData("../data-sources/issues.json"),
-            fetchData("../data-sources/labels.json"),
+            fetchIssues(),
+            fetchLabels()
         ]);
-        
-        pipe(renderItems, setItemCounts, setEventListener, filterData)(issues)
+            
+        // [TODO]: issue관리도 객체지향형으로 변경
+        // pipe(renderItems, setItemCounts, setEventListener, filterData)(issues);
+
+        new Label(labels).init();
     };
 
     loadData();

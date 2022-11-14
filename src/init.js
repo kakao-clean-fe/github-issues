@@ -1,7 +1,9 @@
-import {STATUS} from './const';
-import {renderCount, renderItems} from './render';
+import {STATUS} from './common/const';
+import {renderCount, renderItems} from './common/render';
+import {fetchData} from './utils';
 
-export const loadData = () => fetch('../data-sources/issues.json').then((response) => response.json());
+export const fetchIssues = () => fetchData("../data-sources/issues.json");
+export const fetchLabels = () => fetchData("../data-sources/labels.json");
 
 export const setItemCounts = (listData) => {
     const openedItemCount = listData.filter((item) => item.status === STATUS.OPEN).length;
