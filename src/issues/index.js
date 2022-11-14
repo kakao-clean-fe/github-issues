@@ -4,7 +4,7 @@ import {
 } from "../tpl.js";
 
 import issueStore from "..//store/issueStore.js";
-import { ISSUE_STATUS } from "../constant.js";
+import { EVENTS, ISSUE_STATUS } from "../constant.js";
 import { addClassList, on, cacheFunction, removeClassList, render } from "../utils/index.js";
 
 const SELECTORS = {
@@ -25,12 +25,12 @@ const clickCloseHandler = () => setSelectedStatus(ISSUE_STATUS.CLOSE);
 const initEventListeners = () => {
   on({
     selector: SELECTORS.OEPN_COUNT, 
-    event: "click", 
+    event: EVENTS.CLICK, 
     callback: clickOpenHandler
   });
   on({
     selector: SELECTORS.CLOSE_COUNT, 
-    event: "click", 
+    event: EVENTS.CLICK, 
     callback: clickCloseHandler
   });
 }

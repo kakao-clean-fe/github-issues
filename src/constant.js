@@ -3,5 +3,10 @@ const ISSUE_STATUS = {
   CLOSE: 'close'
 }
 
+const EVENTS = {
+  CLICK: 'click',
+  CHANGE: 'change'
+}
 
-export {ISSUE_STATUS}
+
+export {ISSUE_STATUS, EVENTS}

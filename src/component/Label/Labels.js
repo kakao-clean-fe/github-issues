@@ -1,4 +1,5 @@
 import Component from "..";
+import { EVENTS } from "../../constant";
 import { getLabelTpl } from "../../tpl";
 import { getRandomColor } from "../../utils";
 import LabelItem from "./LabelItem";
@@ -106,16 +107,16 @@ export default class Labels extends Component {
   }
 
   setListeners() {
-    this.on(SELECTORS.NEW_LABEL_BUTTON, "click", this.toggleForm);
-    this.on(SELECTORS.NEW_LABEL_COLOR, "click", this.setNewLabelColor);
-    this.on(SELECTORS.LABEL_NAME_INPUT, "change", this.setLabelName);
+    this.on(SELECTORS.NEW_LABEL_BUTTON, EVENTS.CLICK, this.toggleForm);
+    this.on(SELECTORS.NEW_LABEL_COLOR, EVENTS.CLICK, this.setNewLabelColor);
+    this.on(SELECTORS.LABEL_NAME_INPUT, EVENTS.CHANGE, this.setLabelName);
     this.on(
       SELECTORS.LABEL_DESCRIPTION_INPUT,
-      "change",
+      EVENTS.CHANGE,
       this.setLabelDescription
     );
-    this.on(SELECTORS.LABEL_CREATE_BUTTON, "click", this.addNewLabel);
-    this.on(SELECTORS.DELETE_BUTTON, "click", this.removeLabel);
+    this.on(SELECTORS.LABEL_CREATE_BUTTON, EVENTS.CLICK, this.addNewLabel);
+    this.on(SELECTORS.DELETE_BUTTON, EVENTS.CLICK, this.removeLabel);
   }
 
   render() {
