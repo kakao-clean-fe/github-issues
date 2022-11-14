@@ -162,12 +162,6 @@ export function getLabelItemTpl({name, color, description}) {
 
 
 export function getLabelFormTpl({showNewLabel, previewLabelColor}) {
-  //  <form
-  //   class="${showNewLabel ? '' : 'hidden'} p-3 mb-3 mt-6 border rounded-sm font-bold"
-  //   id="new-label-form"
-  //   action="/labels"
-  //   accept-charset="UTF-8"
-  //   method="post">
   const $parent = document.createElement('form')
   $parent.id = 'new-label-form'
   $parent.className = `${showNewLabel ? '' : 'hidden'} p-3 mb-3 mt-6 border rounded-sm font-bold`

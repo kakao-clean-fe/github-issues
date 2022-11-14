@@ -1,4 +1,4 @@
-import {getRandomColor, isHexColor, selectOne} from "../utils.js";
+import {getRandomColorCode, isHexColor, selectOne} from "../utils.js";
 import {getLabelFormTpl, getLabelItemTpl, getLabelTpl} from "../tpl.js";
 import {TAB} from "../constants.js";
 import Observer from "../libs/observer.js";
@@ -6,7 +6,7 @@ import AppState from "../libs/state.js";
 import LabelStore from "../stores/label.js";
 
 
-export class Label extends Observer {
+export class LabelTab extends Observer {
   get $targetEl() {
     return selectOne('#app')
   }
@@ -57,11 +57,6 @@ export class LabelModel extends Observer {
     return getLabelItemTpl(this.data)
   }
 
-  render() {
-    const {activeTab} = AppState.get()
-    if (activeTab === TAB.LABEL) super.render()
-  }
-
   bindEvents() {
     const {deleteButton} = this.$
 
@@ -76,6 +71,11 @@ export class LabelModel extends Observer {
       editButton: querySelector('.edit-button'),
       deleteButton: querySelector('.delete-button'),
     }
+  }
+
+  render() {
+    const {activeTab} = AppState.get()
+    if (activeTab === TAB.LABEL) super.render()
   }
 }
 
@@ -114,11 +114,12 @@ export class LabelForm extends Observer {
       labelColorInput.value = `#${colorCode}`
     }
 
-    // click reset color button
+    // onClick reset color button
     resetColorButton.addEventListener('click', () => {
-      changeColorCode(getRandomColor())
+      changeColorCode(getRandomColorCode())
     })
 
+    // color input 입력시 hexColor이면 preview color 수정
     labelColorInput.addEventListener('input', (e) => {
       const value = e.target.value
       if (isHexColor(value)) {
@@ -126,6 +127,7 @@ export class LabelForm extends Observer {
       }
     })
 
+    // input validation을 체크하여 create-button을 활성화/비활성화
     const handleInputs = () => {
       if (labelNameInput.value && labelDescInput.value) {
         labelCreateButton.classList.remove("opacity-50")
@@ -135,10 +137,10 @@ export class LabelForm extends Observer {
         labelCreateButton.disabled = true
       }
     }
-
     labelNameInput.addEventListener('input', handleInputs)
     labelDescInput.addEventListener('input', handleInputs)
 
+    // create button 클릭시 store에 LabelModel을 추가
     labelCreateButton.addEventListener('click', (e) => {
       e.preventDefault()
       const item = {
@@ -148,10 +150,12 @@ export class LabelForm extends Observer {
       }
 
       if (LabelStore.isValid(item)) {
-        AppState.update({previewLabelColor: getRandomColor()}, false)
+        AppState.update({previewLabelColor: getRandomColorCode()}, false)
         LabelStore.add(item)
       }
     })
+
+    // cancel 버튼 클릭시 Form 숨김
     labelCancelButton.addEventListener('click', () => {
       AppState.update({showNewLabel: false})
     })

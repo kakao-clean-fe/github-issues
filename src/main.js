@@ -1,11 +1,11 @@
 import IssueStore from "./stores/issue.js";
+import LabelStore from "./stores/label.js";
 import Nav from "./components/nav.js";
-import {Issue} from "./components/issue.js"
+import {IssueTab} from "./components/issue.js"
 import {STATUS, TAB} from "./constants.js";
 import AppState from "./libs/state.js";
-import LabelStore from "./stores/label.js";
-import {Label, LabelForm} from "./components/label.js";
-import {getRandomColor} from "./utils.js";
+import {LabelForm, LabelTab} from "./components/label.js";
+import {getRandomColorCode} from "./utils.js";
 
 (
   () => {
@@ -15,7 +15,7 @@ import {getRandomColor} from "./utils.js";
       activeTab: TAB.LABEL,
       activeStatus: STATUS.OPEN,
       showNewLabel: false,
-      previewLabelColor: getRandomColor()
+      previewLabelColor: getRandomColorCode()
     }
     AppState.update(initState)
 
@@ -32,8 +32,8 @@ import {getRandomColor} from "./utils.js";
       })
 
     /* Issue, Label, LabelForm 생성 -> 생성과 함께 subscribe */
-    new Issue()
-    new Label()
+    new IssueTab()
+    new LabelTab()
     new LabelForm()
     // notify는 데이터 로딩 후 실행하므로 notify X
 

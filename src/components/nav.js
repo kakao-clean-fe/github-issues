@@ -1,4 +1,4 @@
-import {selectAll, selectOne} from "../utils.js";
+import {selectAll} from "../utils.js";
 import {TAB} from "../constants.js";
 import AppState from "../libs/state.js";
 

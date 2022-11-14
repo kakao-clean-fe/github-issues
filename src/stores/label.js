@@ -2,7 +2,7 @@ import {fetchData, isHexColor, removeItem} from "../utils.js";
 import AppState from "../libs/state.js";
 import {LabelModel} from "../components/label.js";
 
-
+/* Label Store를 object literal로 정의합니다. */
 const LabelStore = {
   getInitialData() {
     return fetchData("data-sources/labels.json")

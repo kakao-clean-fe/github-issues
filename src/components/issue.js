@@ -1,11 +1,12 @@
 import {selectAll, selectOne} from "../utils.js";
-import {getIssueItemTpl, getIssueTpl, getLabelItemTpl} from "../tpl.js";
+import {getIssueItemTpl, getIssueTpl} from "../tpl.js";
 import {STATUS, TAB} from "../constants.js";
 import Observer from "../libs/observer.js";
 import AppState from "../libs/state.js";
 
 
-export class Issue extends Observer {
+/** Issue Tab */
+export class IssueTab extends Observer {
   getTemplate(state) {
     const {activeTab, activeStatus, issues} = state
     const openedIssues = issues?.filter((model) => model.data.status === STATUS.OPEN) || [];
@@ -28,7 +29,7 @@ export class Issue extends Observer {
   }
 
   bindEvents() {
-    selectAll("#app .statusTab .cursor-pointer")
+    this.$statusTabs
       .forEach(
         (el) => {
           el.addEventListener(
@@ -42,6 +43,10 @@ export class Issue extends Observer {
           )
         }
       )
+  }
+
+  get $statusTabs() {
+    return selectAll("#app .statusTab .cursor-pointer")
   }
 
   render() {
@@ -68,16 +73,5 @@ export class IssueModel extends Observer {
   render() {
     const {activeTab, activeStatus} = AppState.get()
     if (activeTab === TAB.ISSUE && activeStatus === this.data.status) super.render()
-  }
-
-  bindEvents() {
-  }
-
-  get $() {
-    const querySelector = (selector) => this.contents?.querySelector(selector)
-    return {
-      editButton: querySelector('.edit-button'),
-      deleteButton: querySelector('.delete-button'),
-    }
   }
 }
