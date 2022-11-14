@@ -1,15 +1,21 @@
-import {getFetchData} from './api';
-import {IssuesData} from './stores/issue';
-import {setDefaultTemplate, setListTemplate} from './utils/template';
-import {getStatusCount} from './utils/status';
-import {setEventListerElement} from './utils/event';
-import {pipe} from './utils/pipe';
+import Header from "./components/Header";
+import LabelForm from "./components/LabelForm";
+import LabelList from "./components/LabelList";
+import { getFetchData } from "./api";
 
-(async () => {
-  const issuesData = IssuesData();
-  const issues = await getFetchData('issues')
-  issuesData.setIssues(issues);
-  pipe(getStatusCount, setDefaultTemplate)(issues);
-  setEventListerElement(issues);
-  setListTemplate(issues);
-})();
+const labelData = await getFetchData('labels');
+const header = new Header();
+const labelForm = new LabelForm();
+const labelList = new LabelList(labelData);
+document.querySelector('#app').innerHTML = `
+  <div id="label-wrapper" class="w-9/12 m-auto min-w-min">
+    ${header.getTemplate()}
+    ${labelForm.getTemplate()}
+    ${labelList.getTemplate()}
+  </div>
+  `;
+// const labelList = document.querySelector('.label-list');
+// labelData.forEach(item => {
+//   const labelListRow = new LabelListRow(item);
+//   labelList.appendChild(labelListRow.getElement());
+// });
