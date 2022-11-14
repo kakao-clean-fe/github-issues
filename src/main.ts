@@ -6,5 +6,5 @@ import {GNB} from "./view/gnb";
     const issueView = new IssueView();
     const labelView = new LabelView();
     GNB({issueView, labelView});
-    issueView.attach();
+    labelView.attach();
 })();
