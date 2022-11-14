@@ -1,7 +1,7 @@
 import { getLabelTpl } from "../template";
 import { getData } from "../api";
 import { renderUtils } from "../utils";
-import { MENU } from "../constants";
+import { MENU, LABEL } from "../constants";
 import { labelInputEvent, labelClickEvent } from "../event";
 
 export const renderLabel = async () => {
@@ -12,5 +12,6 @@ export const renderLabel = async () => {
   labelInputEvent(app);
   labelClickEvent(app);
 
-  renderUtils.setItems(app, labelData, MENU.LABEL);
+  const labelWrapper = app.querySelector(LABEL.WRAPPER);
+  renderUtils.setItems(labelWrapper, labelData, MENU.LABEL);
 };

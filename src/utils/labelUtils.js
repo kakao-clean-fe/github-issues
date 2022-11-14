@@ -1,5 +1,7 @@
+import { LABEL } from "../constants";
+
 const uselabelBtn = () => {
-  const createLabelBtn = app.querySelector("#label-create-button");
+  const createLabelBtn = app.querySelector(`#${LABEL.CREATE_BTN}`);
   createLabelBtn.disabled = false;
   createLabelBtn.classList.remove("opacity-50");
 };
@@ -14,4 +16,10 @@ const checkInput = () => {
 
 const rancomColor = () => Math.floor(Math.random() * 16777215).toString(16);
 
-export { uselabelBtn, checkInput, rancomColor };
+const labelUtils = {
+  uselabelBtn,
+  checkInput,
+  rancomColor,
+};
+
+export { labelUtils };
