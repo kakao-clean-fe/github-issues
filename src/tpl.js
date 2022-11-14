@@ -205,7 +205,7 @@ export function getLabelFormTpl() {
           <div class="ml-2">
             <input type="text" id="label-color-value" name="label-color[description]"
             class="w-full p-2 base-outer focus:outline-none"
-            placeholder="#color" value="" maxlength="100">
+            placeholder="#color" value="" maxlength="100" disabled="">
           </div>
 
         </dd>
@@ -228,11 +228,11 @@ export function getLabelFormTpl() {
     `
 }
 
-export function getLabelItemTpl({name, color, description}) {
+export function getLabelItemTpl({id, name, color, description}) {
     return `
-            <li class="label-item flex items-center ml-4 py-3 justify-between border-b ">
+            <li id="${id}" class="label-item flex items-center ml-4 py-3 justify-between border-b ">
                 <div class="issue-title flex"> 
-                    <span class="rounded-lg border p-1 px-2" style="background-color:#${color}">${name}</span> 
+                    <span id="label-name" class="rounded-lg border p-1 px-2" style="background-color:#${color}">${name}</span> 
                 </div>
                 <div class="issue-description ">${description}</div>
                 <div class="issue-description ">3 issues </div>

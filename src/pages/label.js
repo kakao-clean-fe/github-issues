@@ -2,7 +2,7 @@ import {getLabelTpl} from "../tpl.js";
 import {Component} from "../components/component.js";
 import {LabelItem} from "../components/label/labelItem.js";
 import {fetchLabelData} from "../utils/fetch.js";
-import {useAtomValue, useSetAtomListener, useSetAtomValue} from "../store/atomHooks.js";
+import {useAtom, useSetAtomListener} from "../store/atomHooks.js";
 import {labelsAtom} from "../store/atom.js";
 import {LabelForm} from "../components/label/labelForm.js";
 import {pipe} from "../utils/functional.js";
@@ -11,8 +11,7 @@ import {STYLE} from "../consts/style.js";
 import {SELECTOR} from "../consts/selector.js";
 import {COMPONENT_KEY} from "../consts/key.js";
 
-const setLabels = useSetAtomValue(labelsAtom);
-const getLabels = useAtomValue(labelsAtom);
+const [getLabels, setLabels] = useAtom(labelsAtom);
 const setLabelsListener = useSetAtomListener(labelsAtom);
 
 export class LabelPage extends Component {
@@ -35,17 +34,17 @@ export class LabelPage extends Component {
     }
 
     #updateChildAndLabelsCount() {
-        if(!this._isMounted) return; // mount가 안된 상태에서는 dom 접근 불가능하기 때문
+        if (!this._isMounted) return; // mount가 안된 상태에서는 dom 접근 불가능하기 때문
         this.#updateChild();
         this.#updateLabelsCount();
     }
 
-    #updateChild(){
+    #updateChild() {
         const newLabels = getLabels();
-        this._appendChild(new LabelItem(`${COMPONENT_KEY.LABEL_ITEM}-${this._index++}`, newLabels[newLabels.length-1], SELECTOR.LABEL_LIST));
+        this._appendChild(new LabelItem(`${COMPONENT_KEY.LABEL_ITEM}-${this._index++}`, newLabels[newLabels.length - 1], SELECTOR.LABEL_LIST));
     }
 
-    #updateLabelsCount(){
+    #updateLabelsCount() {
         document.querySelector('#labels-count').textContent = `${getLabels().length} Labels`;
     }
 
