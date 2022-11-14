@@ -12,29 +12,33 @@ const SELECTORS = {
   LABEL_COLOR_INPUT: "#label-color-value",
   LABEL_NAME_INPUT: "#label-name-input",
   LABEL_DESCRIPTION_INPUT: "#label-description-input",
-  LABEL_CREATE_BUTTON: '#label-create-button',
-  DELETE_BUTTON: '.delete-button',
+  LABEL_CREATE_BUTTON: "#label-create-button",
+  DELETE_BUTTON: ".delete-button",
 };
-const CLASS_HIDDEN = "hidden";
-const CLASS_DISABLED = 'opacity-50';
 
+const CLASS_HIDDEN = "hidden";
+const CLASS_DISABLED = "opacity-50";
 
 const initialForm = {
   name: "",
   description: "",
   color: "#BE185D",
 };
+
 export default class Labels extends Component {
   constructor({ store, ...args }) {
-    super({...args})
+    super({ ...args });
     this.store = store;
-    this.setState( {
+    this.setState({
       labels: this.store.selectLabels(this.store.getState()),
       showForm: false,
       labelForm: initialForm,
     }),
-    this.store.addChangeListener(this.setState);
+      this.store.addChangeListener(this.setState);
+    this._bindMethod();
+  }
 
+  _bindMethod() {
     this.toggleForm = this.toggleForm.bind(this);
     this.setNewLabelColor = this.setNewLabelColor.bind(this);
     this.setLabelName = this.setLabelName.bind(this);
@@ -48,6 +52,7 @@ export default class Labels extends Component {
     this.setState({ showForm: !this.state.showForm });
   }
 
+  /** 랜덤 라벨 색상 변경 */
   setNewLabelColor() {
     const newColor = getRandomColor();
     const labelForm = {
@@ -57,6 +62,7 @@ export default class Labels extends Component {
     this.setState({ labelForm });
   }
 
+  /** 라벨 이름 변경 */
   setLabelName(e) {
     const newName = e.target.value;
     const labelForm = {
@@ -66,6 +72,7 @@ export default class Labels extends Component {
     this.setState({ labelForm });
   }
 
+  /** 라벨 설명 변경 */
   setLabelDescription(e) {
     const newDesc = e.target.value;
     const labelForm = {
@@ -75,67 +82,66 @@ export default class Labels extends Component {
     this.setState({ labelForm });
   }
 
+  /** 라벨 추가 */
   addNewLabel() {
     this.store.addLabel({
       ...this.state.labelForm,
-      color: this.state.labelForm.color.replace('#', '')
+      color: this.state.labelForm.color.replace("#", ""),
     });
     this.initForm();
   }
 
+  /** 라벨 제거 */
   removeLabel(e) {
-    const {name} = e.target.dataset;
+    const { name } = e.target.dataset;
     console.log(name);
-    if(!name) {
-      throw new Error('삭제하려는 name값을 찾지 못했습니다.');
+    if (!name) {
+      throw new Error("삭제하려는 name값을 찾지 못했습니다.");
     }
     this.store.removeLabel(name);
   }
 
   initForm() {
-    this.setState({labelForm: initialForm});
+    this.setState({ labelForm: initialForm });
   }
 
   setListeners() {
     this.on(SELECTORS.NEW_LABEL_BUTTON, "click", this.toggleForm);
     this.on(SELECTORS.NEW_LABEL_COLOR, "click", this.setNewLabelColor);
-    this.on(SELECTORS.LABEL_NAME_INPUT, 'change', this.setLabelName)
-    this.on(SELECTORS.LABEL_DESCRIPTION_INPUT, 'change', this.setLabelDescription)
-    this.on(SELECTORS.LABEL_CREATE_BUTTON, 'click', this.addNewLabel);
-    this.on(SELECTORS.DELETE_BUTTON, 'click', this.removeLabel);
-  } 
+    this.on(SELECTORS.LABEL_NAME_INPUT, "change", this.setLabelName);
+    this.on(
+      SELECTORS.LABEL_DESCRIPTION_INPUT,
+      "change",
+      this.setLabelDescription
+    );
+    this.on(SELECTORS.LABEL_CREATE_BUTTON, "click", this.addNewLabel);
+    this.on(SELECTORS.DELETE_BUTTON, "click", this.removeLabel);
+  }
 
   render() {
-    if(!this.state) {
-      return null;
+    if (!this.state) {
+      this.template = null;
     }
-    const labelNode = this.convertHTMLStringToNode(getLabelTpl());
+    this.template = this.convertHTMLStringToNode(getLabelTpl());
     if (this.state.showForm) {
-      labelNode
-        .querySelector(SELECTORS.NEW_LABEL_FORM)
-        .classList.remove(CLASS_HIDDEN);
+      this.select(SELECTORS.NEW_LABEL_FORM).classList.remove(CLASS_HIDDEN);
     }
 
     const { name, description, color } = this.state.labelForm || {};
 
-    if(name && description && color) {
-      const button = labelNode.querySelector(SELECTORS.LABEL_CREATE_BUTTON)
+    if (name && description && color) {
+      const button = this.select(SELECTORS.LABEL_CREATE_BUTTON);
       button.disabled = false;
       button.classList.remove(CLASS_DISABLED);
     }
+    
+    this.select(SELECTORS.LABEL_PREVIEW).style.backgroundColor = color;
+    this.select(SELECTORS.NEW_LABEL_COLOR).style.backgroundColor = color;
+    this.select(SELECTORS.LABEL_COLOR_INPUT).value = color;
+    this.select(SELECTORS.LABEL_NAME_INPUT).value = name;
+    this.select(SELECTORS.LABEL_DESCRIPTION_INPUT).value = description;
 
-    labelNode.querySelector(SELECTORS.LABEL_PREVIEW).style.backgroundColor =
-      color;
-    labelNode.querySelector(SELECTORS.NEW_LABEL_COLOR).style.backgroundColor =
-      color;
-    labelNode.querySelector(SELECTORS.LABEL_COLOR_INPUT).value = color;
-    labelNode.querySelector(SELECTORS.LABEL_NAME_INPUT).value = name;
-    labelNode.querySelector(SELECTORS.LABEL_DESCRIPTION_INPUT).value =
-      description;
-
-
-
-    const list = labelNode.querySelector(SELECTORS.LABEL_LIST);
+    const list = this.select(SELECTORS.LABEL_LIST);
     this.state?.labels?.forEach(
       (label) =>
         new LabelItem({
@@ -143,6 +149,5 @@ export default class Labels extends Component {
           state: label,
         })
     );
-    return labelNode;
   }
 }

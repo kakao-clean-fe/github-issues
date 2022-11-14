@@ -1,7 +1,7 @@
 export default class Component {
-  template;
+  template; // 랜더링 할 컴포넌트 Node
   state;
-  target; // Node..
+  target; // 랜더링 할 부모 Node..
 
   constructor({ state, target }) {
     this.target = target;
@@ -17,7 +17,7 @@ export default class Component {
   }
 
   on(selector, event, callback) {
-    const nodes = this.select(selector);
+    const nodes = this.selectAll(selector);
 
     nodes.forEach((node) =>
       node.addEventListener(event, (e) => {
@@ -36,14 +36,18 @@ export default class Component {
   }
 
   select(selector) {
-    return this.template?.querySelectorAll(selector);
+    return this.template?.querySelector(selector);
   }
 
+  selectAll(selector) {
+    return this.template?.querySelectorAll(selector);
+  }
+  
   _render() {
     if (this.template) {
       this.target.removeChild(this.template);
     }
-    this.template = this.render();
+    this.render();
     if (!this.template) {
       return;
     }
