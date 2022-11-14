@@ -1,5 +1,8 @@
-export default class Header{
+import Element from "./Element";
+
+export default class Header extends Element{
   constructor(){
+    super();
     this.template = `
       <div id="header" class="flex justify-between">
         <div class="filter-menu w-2/3 px-3 py-1 flex base-outer items-center">
@@ -14,8 +17,5 @@ export default class Header{
         </div>
       </div>
     `;
-  }
-  getTemplate(){
-    return this.template;
   }
 }

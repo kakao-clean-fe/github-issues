@@ -1,5 +1,8 @@
-export default class LabelListHeader{
+import Element from "./Element";
+
+export default class LabelListHeader extends Element{
   constructor(labelDataList){
+    super();
     this.labelDataList = labelDataList;
     this.template = `
     <div class="label-header h-16 flex justify-between items-center border-b">

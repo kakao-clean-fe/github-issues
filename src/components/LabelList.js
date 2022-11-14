@@ -1,8 +1,10 @@
+import Element from "./Element";
 import LabelListBody from "./LabelListBody";
 import LabelListHeader from "./LabelListHeader";
 
-export default class LabelList{
+export default class LabelList extends Element{
   constructor(labelDataList){
+    super();
     this.labelDataList = labelDataList;
     this.header = new LabelListHeader(labelDataList);
     this.body = new LabelListBody(labelDataList);
@@ -12,8 +14,5 @@ export default class LabelList{
         ${this.header.getTemplate()}
         ${this.body.getTemplate()}
       </div>`;
-  }
-  getTemplate(){
-    return this.template;
   }
 }

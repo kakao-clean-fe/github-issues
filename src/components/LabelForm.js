@@ -1,5 +1,8 @@
-export default class LabelForm{
+import Element from "./Element";
+
+export default class LabelForm extends Element{
   constructor(){
+    super();
     this.template = `
       <form class="hidden p-3 mb-3 mt-6 border rounded-sm font-bold" id="new-label-form" action="/labels" accept-charset="UTF-8" method="post">
         <div class="form-group mt-0 mb-2"
@@ -90,8 +93,5 @@ export default class LabelForm{
 
         </div>
       </form>`;
-  }
-  getTemplate(){
-    return this.template;
   }
 }
