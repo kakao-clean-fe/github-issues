@@ -11,31 +11,28 @@ const makeLabelCountTemplate = (count: number): string => `${count} Labels`;
 export class LabelCount implements Component {
   parent: Element | null = null;
   templateFunction = makeLabelCountTemplate;
-  labels: Labels;
 
   constructor ({
     parentSelector = LABEL_OPEN_COUNT_SELECTOR,
-    templateFunction = makeLabelCountTemplate,
-    labels
+    templateFunction = makeLabelCountTemplate
   }: LabelCountComponentArgs) {
     this.parent = getElement(parentSelector);
     this.templateFunction = templateFunction;
-    this.labels = labels;
   }
 
-  init (): void {
-    this.render();
+  init ({ labels }: { labels: Labels }): void {
+    this.render({ labels });
   }
 
-  private get template (): string {
-    const labelCount = countArray({ arr: this.labels });
+  getTemplate ({ labels }: { labels: Labels }): string {
+    const labelCount = countArray({ arr: labels });
     return this.templateFunction(labelCount);
   }
 
-  render (): void {
+  render ({ labels }: { labels: Labels }): void {
     renderInnerHtml({
       parent: this.parent,
-      html: this.template
+      html: this.getTemplate({ labels })
     });
   }
 }

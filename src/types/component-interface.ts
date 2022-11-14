@@ -1,6 +1,6 @@
 export interface Component {
   parent?: Element | null
-  init: () => void
-  render: () => void
+  init: (...args: unknown[]) => void
+  render: (...args: unknown[]) => void
   initEventHandler?: () => void
 }

@@ -12,12 +12,10 @@ export interface LabelPageLayoutArgs {
 export interface LabelListComponentArgs {
   parentSelector?: string
   labelItemTemplateFunction?: (label: Label) => string
-  labels: Labels
 }
 
 // 라벨 카운트 컴포넌트
 export interface LabelCountComponentArgs {
   parentSelector?: string
   templateFunction?: (count: number) => string
-  labels: Labels
 }

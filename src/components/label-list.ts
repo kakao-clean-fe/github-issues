@@ -10,30 +10,27 @@ import type { Component } from '~/types/component-interface';
 export class LabelList implements Component {
   parent: Element | null = null;
   labelItemTemplateFunction = getLabelItemTpl;
-  labels: Labels;
 
   constructor ({
     parentSelector = LABEL_LIST_SELECTOR,
-    labelItemTemplateFunction = getLabelItemTpl,
-    labels
+    labelItemTemplateFunction = getLabelItemTpl
   }: LabelListComponentArgs) {
     this.parent = getElement(parentSelector);
     this.labelItemTemplateFunction = labelItemTemplateFunction;
-    this.labels = labels;
   }
 
-  init (): void {
-    this.render();
+  init ({ labels }: { labels: Labels }): void {
+    this.render({ labels });
   }
 
-  private get template (): string {
-    return makeTemplate({ arr: this.labels, templateFunc: getLabelItemTpl });
+  getTemplate ({ labels }: { labels: Labels }): string {
+    return makeTemplate({ arr: labels, templateFunc: getLabelItemTpl });
   }
 
-  render (): void {
+  render ({ labels }: { labels: Labels }): void {
     renderInnerHtml({
       parent: this.parent,
-      html: this.template
+      html: this.getTemplate({ labels })
     });
   }
 }
