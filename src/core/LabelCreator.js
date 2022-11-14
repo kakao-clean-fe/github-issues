@@ -1,10 +1,10 @@
-import Item from "./Item";
+import Item from "../lib/Item";
 
 // ref : https://css-tricks.com/snippets/javascript/random-hex-color/
 const createRandomColor = () =>
   `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 
-export default class LabelCreateUI {
+export default class LabelCreator {
   constructor(id, labelStore) {
     this._id = id;
     this._name = new Item("");

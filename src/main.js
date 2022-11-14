@@ -1,5 +1,5 @@
-import initializeIssue from "./issue";
-import initializeLabel from "./label";
+import initializeIssue from "./pages/issue";
+import initializeLabel from "./pages/label";
 
 const [issue, label] = document.querySelectorAll("nav button");
 const target = document.getElementById("app");

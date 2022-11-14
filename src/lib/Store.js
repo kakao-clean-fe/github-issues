@@ -1,4 +1,4 @@
-import { toFetch } from "./helper";
+import { toFetch } from "../utils/helper";
 import Observer from "./Observer";
 
 export default class Store extends Observer {

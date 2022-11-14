@@ -1,7 +1,7 @@
-import { toFetch, updateUI, findByClass, renderLayout } from "./helper";
-import LabelCreateUI from "./LabelCreateUI";
-import Store from "./Store";
-import { getLabelTpl, getLabelItemTpl } from "./tpl";
+import { updateUI, findByClass, renderLayout } from "../utils/helper";
+import LabelCreateUI from "../core/LabelCreator";
+import Store from "../lib/Store";
+import { getLabelTpl, getLabelItemTpl } from "../tpl";
 
 const DATA_SOURCE_LABEL = "/data-sources/labels.json";
 
