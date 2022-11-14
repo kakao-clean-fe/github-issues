@@ -24,8 +24,8 @@ export const LabelPage = class {
   }
 
   initLabelList () {
-    new LabelList(this.labelData);
-    new LabelCreator();
+    const labelList = new LabelList(this.labelData);
+    const labelCreator = new LabelCreator();
 
     this.initEvent();
   }
