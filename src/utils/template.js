@@ -23,9 +23,3 @@ export const setButtonTemplate = (statusButtons, target = null) => {
     target.classList.add('font-bold');
   }
 }
-export const convertElement = (templateStr) => {
-  const div = document.createElement('div');
-  div.innerHTML = templateStr.trim();
-  return div.firstChild;
-}
-

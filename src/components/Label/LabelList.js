@@ -1,4 +1,4 @@
-import Element from "./Element";
+import Element from "../Element";
 import LabelListBody from "./LabelListBody";
 import LabelListHeader from "./LabelListHeader";
 
@@ -12,7 +12,6 @@ export default class LabelList extends Element{
       `
       <div id="labels-wrapper" class="m-auto  base-outer mt-6 bg-slate-100">
         ${this.header.getTemplate()}
-        ${this.body.getTemplate()}
       </div>`;
   }
 }
