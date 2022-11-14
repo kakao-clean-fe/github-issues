@@ -18,8 +18,7 @@ const Label = (appDiv: Element) => {
   const labelHeader = LabelHeader();
   const labelCreate = LabelCreate();
   const labelList = LabelList();
-  setComponent(() => '', wrapper, labelHeader, labelCreate, labelList);
-  return getRoot();
+  return setComponent(() => '', wrapper, labelHeader, labelCreate, labelList);
 };
 
 export default Label;

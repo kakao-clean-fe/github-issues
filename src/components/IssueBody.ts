@@ -1,12 +1,10 @@
 import { Status } from '../../types';
-import Issue from './Issue';
-import { getIssueTpl } from '../common/tpl';
 import { STATUS } from '../common/constants';
 import FunctionComponent from '../common/FunctionComponent';
+import { getIssueBodyTpl, getIssueItemTpl } from '../common/tpl';
 import { itemObserver } from '../viewModel/ItemObserver';
 
-// app의 view에 관한 로직만
-const App = (appElement: Element) => {
+const IssueBody = () => {
   const app = FunctionComponent();
   const {
     getFilteredData,
@@ -76,12 +74,9 @@ const App = (appElement: Element) => {
   });
   return setComponent(
     () =>
-      getIssueTpl(
-        getFilteredData()
-          .map((e) => Issue(e))
-          .join('')
-      ),
-    appElement
+      getIssueBodyTpl(getFilteredData().map((data) => getIssueItemTpl(data))),
+    document.createElement('div')
   );
 };
-export default App;
+
+export default IssueBody;

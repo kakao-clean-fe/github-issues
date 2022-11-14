@@ -12,7 +12,7 @@ export interface IFunctionComponent {
     innerHTML: () => string,
     element: Element,
     ...children: Element[]
-  ) => string;
+  ) => Element;
   addEventListener: (
     querySelector: string,
     event: string,
@@ -77,7 +77,7 @@ const FunctionComponent = (...props): IFunctionComponent => {
     _innerHTML = innerHTML;
     _children = children;
     render();
-    return _element.innerHTML;
+    return _element;
   };
 
   const addBeforeRender = (event: () => void) => {

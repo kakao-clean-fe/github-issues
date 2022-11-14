@@ -1,15 +1,22 @@
-import { Item } from '../../types';
+import { Status } from '../../types';
+import { getIssueTpl } from '../common/tpl';
+import { STATUS } from '../common/constants';
 import FunctionComponent from '../common/FunctionComponent';
-import { getIssueItemTpl } from '../common/tpl';
+import { itemObserver } from '../viewModel/ItemObserver';
+import IssueHeader from './IssueHeader';
+import IssueBody from './IssueBody';
 
-// issue의 view 에 관한 로직만
-const Issue = (item: Item) => {
-  const { getRoot, setComponent } = FunctionComponent();
-
-  return setComponent(
-    () => getIssueItemTpl(item),
-    document.createElement('div')
-  );
+// app의 view에 관한 로직만
+const Issue = (appElement: Element) => {
+  appElement.innerHTML = '';
+  const app = FunctionComponent();
+  const { setComponent } = app;
+  const issueWrapper = document.createElement('div');
+  issueWrapper.id = 'issue-wrapper';
+  issueWrapper.className = 'w-9/12 m-auto min-w-min';
+  appElement.appendChild(issueWrapper);
+  const issueHeader = IssueHeader();
+  const issueBody = IssueBody();
+  return setComponent(() => '', issueWrapper, issueHeader, issueBody);
 };
-
 export default Issue;

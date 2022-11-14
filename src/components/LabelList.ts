@@ -20,7 +20,7 @@ const LabelList = () => {
   } = labelObserver;
   subscribe(app);
 
-  setComponent(
+  return setComponent(
     () =>
       getLabelListTpl(
         getLabelCount(),
@@ -28,8 +28,6 @@ const LabelList = () => {
       ),
     appDiv
   );
-
-  return getRoot();
 };
 
 export default LabelList;

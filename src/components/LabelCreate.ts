@@ -18,7 +18,6 @@ const LabelCreate = () => {
     addLabel,
   } = labelObserver;
   subscribe(app);
-  setComponent(() => getLabelCreateTpl(getCreateHidden()), appDiv);
   try {
     let newLabel: ILabelCls = new LabelBuilder().build();
 
@@ -99,7 +98,7 @@ const LabelCreate = () => {
     });
   } catch (error) {}
 
-  return getRoot();
+  return setComponent(() => getLabelCreateTpl(getCreateHidden()), appDiv);
 };
 
 export default LabelCreate;

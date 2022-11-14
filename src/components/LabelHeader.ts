@@ -10,11 +10,10 @@ const LabelHeader = () => {
   const { subscribe, setCreateHidden } = labelObserver;
   subscribe(app);
 
-  setComponent(() => getLabelHeaderTpl(), appDiv);
   addEventListener('.new-label-button', 'click', (e) => {
     setCreateHidden(false);
   });
-  return getRoot();
+  return setComponent(() => getLabelHeaderTpl(), appDiv);
 };
 
 export default LabelHeader;
