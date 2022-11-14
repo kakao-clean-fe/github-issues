@@ -1,6 +1,9 @@
-import {getIssueTpl, getIssueItemTpl, openCountSelector, closeCountSelector, openIssueTabSelector, closeIssueTabSelector, issueContainerSelector, activateTabClass} from './tpl';
-import {$, clearElement, setRenderTarget, compose, pipe, removeClass, addClass} from './util/componentUtil';
-import {issueStore$,statusStore$, activatedIssuesStore$, loadIssueData } from './store.js'
+import {getIssueTpl, getIssueItemTpl} from './template/tpl';
+import {activateTabClass, navIssueSelector, navLabelSelector, openCountSelector, closeCountSelector, openIssueTabSelector,closeIssueTabSelector, issueContainerSelector} from './template/selector';
+import {$, clearElement, setRenderTarget, toggleClass} from './util/dom';
+import { LABEL_PAGE, ISSUE_PAGE, pageStore$,issueStore$,statusStore$, activatedIssuesStore$, loadIssueData } from './store/issue.js'
+import {initLabelPage} from './page/label';
+import {pipe, compose} from './util/operator';
 
 const renderOpenCloseCount = (issues) => {
   const getfilteredLength = (issues) => status => issues.filter(issue => issue.status === status).length;
@@ -27,17 +30,11 @@ const renderIssues = (issues) => {
   issues.forEach(issue => compose(renderIssue, getIssueItemTpl)(issue));
 }
 
-const activateTab = (status) => {
-  const removeTabClass = removeClass(activateTabClass)
-  const addTabClass = addClass(activateTabClass);
-
-  if (status === 'open') {
-    addTabClass($(openIssueTabSelector))
-    removeTabClass($(closeIssueTabSelector))
-  } else if (status === 'close') {
-    addTabClass($(closeIssueTabSelector))
-    removeTabClass($(openIssueTabSelector))
-  }
+const activateTab = () => {
+  const toggleActiveTab = toggleClass(activateTabClass);
+  
+  toggleActiveTab($(openIssueTabSelector));
+  toggleActiveTab($(closeIssueTabSelector));
 }
 
 const registerWatcher = () => {
@@ -57,7 +54,10 @@ const registerActivatedIssuesWatcher = () => {
   activatedIssuesStore$.addWatchers([renderIssues])
 }
 
-(function init() {
+/**
+ * render page
+ */
+const renderIssuePage = () => {
   const renderWrapper = compose(setRenderTarget($('#app')), getIssueTpl); // render wrapper
   const initialRenderPipe = pipe(renderWrapper, addIssueTabClickListener);
   const initialStorePipe = pipe(
@@ -66,4 +66,28 @@ const registerActivatedIssuesWatcher = () => {
   );
 
   pipe(initialRenderPipe, initialStorePipe)();
+};
+
+const renderPage = (page) => {
+  clearElement('#app');
+
+  page === ISSUE_PAGE ? renderIssuePage() : initLabelPage();
+}
+
+const registerPageStoreWather = () => {
+  pageStore$.addWatchers([renderPage]);
+}
+
+
+// decide rendering issue page or label page
+const clickPageHandler = (page) => () => pageStore$.setValue(page);
+const addRenderPageClickListener = () => {
+  $(navIssueSelector).addEventListener('click', clickPageHandler(ISSUE_PAGE));
+  $(navLabelSelector).addEventListener('click', clickPageHandler(LABEL_PAGE));
+}
+
+(function init() {
+  registerPageStoreWather();
+  addRenderPageClickListener();
+  pageStore$.setValue(LABEL_PAGE);
 })();

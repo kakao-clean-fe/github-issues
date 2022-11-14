@@ -1,3 +1,5 @@
+import { opacityClass } from "../template/selector";
+
 export const $ = (selector) => {
   return document.querySelector(selector);
 }
@@ -20,12 +22,14 @@ export const setRenderTarget = (parent) => (template) => parent?.insertAdjacentH
 
 export const removeClass = (className) => target => target.classList.remove(className);
 export const addClass = className => target => target.classList.add(className);
+export const toggleClass = className => target => target.classList.toggle(className);
 
-// args2는 배열 아닌 인자
-export const compose = (...args1) => {
-  return (args2) => args1.reduceRight((acc, fn) => fn(acc), args2);
+export const activateButton = target => {
+  removeClass(opacityClass)(target);
+  target.style.cursor = 'pointer';
 }
 
-export const pipe = (...args1) => {
-  return (...args2) => args1.reduce((acc, fn) => fn(acc), args2);
+export const deactivateButton = target => {
+  addClass(opacityClass)(target);
+  target.style.cursor = '';
 }

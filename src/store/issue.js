@@ -1,5 +1,13 @@
-import {store, createDerivedStore, fetchData} from './util/storeUtil.js';
+import {store, createDerivedStore, fetchData} from './reusableStore.js';
 
+export const LABEL_PAGE = 'label';
+export const ISSUE_PAGE = 'issue';
+
+export const pageStore$ = store('');
+
+/**
+ * issue store 관련
+ */
 export const issueStore$ = store([]);
 export const statusStore$ = store('open');
 

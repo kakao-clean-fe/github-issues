@@ -1,4 +1,4 @@
-import {pipe} from './componentUtil';
+import {pipe} from '../util/operator';
 
 /** STORE */
 export const store = (initialValue) => {
@@ -44,7 +44,7 @@ export const createDerivedStore = (fn, ...upstreams) => {
   }
 }
 
-const getPromiseData = (url) => {
+export const getPromiseData = (url) => {
   return fetch(url).then(res => res.json())
 }
 
