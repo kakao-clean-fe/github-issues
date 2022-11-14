@@ -9,7 +9,7 @@ import {useSetAtomListener, useSetAtomValue} from "../store/atomHooks.js";
 const setIssues = useSetAtomValue(issuesAtom);
 const setIssuesListener = useSetAtomListener(issuesAtom);
 
-export const initIssuePage = async () => {
+export default async () => {
     setIssuesListener(fetchIssueAtomListeners);
     setIssues(await fetchIssueData());
     initIssueLayout();
@@ -17,12 +17,6 @@ export const initIssuePage = async () => {
     initIssueItems();
 }
 
-const initIssueLayout = () => {
-    const issueContainer = document.createElement('template');
-    issueContainer.innerHTML = getIssueTpl();
-    document.querySelector(SELECTOR.ROOT).appendChild(issueContainer.content);
-}
+const initIssueLayout = () => document.querySelector(SELECTOR.ROOT).innerHTML = getIssueTpl();
 
-export const fetchIssueAtomListeners = () => console.log("fetchIssueData");
-
-await initIssuePage();
+const fetchIssueAtomListeners = () => console.log("fetchIssueData");

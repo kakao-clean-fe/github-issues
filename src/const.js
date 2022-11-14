@@ -16,3 +16,8 @@ export const ATOM_PROP = {
     VALUE : 'value',
     LISTENERS : 'listeners'
 }
+
+export const NAV_BTN_STATUS = {
+    ISSUE: 'issue',
+    LABEL: 'label'
+}

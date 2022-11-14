@@ -108,8 +108,34 @@ export function getLabelTpl() {
     </div>
   </div>
 
+  <div id="new-label-form"></div>
 
-  <form class="hidden p-3 mb-3 mt-6 border rounded-sm font-bold" id="new-label-form" action="/labels" accept-charset="UTF-8" method="post">
+  <div id="labels-wrapper" class="m-auto  base-outer mt-6 bg-slate-100">
+    <div class="label-header h-16 flex justify-between items-center border-b">
+
+      <div class="mr-3 d-none pl-4">
+        <div id="labels-count" class="whitespace-nowrap open-count font-bold cursor-pointer">6 Labels</div>
+      </div>
+
+      <div class="details-list flex ml-auto">
+        <details>
+          <summary>Sort</summary>
+        </details>
+      </div>
+
+    </div>
+    <ul class="label-list ml-auto text-sm bg-white">
+
+    </ul>
+  </div>
+    <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
+</div>
+  `
+}
+
+export function getLabelFormTpl() {
+    return `
+  <form class="hidden p-3 mb-3 mt-6 border rounded-sm font-bold" id="new-label-form" accept-charset="UTF-8">
     <div class="form-group mt-0 mb-2"
       data-url-template="/labels/preview/" data-default-name="Label preview">
 
@@ -191,7 +217,7 @@ export function getLabelTpl() {
         class="form-group my-2 flex mt-10">
         <button type="button" class="base-outer p-2 mr-4"> Cancel
         </button>
-        <button id="label-create-button" type="submit" class="base-outer p-2 mr-4 bg-green-700 opacity-50 text-white" disabled=""> Create label
+        <button id="label-create-button" type="button" class="base-outer p-2 mr-4 bg-green-700 text-white"> Create label
         </button>
       </div>
       <!--END new label actions-->
@@ -199,29 +225,7 @@ export function getLabelTpl() {
     </div>
 
   </form>
-
-
-  <div id="labels-wrapper" class="m-auto  base-outer mt-6 bg-slate-100">
-    <div class="label-header h-16 flex justify-between items-center border-b">
-
-      <div class="mr-3 d-none pl-4">
-        <div class="whitespace-nowrap open-count font-bold cursor-pointer">6 Labels</div>
-      </div>
-
-      <div class="details-list flex ml-auto">
-        <details>
-          <summary>Sort</summary>
-        </details>
-      </div>
-
-    </div>
-    <ul class="label-list ml-auto text-sm bg-white">
-
-    </ul>
-  </div>
-    <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
-</div>
-  `
+    `
 }
 
 export function getLabelItemTpl({name, color, description}) {
