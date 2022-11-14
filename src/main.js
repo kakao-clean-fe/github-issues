@@ -1,9 +1,16 @@
-import { getIssueItemTpl, getIssueTpl } from './tpl';
-import { fetchIssuesData } from './common/api';
-import { OPEN, CLOSED } from './constants/status';
 import { SELECTOR } from './constants/selector';
-import { getIssuesWithStatus } from './utils/status';
-import { createApp, createIssueList, updateIssueList, boldToStatusButton } from './utils/template';
-import { hasClass } from './utils/dom';
-import { pipe } from './utils/pipe';
-import { bindClickEvent } from './utils/event';
+import {selectElement } from './utils/dom';
+import { createIssuePage } from './pages/issues';
+import { EVENT } from './constants/event';
+import { LabelPage } from './pages/label';
+
+const issueTabButton = selectElement(SELECTOR.ISSUE_TAB);
+const labelTabButton = selectElement(SELECTOR.LABEL_TAB);
+
+issueTabButton.addEventListener(EVENT.CLICK, () => {
+  createIssuePage();
+});
+
+labelTabButton.addEventListener(EVENT.CLICK, () => {
+  new LabelPage();
+});

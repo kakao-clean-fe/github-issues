@@ -1,3 +1,13 @@
+import { getIssuesWithStatus } from '../utils/status';
+import { pipe } from '../utils/pipe';
+import { getIssueItemTpl, getIssueTpl } from '../tpl';
+import { hasClass } from '../utils/dom';
+import { boldToStatusButton, createApp, createIssueList, updateIssueList } from '../utils/template';
+import { bindClickEvent } from '../utils/event';
+import { fetchIssuesData } from '../common/api';
+import { CLOSED, OPEN } from '../constants/status';
+import { SELECTOR } from '../constants/selector';
+
 const renderIssue = (issues) => {
   /** 데이터 가져오기 */
   const getIssues = getIssuesWithStatus(issues);
@@ -39,7 +49,7 @@ const initApp = async (issues) => {
   setStatusTabEvent(issues);
 }
 
-const createIssuePage = async () => {
+export const createIssuePage = async () => {
   const issuesData = await fetchIssuesData();
 
   initApp(issuesData);
