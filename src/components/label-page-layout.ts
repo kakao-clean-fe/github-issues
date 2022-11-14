@@ -25,14 +25,14 @@ export class LabelPageLayout implements Component {
     this.initEventHandler();
   }
 
-  private get template (): string {
+  getTemplate (): string {
     return this.templateFunction();
   }
 
   render (): void {
     renderInnerHtml({
       parent: this.parent,
-      html: this.template
+      html: this.getTemplate()
     });
   }
 
