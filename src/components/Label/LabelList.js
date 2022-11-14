@@ -3,15 +3,20 @@ import LabelListBody from "./LabelListBody";
 import LabelListHeader from "./LabelListHeader";
 
 export default class LabelList extends Component{
-  constructor(labelDataList){
+  #templateStr = `
+    <div id="labels-wrapper" class="m-auto  base-outer mt-6 bg-slate-100">
+    <div>
+  `;
+  constructor(model){
     super();
-    this.labelDataList = labelDataList;
-    this.header = new LabelListHeader(labelDataList);
-    this.body = new LabelListBody(labelDataList);
-    this.template = 
-      `
-      <div id="labels-wrapper" class="m-auto  base-outer mt-6 bg-slate-100">
-        ${this.header.getTemplate()}
-      </div>`;
+    this.template = this.convertElement(this.#templateStr);
+    this.render('#label-wrapper');
+    this.model = model;
+    this.header = new LabelListHeader(model.labelList.length);
+    this.model.subscribe(this.updatedLabelList.bind(this));
+    this.body = new LabelListBody(model.labelList);
+  }
+  updatedLabelList(){
+    this.header.setCountTemplate(this.model.labelList);
   }
 }

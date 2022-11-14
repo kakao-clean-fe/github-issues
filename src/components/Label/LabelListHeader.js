@@ -1,13 +1,10 @@
 import Component from "..";
-
+import { querySelector } from "../../utils/dom-selector";
 export default class LabelListHeader extends Component{
-  constructor(labelDataList){
-    super();
-    this.labelDataList = labelDataList;
-    this.template = `
+  #templateStr = `
     <div class="label-header h-16 flex justify-between items-center border-b">
       <div class="mr-3 d-none pl-4">
-        <div class="whitespace-nowrap open-count font-bold cursor-pointer">${this.labelDataList.length} Labels</div>
+        <div class="whitespace-nowrap open-count font-bold cursor-pointer">6 Labels</div>
       </div>
       <div class="details-list flex ml-auto">
         <details>
@@ -15,9 +12,16 @@ export default class LabelListHeader extends Component{
         </details>
       </div>
     </div>
-    `
+  `;
+  constructor(count){
+    super();
+    this.count = count;
+    this.template = this.convertElement(this.#templateStr);
+    this.render('#labels-wrapper');
+
+    this.setCountTemplate(count);
   }
-  getTemplate(){
-    return this.template;
+  setCountTemplate(count){
+    querySelector('.open-count').innerHTML = `${count} Labels`;
   }
 }

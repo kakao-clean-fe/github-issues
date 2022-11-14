@@ -1,3 +1,5 @@
+import { querySelector } from "../utils/dom-selector";
+
 export default class Component{
   constructor(model){
     this.formStateModel = model;
@@ -5,9 +7,12 @@ export default class Component{
   getTemplate(){
     return this.template;
   }
-  render(parent){
-    console.log(parent, this.template);
-    document.querySelector(parent).append(this.template);
+  render(parent, remove = false){
+    const parentElement = querySelector(parent);
+    if(remove) {
+      parentElement.innerHTML = '';
+    }
+    parentElement.append(this.template);
   }
   convertElement(templateStr){
     const div = document.createElement('div');

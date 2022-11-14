@@ -1,16 +1,32 @@
 import Observer from ".";
 
-export default class FormStateModel extends Observer {
+export class FormStateModel extends Observer {
   constructor() {
     super();
     this.isOpen = false;
   }
-  getIsOpen() {
-    return this.isOpen;
+  get isOpen() {
+    return this._isOpen;
   }
-  setIsOpen(isOpen) {
-    console.log('111', isOpen)
-    this.isOpen = isOpen; //상태 변경
+  set isOpen(isOpen) {
+    this._isOpen = isOpen; //상태 변경
+    this.notify(); //등록된 렌더링 함수들 호출
+  }
+}
+export class LabelListModel extends Observer {
+  constructor(labelList) {
+    super();
+    this.labelList = labelList;
+  }
+  get labelList() {
+    return this._labelList;
+  }
+  set labelList(labelList) {
+    this._labelList = labelList;
+    this.notify(); //등록된 렌더링 함수들 호출
+  }
+  addLabelList(label) {
+    this.labelList = [...this.labelList, label];
     this.notify(); //등록된 렌더링 함수들 호출
   }
 }
