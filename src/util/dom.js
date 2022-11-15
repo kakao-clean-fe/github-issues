@@ -1,4 +1,4 @@
-import { opacityClass } from "../template/selector";
+import { AppSelector, opacityClass } from "../template/selector";
 
 export const $ = (selector) => {
   return document.querySelector(selector);
@@ -19,6 +19,7 @@ export const renderTemplate = (parent, template) => {
 }
 
 export const setRenderTarget = (parent) => (template) => parent?.insertAdjacentHTML('beforeend', template);
+export const renderPageInApp = setRenderTarget($(AppSelector));
 
 export const removeClass = (className) => target => target.classList.remove(className);
 export const addClass = className => target => target.classList.add(className);
@@ -32,4 +33,10 @@ export const activateButton = target => {
 export const deactivateButton = target => {
   addClass(opacityClass)(target);
   target.style.cursor = '';
+}
+
+export const addTargetsListener = (_targetElements, callback = () => {}) => {
+  const targetElements = Array.isArray(_targetElements) ? _targetElements : [_targetElements];
+
+  targetElements.forEach(el =>  el.addEventListener('click', callback));
 }

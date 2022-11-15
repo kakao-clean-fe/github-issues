@@ -1,3 +1,5 @@
+export const AppSelector = '#app';
+
 /**
  * body > nav 관련
  */

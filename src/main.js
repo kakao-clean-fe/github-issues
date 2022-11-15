@@ -1,18 +1,18 @@
-import {selectPageContainerSelector} from './template/selector';
+import {AppSelector, selectPageContainerSelector} from './template/selector';
 import {$, clearElement} from './util/dom';
 import {pageStore$ } from './store/issue.js'
-import {initLabelPage} from './page/label';
 import {LABEL_PAGE, ISSUE_PAGE} from './const';
 import {issuePage} from './page/issue';
+import {labelPage} from './page/label';
 
 /**
  * initiate app
  */
 const app = {
   renderPage(page) {
-    clearElement('#app');
+    clearElement(AppSelector);
     
-    page === ISSUE_PAGE ? issuePage.render() : initLabelPage();
+    page === ISSUE_PAGE ? issuePage.render() : labelPage.render();
   },
   // decide whether to render issue or label page
   clickPageHandler(e) {

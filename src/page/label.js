@@ -1,67 +1,69 @@
-import {getLabelItemTpl, getLabelTpl} from '../template/tpl';
-import {labelPreviewSelector, newLabelColorSelector, newLabelBtnSelector, labelListContainerSelector, labelCountSelector, labelFormSelector, formHiddenClass, labelCreateCancelButtonSelector, formColorValueSelector} from '../template/selector';
-import {$ ,clearElement, setRenderTarget } from '../util/dom';
+import { getLabelItemTpl, getLabelTpl } from '../template/tpl';
+import { labelPreviewSelector, newLabelColorSelector, newLabelBtnSelector, labelListContainerSelector, labelCountSelector, labelCreateCancelButtonSelector, formColorValueSelector} from '../template/selector';
+import { $ ,addTargetsListener,clearElement, renderPageInApp, setRenderTarget } from '../util/dom';
 import { getLabelStore$, newLabelColorStore$ } from '../store/label';
-import { addFormEventListener, formData$ } from './labelForm';
-import {compose, pipe} from '../util/operator';
+import { labelFormComponent, formData$ } from './labelForm';
+import { compose, pipe } from '../util/operator';
 
 /**
  * week2. 객체지향으로 짜보기
+ * label page
  */
-const renderWrapper = compose(setRenderTarget($('#app')), getLabelTpl);
-const renderInitialLabelColor = () => renderLabelColor(newLabelColorStore$.curr);
-
-const addNewLabelFormListener = () => {
-  // color 새로고침
-  $(newLabelColorSelector).addEventListener('click', () => newLabelColorStore$.next);
-
-  toggleLabelFormListener([newLabelBtnSelector,labelCreateCancelButtonSelector]);
-  addFormEventListener();
-}
-
-const toggleLabelFormListener = (targetElements = []) => {
-  targetElements.forEach(el => $(el).addEventListener('click', () => {
+export const labelPage = {
+  toggleLabelForm() {
     formData$.isCreating = !formData$.isCreating;
-  }));
-}
-
-// proxy에서 side effect
-const renderLabelColor = (newColor) => {
-  const targetEls = [$(labelPreviewSelector), $(newLabelColorSelector)];
-
-  targetEls.forEach(el => (el.style.backgroundColor = newColor));
+  },
+  updateLabelColor() {
+    formData$.color = newLabelColorStore$.next;
+  },
+  /**
+   * add Event Listener
+   */
+  addNewLabelFormListener() {
+    // color 새로고침
+    $(newLabelColorSelector).addEventListener('click', this.updateLabelColor);
   
-  // input으로 들어올 수도 있음
-  if (newColor !== $(formColorValueSelector).value) {
-    $(formColorValueSelector).value = newColor;
+    addTargetsListener([$(newLabelBtnSelector),$(labelCreateCancelButtonSelector)], this.toggleLabelForm);
+    labelFormComponent.addFormEventListener();
+  },
+  // store에 watcher로
+  renderLabelCount(labels) {
+    $(labelCountSelector).textContent = labels.length;
+  },
+
+  // store에 watcher로
+  renderLabelItem(labels) {
+    clearElement(labelListContainerSelector);
+
+    const wrapper = setRenderTarget($(labelListContainerSelector));
+    labels.forEach(label => compose(wrapper, getLabelItemTpl)(label));
+  },
+  // proxy에서 side effect
+  renderLabelColor(newColor) {
+    const targetEls = [$(labelPreviewSelector), $(newLabelColorSelector)];
+
+    targetEls.forEach(el => (el.style.backgroundColor = newColor));
+    
+    // input으로 들어올 수도 있음
+    if (newColor !== $(formColorValueSelector).value) {
+      $(formColorValueSelector).value = newColor;
+    }
+  },
+  /**
+   * render
+   */
+  render() {
+    // 한 번 쓰는 함수는 지역 함수로 정의
+    const renderWrapper = () => renderPageInApp(getLabelTpl());
+    const renderInitialLabelColor = () => this.renderLabelColor(newLabelColorStore$.curr);
+
+    pipe(
+      renderWrapper,
+      renderInitialLabelColor,
+      this.addNewLabelFormListener.bind(this),
+      getLabelStore$, // get data
+      // test용 임시, new form 보이기
+      () => this.toggleLabelForm(),
+    )();
   }
-}
-
-// store에 watcher로
-const renderLabelCount = (labels) => {
-  $(labelCountSelector).textContent = labels.length;
-}
-
-// store에 watcher로
-const renderLabelItem = (labels) => {
-  clearElement(labelListContainerSelector);
-
-  const wrapper = setRenderTarget($(labelListContainerSelector));
-  labels.forEach(label => wrapper(getLabelItemTpl(label)));
-}
-
-const initLabelPage = pipe(
-  renderWrapper,
-  renderInitialLabelColor,
-  // test용 임시
-  () => {formData$.isCreating = !formData$.isCreating;},
-  addNewLabelFormListener,
-  getLabelStore$ // get data
-);
-
-export {
-  initLabelPage,
-  renderLabelColor,
-  renderLabelCount,
-  renderLabelItem
 }

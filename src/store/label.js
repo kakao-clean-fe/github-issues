@@ -1,7 +1,12 @@
 import { getRandom, isHexColor } from '../util/feature';
 import {createStoreObservable} from './proxy';
-import {renderLabelItem, renderLabelCount, renderLabelColor} from '../page/label'
 import {getPromiseData} from './default';
+import {labelPage} from '../page/label';
+
+export const colorList = [
+  '#DC3535', '#f97516', '#fcd34d', '#22c55e', '#EE6983',
+  '#38bef8', '#4649FF', '#fde047', '#eef1ff', '#b1b2ff',
+];
 
 /**
  * week2 객체 지향 프로그래밍
@@ -10,17 +15,12 @@ import {getPromiseData} from './default';
 export let labelStore$;
 export const getLabelStore$ = () => {
   getPromiseData('../../data-sources/labels.json').then((labels = []) => {
-    labelStore$ = createStoreObservable(labels, [renderLabelItem, renderLabelCount]);
+    labelStore$ = createStoreObservable(labels, [labelPage.renderLabelItem, labelPage.renderLabelCount]);
   });
 }
 
-export const colorSet = new Set([
-  '#DC3535', '#f97516', '#fcd34d', '#22c55e', '#EE6983',
-  '#38bef8', '#4649FF', '#fde047', '#eef1ff', '#b1b2ff',
-]);
-
 const initialColorValue = {
-  colors: colorSet,
+  colors: new Set(colorList),
   curr: null,
   next: null,
   temp: null,
@@ -41,7 +41,7 @@ export const newLabelColorStore$ = (function(target) {
         }
 
         cur = data.value;
-        renderLabelColor(cur);
+        labelPage.renderLabelColor(cur);
         return cur;
       }
 
@@ -57,7 +57,7 @@ export const newLabelColorStore$ = (function(target) {
       }
 
       if (prop === 'temp') {
-        renderLabelColor(value); // 버튼, 라벨 프리뷰에 색 입히기
+        labelPage.renderLabelColor(value); // 버튼, 라벨 프리뷰에 색 입히기
         Reflect.set(obj, prop, value, receiver);
       }
 

@@ -2,7 +2,7 @@ import {getIssueTpl, getIssueItemTpl} from '../template/tpl';
 import {pipe, compose} from '../util/operator';
 import {activateTabClass, openCountSelector, closeCountSelector, openIssueTabSelector,closeIssueTabSelector, issueContainerSelector, selectPageContainerSelector} from '../template/selector';
 import {issueStore$,statusStore$, activatedIssuesStore$, loadIssueData } from '../store/issue.js'
-import {$, clearElement, setRenderTarget, toggleClass} from '../util/dom';
+import {$, clearElement, renderPageInApp, setRenderTarget, toggleClass} from '../util/dom';
 import {OPEN, CLOSE} from '../const';
 
 const clickTabHandler = (status) => () => statusStore$.setValue(status);
@@ -51,11 +51,11 @@ export const issuePage = {
     const getfilteredLength = (issues) => status => issues.filter(issue => issue.status === status).length;
     const getFilteredLengthByStatus = getfilteredLength(issues);
   
-    $(openCountSelector).textContent = getFilteredLengthByStatus('open');
-    $(closeCountSelector).textContent = getFilteredLengthByStatus('close');
+    $(openCountSelector).textContent = getFilteredLengthByStatus(OPEN);
+    $(closeCountSelector).textContent = getFilteredLengthByStatus(CLOSE);
   },
   render() {
-    const renderWrapper = compose(setRenderTarget($('#app')), getIssueTpl); // render wrapper
+    const renderWrapper = () => renderPageInApp(getIssueTpl());
     const initialRenderPipe = pipe(renderWrapper, this.addIssueTabClickListener);
     const initialStorePipe = pipe(
       () => this.registerWatcher(),
