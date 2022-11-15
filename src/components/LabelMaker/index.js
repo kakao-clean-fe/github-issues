@@ -8,16 +8,16 @@ export class LabelMaker extends ComponentRefactor {
     return new LabelMaker(...args)
   }
 
-  onChangeLabelName (event) {
-    this.setLabelName(event.target.value);
+  onChangeLabelName ({target: {value}}) {
+    this.setLabelName(value);
   }
 
-  onChangeDescription (event) {
-    this.setDescription(event.target.value);
+  onChangeDescription ({target: {value}}) {
+    this.setDescription(value);
   }
 
-  onChangeColor (event) {
-    this.setColor(event.target.value);
+  onChangeColor ({target: {value}}) {
+    this.setColor(value);
   }
 
   onClickChangeColorButton () {
