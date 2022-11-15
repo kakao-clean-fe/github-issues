@@ -1,13 +1,16 @@
 import ComponentRefactor from "../../core/component_refactor"
+import { labelStoreMixin } from "../../core/mixin/labelStore";
 
 export class LabelList extends ComponentRefactor {
   static getInstance (...args) {
+    Object.assign(LabelList.prototype, labelStoreMixin);
+
     return new LabelList(...args)
   }
 
   initState () {
     this.state = {
-      labelListSize: () => this.props.labelList.length
+      labelListSize: () => this.labelState.labelList.length
     }
   }
 
@@ -26,7 +29,7 @@ export class LabelList extends ComponentRefactor {
       </div>
     </div>
     <ul class="label-list ml-auto text-sm bg-white">
-      ${this.props.labelList && this.props.labelList.map(label => {
+      ${this.labelState.labelList && this.labelState.labelList.map(label => {
         return `
           <li class="label-item flex items-center ml-4 py-3 justify-between border-b ">
             <div class="issue-title flex"> 

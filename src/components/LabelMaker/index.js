@@ -1,13 +1,34 @@
 import ComponentRefactor from "../../core/component_refactor"
+import { labelStoreMixin } from "../../core/mixin/labelStore";
 
 export class LabelMaker extends ComponentRefactor {
   static getInstance (...args) {
+    Object.assign(LabelMaker.prototype, labelStoreMixin);
+
     return new LabelMaker(...args)
+  }
+
+  onChangeLabelName (event) {
+    this.setLabelName(event.target.value);
+  }
+
+  onChangeDescription (event) {
+    this.setDescription(event.target.value);
+  }
+
+  onChangeColor (event) {
+    this.setColor(event.target.value);
+  }
+
+  onClickChangeColorButton () {
+    const randomHexColor = Math.floor(Math.random() * 16777215).toString(16);
+
+    this.setColor(`#${randomHexColor}`)
   }
 
   initState () {
     this.state = {
-      isActiveCreateLabelButton: () => !!this.props.labelName && !!this.props.description && !!this.props.color,
+      isActiveCreateLabelButton: () => !!this.labelState.labelName && !!this.labelState.description && !!this.labelState.color,
     }
   }
 
@@ -20,22 +41,22 @@ export class LabelMaker extends ComponentRefactor {
     {
       selector: '#label-name-input',
       event: 'input',
-      callback: (event) => this.props.onChangeLabelName(event),
+      callback: (event) => this.this.setLabelName(event.target.value),
     },
     {
       selector: '#label-description-input',
       event: 'input',
-      callback: (event) => this.props.onChangeDescription(event),
+      callback: (event) => this.onChangeDescription(event),
     },
     {
       selector: '#label-color-value',
       event: 'input',
-      callback: (event) => this.props.onChangeColor(event),
+      callback: (event) => this.onChangeColor(event),
     },
     {
       selector: '#new-label-color',
       event: 'click',
-      callback: () => this.props.onClickChangeColorButton(),
+      callback: () => this.onClickChangeColorButton(),
     },
     {
       selector: '#cancel-button',
@@ -67,8 +88,8 @@ export class LabelMaker extends ComponentRefactor {
       <div class="form-group mt-0 mb-2"
         data-url-template="/labels/preview/" data-default-name="Label preview">
     
-        <span id="label-preview" class="rounded-lg border p-2 px-3 mt-2 inline-block" style="background-color: ${this.props.color}">
-          ${this.props.labelName}
+        <span id="label-preview" class="rounded-lg border p-2 px-3 mt-2 inline-block" style="background-color: ${this.labelState.color}">
+          ${this.labelState.labelName}
         </span>
       </div>
       <div id="label-input-wrapper" class="flex justify-between items-start mb-2">
@@ -85,7 +106,7 @@ export class LabelMaker extends ComponentRefactor {
             <text-expander keys=":" data-emoji-url="/autocomplete/emoji?use_colon_emoji=true">
               <input type="text" data-maxlength="50" autocomplete="off" required="" pattern="^(?!(\.|\.\.)$).*$"
                 id="label-name-input" name="label[name]"
-                class="w-full p-2 base-outer focus:outline-none" placeholder="Label name" value="${this.props.labelName}" >
+                class="w-full p-2 base-outer focus:outline-none" placeholder="Label name" value="${this.labelState.labelName}" >
             </text-expander>
           </dd>
           <dd class="" hidden="" id="label--name-error"></dd>
@@ -105,7 +126,7 @@ export class LabelMaker extends ComponentRefactor {
           <dd class="mt-2">
             <input type="text" id="label-description-input" name="label[description]"
               class="w-full p-2 base-outer focus:outline-none"
-              placeholder="Description" value="${this.props.description}" 
+              placeholder="Description" value="${this.labelState.description}" 
               maxlength="100">
           </dd>
           <dd class="" hidden="" id="label--description-error"></dd>
@@ -131,7 +152,7 @@ export class LabelMaker extends ComponentRefactor {
             <div class="ml-2">
               <input type="text" id="label-color-value" name="label-color[description]"
               class="w-full p-2 base-outer focus:outline-none"
-              placeholder="#color" value="${this.props.color}" maxlength="100">
+              placeholder="#color" value="${this.labelState.color}" maxlength="100">
             </div>
     
           </dd>
