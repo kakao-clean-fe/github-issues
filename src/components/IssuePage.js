@@ -10,7 +10,7 @@ import { $, isClosedIssue, isOpenedIssue } from '../util';
 import { getIssueItemTpl, getIssueTpl } from '../tpl';
 import { selector as sel, storeKey, pageType } from '../constant';
 
-export function renderIssuePage({ store }) {
+export function createIssuePage({ store }) {
   const [page, setPage] = store.useState(storeKey.page);
   const [issues, setIssues] = store.useState(storeKey.issues);
   const openedIssues = issues.filter(isOpenedIssue);
@@ -41,19 +41,19 @@ export function renderIssuePage({ store }) {
       renderClosedIssues($(sel.issueList));
     })
   );
-  function render() {
-    renderIssueLayout($(sel.app));
-    renderOpenedIssues($(sel.issueList));
-    renderOpenedButton($(sel.openedButton));
-    renderClosedButton($(sel.closedButton));
-  }
   function handlePageChange (event) {
     const targetPage = event.detail;
     if (targetPage === pageType.issue) {
       render();
     }
   }
+  function render() {
+    renderIssueLayout($(sel.app));
+    renderOpenedIssues($(sel.issueList));
+    renderOpenedButton($(sel.openedButton));
+    renderClosedButton($(sel.closedButton));
+    store.useEffect(storeKey.page, handlePageChange);
+  }
 
-  store.useEffect(storeKey.page, handlePageChange);
-  render();
+  return { render }
 }

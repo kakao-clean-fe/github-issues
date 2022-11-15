@@ -32,8 +32,13 @@ export class Store {
   useState(key) {
     return [
       this.state[key],
-      newValue => {
-        this.state[key] = newValue;
+      props => {
+        const prevValue = this.state[key];
+        if (typeof props === 'function') {
+          this.state[key] = props(prevValue);
+        } else {
+          this.state[key] = props;
+        }
       },
     ];
   }

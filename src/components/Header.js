@@ -4,7 +4,7 @@ import { storeKey, pageType } from '../constant';
 import { $ } from '../util';
 import { selector as sel } from '../constant';
 
-export function renderHeader({ store }) {
+export function createHeader({ store }) {
   const [, setPage] = store.useState(storeKey.page, pageType.issue);
   const renderIssueTab = pipe(setEvent('click', () => setPage(pageType.issue)));
   const renderLabelTab = pipe(setEvent('click', () => setPage(pageType.label)));
@@ -14,5 +14,5 @@ export function renderHeader({ store }) {
     renderLabelTab($(sel.labelTab));
   }
 
-  render();
+  return { render };
 }

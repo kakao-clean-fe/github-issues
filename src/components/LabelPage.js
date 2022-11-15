@@ -1,24 +1,39 @@
-import { pipe } from '../fp';
-import { setInnerHTML } from '../curry/dom';
+import { go } from '../fp';
+import { setInnerHTML, setInnerText } from '../curry/dom';
 import { $ } from '../util';
 import { getLabelTpl, getLabelItemTpl } from '../tpl';
 import { selector as sel, storeKey, pageType } from '../constant';
+import { createNewLabelForm } from './NewLabelForm';
 
-export function renderLabelPage({ store }) {
-  const [labels, setLabels] = store.useState(storeKey.labels);
+export function createLabelPage({ store }) {
+  const [labels] = store.useState(storeKey.labels);
+  const newLabelForm = createNewLabelForm({ store });
 
-  const renderLabelLayout = pipe(setInnerHTML(getLabelTpl()));
-  const renderLabels = pipe(setInnerHTML(labels.map(getLabelItemTpl).join('')));
-
-  function render() {
-    renderLabelLayout($(sel.app));
-    renderLabels($(sel.labelList));
+  function renderLabelLayout() {
+    go($(sel.app), setInnerHTML(getLabelTpl()));
+  }
+  function renderLabels(labelList) {
+    go($(sel.labelList), setInnerHTML(labelList.map(getLabelItemTpl).join('')));
+  }
+  function renderLabelCount(labelList) {
+    go($(sel.labelCount), setInnerText(`${labelList.length} Labels`));
   }
   function handlePageChange(event) {
-    const targetPage = event.detail;
-    if (targetPage === pageType.label) {
-      render();
+    const [labels] = store.useState(storeKey.labels);
+    if (event.detail === pageType.label) {
+      renderLabelLayout();
+      renderLabels(labels);
+      renderLabelCount(labels);
+      newLabelForm.render();
     }
   }
-  store.useEffect(storeKey.page, handlePageChange);
+  function render() {
+    renderLabelLayout();
+    renderLabels(labels);
+    renderLabelCount(labels);
+    newLabelForm.render();
+    store.useEffect(storeKey.page, handlePageChange);
+  }
+
+  return { render };
 }

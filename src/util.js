@@ -9,3 +9,7 @@ export function isOpenedIssue(issue) {
 export function isClosedIssue(issue) {
   return issue.status === 'close';
 }
+
+export function getRandomColor() {
+  return `#${parseInt(Math.random() * parseInt('ffffff', 16)).toString(16)}`;
+}

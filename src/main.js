@@ -1,21 +1,11 @@
 import { fetchIssues, fetchLabels } from './service';
 import { storeKey, pageType } from './constant';
 import { Store, EventBus } from './store';
-import { renderHeader } from './components/Header';
-import { renderIssuePage } from './components/IssuePage';
-import { renderLabelPage } from './components/LabelPage';
+import { createHeader } from './components/Header';
+import { createIssuePage } from './components/IssuePage';
+import { createLabelPage } from './components/LabelPage';
 
-async function createApp({ store }) {
-  function render() {
-    renderHeader({ store });
-    renderIssuePage({ store });
-    renderLabelPage({ store });
-  }
-
-  return { render };
-}
-
-window.addEventListener('DOMContentLoaded', async () => {
+async function createApp() {
   const [issues, labels] = await Promise.all([fetchIssues(), fetchLabels()]);
   const store = new Store({
     eventBus: new EventBus(),
@@ -23,8 +13,25 @@ window.addEventListener('DOMContentLoaded', async () => {
       [storeKey.page]: pageType.issue,
       [storeKey.issues]: issues,
       [storeKey.labels]: labels,
+      [storeKey.isNewLabelFormOpen]: false,
+      [storeKey.labelForm]: {
+        name: '',
+        description: '',
+        color: '#ffffff',
+      },
     },
   });
-  const app = await createApp({ store });
+
+  function render() {
+    createHeader({ store }).render();
+    createIssuePage({ store }).render();
+    createLabelPage({ store }).render();
+  }
+
+  return { render };
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+  const app = await createApp();
   app.render();
 });
