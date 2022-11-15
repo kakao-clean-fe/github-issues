@@ -25,7 +25,8 @@ const labelDataHandler = {
 
 export const labelDataProxy = new Proxy(labelData, labelDataHandler);
 
-export const addLabelData = ({name, description, color}) => {
-  const newLabelData = [...labelDataProxy.labelData, {name, description, color}];
+export const addLabelData = (newLabel) => {
+  console.log(2);
+  const newLabelData = [...labelDataProxy.labelData, newLabel];
   labelDataProxy.labelData = newLabelData;
 }

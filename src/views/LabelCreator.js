@@ -1,7 +1,9 @@
 import { getLabelCreatorTpl } from "../tpl"
-import { selectElement } from '../utils/dom';
+import { addEventListener, selectAllElement, selectElement, toggleClass } from '../utils/dom';
 import { SELECTOR } from '../constants/selector';
 import { addLabelData } from "../store/dataStore";
+import { EVENT } from '../constants/event';
+import { HIDDEN } from '../constants/status';
 
 export const LabelCreator = class {
 
@@ -11,17 +13,6 @@ export const LabelCreator = class {
 
   get template () {
     return getLabelCreatorTpl();
-  }
-
-  get event () {
-    return {
-      [SELECTOR.LABEL_NAME_INPUT]: 'onInputLabelName',
-      [SELECTOR.LABEL_DESC_INPUT]: 'onInputLabelDesc',
-      [SELECTOR.LABEL_COLOR_BUTTON]: 'onClickColorButton',
-      [SELECTOR.LABEL_COLOR_INPUT]: 'onInputLabelColor',
-      [SELECTOR.CREATE_LABEL_BUTTON]: 'onClickCreateLabelButton',
-      [SELECTOR.CANCEL_LABEL_BUTTON]: 'onClickCancelButton',
-    };
   }
 
   constructor () {
@@ -35,12 +26,26 @@ export const LabelCreator = class {
 
   }
 
-  initTemplate() {
+  initTemplate () {
     if (!this.parentElement) { return; }
 
     this.parentElement.innerHTML = this.template;
 
     // TODO: 이벤트 등록 필요한 요소 찾아서 이벤트 등록
+    this.initEvent();
+  }
+
+  initEvent () {
+    const addClickEventListener = addEventListener(EVENT.CLICK);
+    const addInputEventListener = addEventListener(EVENT.INPUT);
+
+    addInputEventListener(SELECTOR.LABEL_NAME_INPUT, this.onInputLabelName.bind(this));
+    addInputEventListener(SELECTOR.LABEL_NAME_INPUT, this.onInputLabelDesc.bind(this));
+    // addInputEventListener(SELECTOR.LABEL_NAME_INPUT, this.onInputLabelColor);
+
+    addClickEventListener(SELECTOR.LABEL_COLOR_BUTTON, this.onClickColorButton.bind(this));
+    addClickEventListener(SELECTOR.CREATE_LABEL_BUTTON, this.onClickCreateLabelButton.bind(this));
+    addClickEventListener(SELECTOR.CANCEL_LABEL_BUTTON, this.onClickCancelButton.bind(this));
   }
 
   createLabel ({name, description, color}) {
@@ -48,6 +53,7 @@ export const LabelCreator = class {
   }
 
   onInputLabelName ({target}) {
+    console.log(target.value);
     this.name = target.value;
   }
 
@@ -63,11 +69,14 @@ export const LabelCreator = class {
 
   }
 
-  onClickCreateLabelButton () {
+  onClickCreateLabelButton (e) {
+    e.preventDefault();
+
     this.createLabel({
       name: this.name,
       description: this.description,
-      color: this.color
+      color: 'bfdadc', // 임시 코드
+      // color: this.color
     });
 
     // labelCreator 닫기

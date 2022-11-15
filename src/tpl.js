@@ -223,7 +223,7 @@ export function getLabelCreatorTpl() {
           class="form-group my-2 flex mt-10">
           <button type="button" class="base-outer p-2 mr-4 _cancel_label_button"> Cancel
           </button>
-          <button id="label-create-button" type="submit" class="base-outer p-2 mr-4 bg-green-700 opacity-50 text-white _create_label_button" disabled=""> Create label
+          <button id="label-create-button" class="base-outer p-2 mr-4 bg-green-700 opacity-50 text-white _create_label_button" > Create label
           </button>
         </div>
         <!--END new label actions-->

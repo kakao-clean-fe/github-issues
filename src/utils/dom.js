@@ -25,3 +25,7 @@ export const toggleClass = (element, className) => {
     return selectElement(element).classList.toggle(className);
   }
 }
+
+export const addEventListener = eventType => (selector, handler) => {
+  selectElement(selector).addEventListener(eventType, handler);
+};
