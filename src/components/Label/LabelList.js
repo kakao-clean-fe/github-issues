@@ -1,4 +1,4 @@
-import Component from "..";
+import {Component} from "..";
 import LabelListBody from "./LabelListBody";
 import LabelListHeader from "./LabelListHeader";
 
@@ -13,10 +13,10 @@ export default class LabelList extends Component{
     this.render('#label-wrapper');
     this.model = model;
     this.header = new LabelListHeader(model.labelList.length);
-    this.model.subscribe(this.updatedLabelList.bind(this));
     this.body = new LabelListBody(model.labelList);
+    this.model.subscribe(this.updatedLabelList.bind(this));
   }
   updatedLabelList(){
-    this.header.setCountTemplate(this.model.labelList);
+    this.header.setCountTemplate(this.model.labelList.length);
   }
 }

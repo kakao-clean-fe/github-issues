@@ -1,6 +1,6 @@
 import { querySelector } from "../utils/dom-selector";
 
-export default class Component{
+export class Component{
   constructor(model){
     this.formStateModel = model;
   }
@@ -18,6 +18,12 @@ export default class Component{
     const div = document.createElement('div');
     div.innerHTML = templateStr.trim();
     return div.firstChild;
+  }
+}
+
+export class Button extends Component{
+  constructor(model){
+    super(model);
   }
   setOnClickListener($target, clickEvent){
     $target.addEventListener('click', clickEvent);

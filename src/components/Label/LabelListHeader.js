@@ -1,4 +1,4 @@
-import Component from "..";
+import {Component} from "..";
 import { querySelector } from "../../utils/dom-selector";
 export default class LabelListHeader extends Component{
   #templateStr = `

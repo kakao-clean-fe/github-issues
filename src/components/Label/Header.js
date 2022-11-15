@@ -1,4 +1,4 @@
-import Component from "..";
+import {Component} from "..";
 import NewLabelButton from "./NewLabelButton";
 export default class Header extends Component{
   #templateStr = `
@@ -15,7 +15,7 @@ export default class Header extends Component{
     super();
     this.template = this.convertElement(this.#templateStr);
     this.render('#label-wrapper');
-    
+
     this.newLabelButton = new NewLabelButton(model);
   }
 }

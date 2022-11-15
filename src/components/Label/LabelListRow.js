@@ -1,5 +1,5 @@
 
-import Component from "..";
+import { Component } from "..";
 import { getLabelItemTpl } from "../../tpl";
 
 export default class LabelListRow extends Component{

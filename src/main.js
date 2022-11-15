@@ -9,16 +9,8 @@ document.querySelector('#app').innerHTML = `
   </div>
   `;
 const formStateModel = new FormStateModel();
-const header = new Header(formStateModel);
-const form = new LabelForm(formStateModel);
-
 const labelListModel = new LabelListModel(await getFetchData('labels'));
-const labelList = new LabelList(labelListModel);
+const header = new Header(formStateModel);
+const form = new LabelForm({label: labelListModel, form: formStateModel});
 
-// document.querySelector('#label-wrapper').appendChild(header.getTemplate());
-// document.querySelector('#label-wrapper').appendChild(form.getTemplate());
-// const labelList = document.querySelector('.label-list');
-// labelData.forEach(item => {
-//   const labelListRow = new LabelListRow(item);
-//   labelList.appendChild(labelListRow.getElement());
-// });
+const labelList = new LabelList(labelListModel);

@@ -1,4 +1,4 @@
-import Component from "..";
+import {Component} from "..";
 import LabelListRow from "./LabelListRow";
 
 export default class LabelListBody extends Component{
