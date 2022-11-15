@@ -11,18 +11,21 @@ export const renderIssue = async () => {
   const app = document.querySelector("#app");
   app.innerHTML = getIssueTpl(opens.length, closed.length);
 
+  const ulTarget = document.querySelector("ul");
+
   const openCloseMenu = document.querySelector(ISSUE_CLASS.STATUS_TAB);
   openCloseMenu.addEventListener("click", function (e) {
     classUtils.removeAll(openCloseMenu.childNodes, COMMON.FONT_BOLD);
     const target = e.target;
+    const isOpen = target.classList.contains(ISSUE_CLASS.OPEN_COUNT);
     if (
       target.classList.contains(ISSUE_CLASS.OPEN_COUNT) ||
       target.classList.contains(ISSUE_CLASS.CLOSE_COUNT)
     ) {
       target.classList.add(COMMON.FONT_BOLD);
+      renderUtils.setItems(ulTarget, isOpen ? opens : closed, MENU.ISSUE);
     }
   });
 
-  const target = document.querySelector("ul");
-  renderUtils.setItems(target, opens, MENU.ISSUE);
+  renderUtils.setItems(ulTarget, opens, MENU.ISSUE);
 };
