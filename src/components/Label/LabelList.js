@@ -14,7 +14,7 @@ export default class LabelList extends Component{
   }
   updatedLabelList(){
     this.header.setCountTemplate(this.model.labelList.length);
-    this.body.setDDD(this.model.labelList);
+    this.body.updateTemplate(this.model.labelList);
   }
 }
 class LabelListBody extends Component{
@@ -23,10 +23,10 @@ class LabelListBody extends Component{
     this.targetQuery = targetQuery;
     this.labelTemplates = this.createLabel(labelList);
   }
-  setDDD(labelList){
+  updateTemplate(labelList){
     this.template.innerHTML = '';
     this.labelTemplates = this.createLabel(labelList);
-    this.render(this.targetQuery, true);
+    this.render(this.targetQuery);
   }
   createLabel(labelList){
     return labelList.map(labelData => new LabelListRow(labelData, '.label-list'));

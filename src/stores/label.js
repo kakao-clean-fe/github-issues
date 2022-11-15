@@ -30,3 +30,17 @@ export class LabelListModel extends Observer {
     this.notify(); //등록된 렌더링 함수들 호출
   }
 }
+
+export class LabelModel extends Observer {
+  constructor() {
+    super();
+    this.label = {};
+  }
+  get label() {
+    return this._label;
+  }
+  set label(label) {
+    this._label = label;
+    this.notify(); //등록된 렌더링 함수들 호출
+  }
+}
