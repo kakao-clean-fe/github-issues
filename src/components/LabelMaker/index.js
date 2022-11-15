@@ -41,7 +41,7 @@ export class LabelMaker extends ComponentRefactor {
     {
       selector: '#label-name-input',
       event: 'input',
-      callback: (event) => this.this.setLabelName(event.target.value),
+      callback: (event) => this.onChangeLabelName(event),
     },
     {
       selector: '#label-description-input',
