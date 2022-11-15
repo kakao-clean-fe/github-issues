@@ -6,31 +6,39 @@ const { ITEM_CNT, ITEM_LIST, SHOW_CREATE } = LABEL_CLASS_NAME;
 
 const renderLabelLayout = renderLayout(getLabelTpl);
 
-const labelList = {
-  store: null,
-  target: null,
-  _renderItems: () => {},
-  render: function () {
-    this.target.innerText = "";
-    renderLabelLayout(this.target);
-    const find = findByClass(this.target);
-    const listEl = find(ITEM_LIST);
-    const openEl = find(ITEM_CNT);
+function LabelList(store, target, done) {
+  this._store = store;
+  this._target = target;
+  this._renderItems = null;
+  this._done = done;
+}
 
-    this._renderItems = updateUI(getLabelItemTpl, listEl, [openEl], ["Labels"]);
-  },
-  updateItems: function () {
-    this._renderItems(this.store, this.store.items);
-  },
-  addEvent: function (callback) {
-    const find = findByClass(this.target);
-    const newLabelBtn = find(SHOW_CREATE);
+LabelList.prototype.render = function () {
+  this._target.innerText = "";
+  renderLabelLayout(this._target);
+  const find = findByClass(this._target);
+  const listEl = find(ITEM_LIST);
+  const openEl = find(ITEM_CNT);
 
-    newLabelBtn.addEventListener(EVENT_KEY.CLICK, (e) => {
-      e.preventDefault();
-      callback();
-    });
-  },
+  this._renderItems = updateUI(getLabelItemTpl, listEl, [openEl], ["Labels"]);
+  this._done();
 };
 
-export default labelList;
+LabelList.prototype.updateItems = function () {
+  if (typeof this._renderItems !== "function") {
+    this.render();
+  }
+  this._renderItems(this._store, this._store.items);
+};
+
+LabelList.prototype.addEvent = function (callback) {
+  const find = findByClass(this._target);
+  const newLabelBtn = find(SHOW_CREATE);
+
+  newLabelBtn.addEventListener(EVENT_KEY.CLICK, (e) => {
+    e.preventDefault();
+    callback();
+  });
+};
+
+export default LabelList;
