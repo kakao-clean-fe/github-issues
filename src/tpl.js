@@ -1,4 +1,7 @@
-export function getIssueTpl(openCount = 0, closedCount = 0) {
+import IssueStore from './store/issueStore';
+import LabelStore from './store/labelStore';
+
+export function getIssueTpl() {
   /* html */
   return `
     <div id="issue-wrapper" class="w-9/12 m-auto min-w-min">
@@ -18,7 +21,7 @@ export function getIssueTpl(openCount = 0, closedCount = 0) {
       </nav>
 
       <div class="new-issue p-3 py-1 base-outer flex items-center justify-center w-2/12 ml-4 bg-green-700 text-white">
-        <a href="#">New
+        <a href="javascript:void(0);">New
           issue</a></div>
 
     </div>
@@ -30,8 +33,12 @@ export function getIssueTpl(openCount = 0, closedCount = 0) {
         </div>
 
         <div class="statusTab flex">
-          <div id="openTab" class="whitespace-nowrap open-count font-bold cursor-pointer">${openCount} Opens</div>
-          <div id="closedTab" class="whitespace-nowrap close-count ml-3 cursor-pointer">${closedCount} Closed</div>
+          <div id="openTab" class="whitespace-nowrap open-count font-bold cursor-pointer">${
+            IssueStore.getState().openCount
+          } Opens</div>
+          <div id="closeTab" class="whitespace-nowrap close-count ml-3 cursor-pointer">${
+            IssueStore.getState().closeCount
+          } Closed</div>
         </div>
 
         <div class="details-list flex ml-auto">
@@ -108,13 +115,13 @@ export function getLabelTpl() {
       </form>
     </div>
 
-    <div class="new-label-button cursor-pointer p-1 py-1 base-outer flex items-center justify-center w-2/12 ml-4 bg-green-700 text-white">
-      <a href="#">New label</a>
+    <div id="newLabelButton" class="new-label-button cursor-pointer p-1 py-1 base-outer flex items-center justify-center w-2/12 ml-4 bg-green-700 text-white">
+      <a href="javascript:void(0);">New label</a>
     </div>
   </div>
 
 
-  <form class="hidden p-3 mb-3 mt-6 border rounded-sm font-bold" id="new-label-form" action="/labels" accept-charset="UTF-8" method="post">
+  <form id="labelInputForm" class="hidden p-3 mb-3 mt-6 border rounded-sm font-bold" id="new-label-form" action="/labels" accept-charset="UTF-8" method="post">
     <div class="form-group mt-0 mb-2"
       data-url-template="/labels/preview/" data-default-name="Label preview">
 
@@ -184,7 +191,7 @@ export function getLabelTpl() {
           <div class="ml-2">
             <input type="text" id="label-color-value" name="label-color[description]"
             class="w-full p-2 base-outer focus:outline-none"
-            placeholder="#color" value="" maxlength="100">
+            placeholder="#color" value="" maxlength="100" disabled>
           </div>
 
         </dd>
@@ -194,9 +201,9 @@ export function getLabelTpl() {
       <!--new label actions-->
       <div
         class="form-group my-2 flex mt-10">
-        <button type="button" class="base-outer p-2 mr-4"> Cancel
+        <button id="label-cancel-button" type="button" class="base-outer p-2 mr-4"> Cancel
         </button>
-        <button id="label-create-button" type="submit" class="base-outer p-2 mr-4 bg-green-700 opacity-50 text-white" disabled=""> Create label
+        <button id="label-create-button" type="submit" class="base-outer p-2 mr-4 bg-green-700 opacity-50 text-white" disabled> Create label
         </button>
       </div>
       <!--END new label actions-->
@@ -210,7 +217,9 @@ export function getLabelTpl() {
     <div class="label-header h-16 flex justify-between items-center border-b">
 
       <div class="mr-3 d-none pl-4">
-        <div class="whitespace-nowrap open-count font-bold cursor-pointer">6 Labels</div>
+        <div id="labelCount" class="whitespace-nowrap open-count font-bold cursor-pointer">${
+          LabelStore.getState().labelList.length
+        } Labels</div>
       </div>
 
       <div class="details-list flex ml-auto">
