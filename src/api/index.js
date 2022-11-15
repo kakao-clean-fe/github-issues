@@ -4,6 +4,7 @@ export const getFetchData = async (fileName) => {
     return await response.json();
   } catch(e){
     console.log(e);
+    return [];
   }
   return;
 }

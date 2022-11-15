@@ -6,7 +6,7 @@ export default class LabelForm extends Component{
     super(templateStr, targetQuery);
     this.labelInputDiv = new LabelInputDiv(labelInputDivStr, '#new-label-form', model);
 
-    model.form.subscribe(this.toggleForm.bind(this));
+    model.form.subscribe(() => this.toggleForm());
   }
   toggleForm(){
     this.template.classList.toggle('hidden');

@@ -9,7 +9,7 @@ export default class LabelList extends Component{
     this.model = model;
     this.header = new LabelListHeader(labelListHeaderStr, '#labels-wrapper', model.labelList.length);
     this.body = new LabelListBody(labelListBodyStr, '#labels-wrapper', model.labelList);
-    this.model.subscribe(this.updatedLabelList.bind(this));
+    this.model.subscribe(() => this.updatedLabelList());
   }
   updatedLabelList(){
     this.header.setCountTemplate(this.model.labelList.length);

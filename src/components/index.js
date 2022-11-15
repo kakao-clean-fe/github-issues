@@ -1,14 +1,9 @@
 import { querySelector } from "../utils/dom-selector";
 
 export class Component{
-  constructor(templateStr, targetQuery, model){
+  constructor(templateStr, targetQuery){
     this.template = this.convertElement(templateStr);
     this.render(targetQuery);
-    
-    this.formModel = model;
-  }
-  getTemplate(){
-    return this.template;
   }
   render(parent, remove = false){
     const parentElement = querySelector(parent);
@@ -23,10 +18,9 @@ export class Component{
     return div.firstChild;
   }
 }
-
 export class Button extends Component{
-  constructor(templateStr, targetQuery, model){
-    super(templateStr, targetQuery, model);
+  constructor(templateStr, targetQuery){
+    super(templateStr, targetQuery);
   }
   setOnClickListener($target, clickEvent){
     $target.addEventListener('click', clickEvent);

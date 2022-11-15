@@ -7,7 +7,6 @@ export default class LabelListRow extends Component{
     super(getLabelItemTpl(labelData), targetQuery);
     this.labelData = labelData;
   }
-  getTemplate = () => this.template;
   setLabelData = (labelData) => {
     this.labelData = labelData;
   }
