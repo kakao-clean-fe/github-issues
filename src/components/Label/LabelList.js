@@ -9,17 +9,29 @@ export default class LabelList extends Component{
     this.model = model;
     this.header = new LabelListHeader(labelListHeaderStr, '#labels-wrapper', model.labelList.length);
     this.body = new LabelListBody(labelListBodyStr, '#labels-wrapper', model.labelList);
+
     this.model.subscribe(() => this.updatedLabelList());
   }
   updatedLabelList(){
     this.header.setCountTemplate(this.model.labelList.length);
+    this.body.setDDD(this.model.labelList);
   }
 }
 class LabelListBody extends Component{
   constructor(templateStr, targetQuery, labelList){
     super(templateStr, targetQuery);
-    this.labelListTemplate = labelList.map(labelData => new LabelListRow(labelData, '.label-list'));
+    this.targetQuery = targetQuery;
+    this.labelTemplates = this.createLabel(labelList);
   }
+  setDDD(labelList){
+    this.template.innerHTML = '';
+    this.labelTemplates = this.createLabel(labelList);
+    this.render(this.targetQuery, true);
+  }
+  createLabel(labelList){
+    return labelList.map(labelData => new LabelListRow(labelData, '.label-list'));
+  }
+  
 }
 class LabelListHeader extends Component{
   constructor(templateStr, targetQuery, count){

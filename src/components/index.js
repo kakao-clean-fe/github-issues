@@ -5,11 +5,8 @@ export class Component{
     this.template = this.convertElement(templateStr);
     this.render(targetQuery);
   }
-  render(parent, remove = false){
+  render(parent){
     const parentElement = querySelector(parent);
-    if(remove) {
-      parentElement.innerHTML = '';
-    }
     parentElement.append(this.template);
   }
   convertElement(templateStr){
