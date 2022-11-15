@@ -1,19 +1,14 @@
 import {Component} from "..";
+import { labelListBodyStr, labelListHeaderStr } from "../../constants/template-label";
 import LabelListBody from "./LabelListBody";
 import LabelListHeader from "./LabelListHeader";
 
 export default class LabelList extends Component{
-  #templateStr = `
-    <div id="labels-wrapper" class="m-auto  base-outer mt-6 bg-slate-100">
-    <div>
-  `;
-  constructor(model){
-    super();
-    this.template = this.convertElement(this.#templateStr);
-    this.render('#label-wrapper');
+  constructor(templateStr, targetQuery, model){
+    super(templateStr, targetQuery);
     this.model = model;
-    this.header = new LabelListHeader(model.labelList.length);
-    this.body = new LabelListBody(model.labelList);
+    this.header = new LabelListHeader(labelListHeaderStr, '#labels-wrapper', model.labelList.length);
+    this.body = new LabelListBody(labelListBodyStr, '#labels-wrapper', model.labelList);
     this.model.subscribe(this.updatedLabelList.bind(this));
   }
   updatedLabelList(){

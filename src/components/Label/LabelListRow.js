@@ -3,11 +3,9 @@ import { Component } from "..";
 import { getLabelItemTpl } from "../../tpl";
 
 export default class LabelListRow extends Component{
-  constructor(labelData){
-    super();
+  constructor(labelData, targetQuery){
+    super(getLabelItemTpl(labelData), targetQuery);
     this.labelData = labelData;
-    this.template = this.convertElement(getLabelItemTpl(this.labelData));
-    this.render('.label-list');
   }
   getTemplate = () => this.template;
   setLabelData = (labelData) => {
