@@ -31,7 +31,6 @@ export const LabelCreator = class {
 
     this.parentElement.innerHTML = this.template;
 
-    // TODO: 이벤트 등록 필요한 요소 찾아서 이벤트 등록
     this.initEvent();
   }
 
@@ -41,7 +40,6 @@ export const LabelCreator = class {
 
     addInputEventListener(SELECTOR.LABEL_NAME_INPUT, this.onInputLabelName.bind(this));
     addInputEventListener(SELECTOR.LABEL_NAME_INPUT, this.onInputLabelDesc.bind(this));
-    // addInputEventListener(SELECTOR.LABEL_NAME_INPUT, this.onInputLabelColor);
 
     addClickEventListener(SELECTOR.LABEL_COLOR_BUTTON, this.onClickColorButton.bind(this));
     addClickEventListener(SELECTOR.CREATE_LABEL_BUTTON, this.onClickCreateLabelButton.bind(this));
@@ -79,13 +77,17 @@ export const LabelCreator = class {
       // color: this.color
     });
 
-    // labelCreator 닫기
     this.toggleLabelCreator();
   }
 
   onClickCancelButton () {
-    // labelCreator 닫기
+    this.resetLabelData();
     this.toggleLabelCreator();
+  }
+
+  resetLabelData () {
+    // 데이터 초기화
+    // 입력란 초기화
   }
 
   toggleLabelCreator () {
