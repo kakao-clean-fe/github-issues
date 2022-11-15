@@ -1,5 +1,5 @@
 import {formHiddenClass} from './selector';
-import {showLabelFormFirst} from '../const '
+import {showLabelFormFirst} from '../const'
 
 export function getIssueTpl() {
 	return `

@@ -1,8 +1,5 @@
 import {store, createDerivedStore, fetchData} from './reusableStore.js';
 
-export const LABEL_PAGE = 'label';
-export const ISSUE_PAGE = 'issue';
-
 export const pageStore$ = store('');
 
 /**

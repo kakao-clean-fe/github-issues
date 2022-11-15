@@ -1,5 +1,7 @@
-export const navIssueSelector = 'nav button#nav-issue';
-export const navLabelSelector = 'nav button#nav-label';
+/**
+ * body > nav 관련
+ */
+export const selectPageContainerSelector = 'nav#select-page';
 
 /**
  * label 관련 selector

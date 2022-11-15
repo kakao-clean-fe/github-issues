@@ -2,9 +2,8 @@ import { labelFormSelector, createLabelButtonSelector, formColorValueSelector, f
 import { $, activateButton, deactivateButton, toggleClass } from "../util/dom"
 import {labelStore$, newLabelColorStore$} from '../store/label';
 import {updateProperty} from '../store/proxyStore';
-import { showLabelFormFirst } from "../const ";
+import { showLabelFormFirst } from "../const";
 import { isValid } from "../util/feature";
-import { renderLabelColor } from "./label";
 
 /**
  * 다른 곳에서 쓰지 않아 page에서 store 정의
