@@ -1,7 +1,7 @@
 import { getLabelTpl } from '../tpl';
 import { createApp } from '../utils/template';
 import { LabelList } from '../views/LabelList';
-import { selectElement, removeClass } from '../utils/dom';
+import { selectElement, removeClass, toggleClass } from '../utils/dom';
 import { SELECTOR } from '../constants/selector';
 import { EVENT } from '../constants/event';
 import { LabelCreator } from '../views/LabelCreator';
@@ -16,14 +16,14 @@ export const LabelPage = class {
     this.labelData = labelData;
 
     this.initTemplate();
-    this.initLabelList();
+    this.initLabelChildrenView();
   }
 
   initTemplate () {
     createApp(this.template);
   }
 
-  initLabelList () {
+  initLabelChildrenView () {
     const labelList = new LabelList(this.labelData);
     const labelCreator = new LabelCreator();
 
@@ -34,12 +34,12 @@ export const LabelPage = class {
     this.onClickNewLabel();
   }
 
+  toggleLabelCreator () {
+    toggleClass(SELECTOR.LABEL_CREATOR, HIDDEN);
+  }
+
   onClickNewLabel () {
     const newLabelButton = selectElement(SELECTOR.NEW_LABEL_BUTTON);
-    newLabelButton.addEventListener(EVENT.CLICK, () => {
-      // TODO: label creator 토글 메서드 함수형 유틸로 개선
-      const removeHiddenClass = removeClass(HIDDEN);
-      removeHiddenClass(SELECTOR.LABEL_CREATOR);
-    });
+    newLabelButton.addEventListener(EVENT.CLICK, this.toggleLabelCreator)
   }
 }

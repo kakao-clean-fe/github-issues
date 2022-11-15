@@ -165,7 +165,7 @@ export function getLabelCreatorTpl() {
             <text-expander keys=":" data-emoji-url="/autocomplete/emoji?use_colon_emoji=true">
               <input type="text" data-maxlength="50" autocomplete="off" required="" pattern="^(?!(\.|\.\.)$).*$"
                 id="label-name-input" name="label[name]"
-                class="w-full p-2 base-outer focus:outline-none" placeholder="Label name" value="" >
+                class="w-full p-2 base-outer focus:outline-none _label_name_input" placeholder="Label name" value="" >
             </text-expander>
           </dd>
           <dd class="" hidden="" id="label--name-error"></dd>
@@ -184,7 +184,7 @@ export function getLabelCreatorTpl() {
           </dt>
           <dd class="mt-2">
             <input type="text" id="label-description-input" name="label[description]"
-              class="w-full p-2 base-outer focus:outline-none"
+              class="w-full p-2 base-outer focus:outline-none _label_desc_input"
               placeholder="Description" value=""
               maxlength="100">
           </dd>
@@ -201,7 +201,7 @@ export function getLabelCreatorTpl() {
 
             <button id="new-label-color" type="button"
               data-view-component="true"
-              class="rounded-md border px-1 bg-pink-700 font-bold text-4xl"
+              class="rounded-md border px-1 bg-pink-700 font-bold text-4xl _label_color_button"
               aria-labelledby="tooltip-1664858299420-7732">
               ⟳
             </button>
@@ -210,7 +210,7 @@ export function getLabelCreatorTpl() {
               a new color</tool-tip>
             <div class="ml-2">
               <input type="text" id="label-color-value" name="label-color[description]"
-              class="w-full p-2 base-outer focus:outline-none"
+              class="w-full p-2 base-outer focus:outline-none _label_color_input"
               placeholder="#color" value="" maxlength="100">
             </div>
 
@@ -221,9 +221,9 @@ export function getLabelCreatorTpl() {
         <!--new label actions-->
         <div
           class="form-group my-2 flex mt-10">
-          <button type="button" class="base-outer p-2 mr-4"> Cancel
+          <button type="button" class="base-outer p-2 mr-4 _cancel_label_button"> Cancel
           </button>
-          <button id="label-create-button" type="submit" class="base-outer p-2 mr-4 bg-green-700 opacity-50 text-white" disabled=""> Create label
+          <button id="label-create-button" type="submit" class="base-outer p-2 mr-4 bg-green-700 opacity-50 text-white _create_label_button" disabled=""> Create label
           </button>
         </div>
         <!--END new label actions-->

@@ -12,7 +12,7 @@ export const LabelList = class {
   }
 
   constructor (labelData) {
-    this.element = selectElement(SELECTOR.LABEL_LIST_TABLE);
+    this.parentElement = selectElement(SELECTOR.LABEL_LIST_TABLE);
 
     this.labelData = labelData;
 
@@ -25,8 +25,8 @@ export const LabelList = class {
   }
 
   initTemplate () {
-    if (!this.element) { return; }
+    if (!this.parentElement) { return; }
 
-    this.element.innerHTML = this.template;
+    this.parentElement.innerHTML = this.template;
   }
 }

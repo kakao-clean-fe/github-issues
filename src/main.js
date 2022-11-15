@@ -14,6 +14,7 @@ issueTabButton.addEventListener(EVENT.CLICK, () => {
 });
 
 labelTabButton.addEventListener(EVENT.CLICK, async () => {
+  // TODO: 프록시 사용 방법 개선
   const labelData = await fetchLabelsData();
   labelDataProxy.labelData = labelData;
 });
