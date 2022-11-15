@@ -1,14 +1,11 @@
 import { renderLabelList, renderLabelCount, setLabelFormToggleEvent, setRandomColorChangeEvent, renderLabelTpl } from "../common/render";
 import { store } from '../store/store';
-import Observable from '../observable';
 
-export class Label extends Observable {
+export class Label {
 
     constructor(labels){
-        super();
-
-        store.setLables(labels);
-    }
+        store.setLabels(labels);
+    };
 
     init() {
         renderLabelTpl();
@@ -16,20 +13,20 @@ export class Label extends Observable {
         setRandomColorChangeEvent();
 
         this.render();
-    }
+    };
 
-    setLables(labels) {
-        store.setLables(labels);
+    setLabels(labels) {
+        store.setLabels(labels);
 
         this.render();
-    }
+    };
 
-    getLables() {
+    getLabels() {
         return store.getLabels();
-    }
+    };
 
     render() {
         renderLabelList(store.getLabels());
         renderLabelCount(`${store.getLabels().length} Labels`)
-    }
+    };
 }

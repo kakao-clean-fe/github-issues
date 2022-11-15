@@ -9,7 +9,7 @@ export const store = {
         return state._labels;
     },
 
-    setLables (labels) {
+    setLabels (labels) {
         state._labels = labels;
     },
 
