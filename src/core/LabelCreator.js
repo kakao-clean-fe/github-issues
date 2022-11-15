@@ -1,9 +1,15 @@
-import { LABEL_CREATOR_EVENT } from "../events";
 import Item from "../lib/Item";
 
-// ref : https://css-tricks.com/snippets/javascript/random-hex-color/
-const createRandomColor = () =>
-  `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+import { createColor } from "../utils/helper";
+
+import { LABEL_CREATOR_EVENT } from "../events";
+
+import { EVENT_KEY, HIDDEN, LABEL_CLASS_NAME } from "../constants";
+
+const { NAME, COLOR, DESCRIPTION, COLOR_BUTTON, CANCEL_BUTTON, CREATE_BUTTON } =
+  LABEL_CLASS_NAME;
+
+const { KEYUP, CLICK } = EVENT_KEY;
 
 export default class LabelCreator {
   constructor(id, labelStore) {
@@ -20,7 +26,7 @@ export default class LabelCreator {
   }
 
   _createColor() {
-    const newColor = createRandomColor();
+    const newColor = createColor();
     if (!this._labelStore.isSuccess) {
       return newColor;
     }
@@ -32,17 +38,34 @@ export default class LabelCreator {
     return this._createColor();
   }
 
-  _getElement(id = this._id, target = document) {
-    if (target === document) {
-      return target.getElementById(id);
-    }
-    return target.querySelector(`#${id}`);
+  _getElement(target = document) {
+    return (id = this._id) => {
+      if (target === document) {
+        return target.getElementById(id);
+      }
+      return target.querySelector(`#${id}`);
+    };
+  }
+
+  _action(id, action) {
+    return (store) => {
+      const find = this._getElement();
+      const el = find(id);
+
+      if (!el) {
+        return;
+      }
+
+      action(el, store);
+    };
   }
 
   toggle() {
-    const target = this._getElement();
+    const find = this._getElement();
+    const target = find();
+
     if (target) {
-      target.classList.toggle("hidden");
+      target.classList.toggle(HIDDEN);
     }
     return this;
   }
@@ -51,19 +74,6 @@ export default class LabelCreator {
     this._name.value = "";
     this._color.value = this._createColor();
     this._description.value = "";
-  }
-
-  _action(id, action) {
-    return (store) => {
-      const target = this._getElement();
-      const el = this._getElement(id, target);
-
-      if (!el) {
-        return;
-      }
-
-      action(el, store);
-    };
   }
 
   subscribe() {
@@ -77,32 +87,31 @@ export default class LabelCreator {
   }
 
   addEvent() {
-    const target = this._getElement();
-    const labelNameInput = this._getElement("label-name-input", target);
-    const labelColorValue = this._getElement("label-color-value", target);
-    const labelDescriptionInput = this._getElement(
-      "label-description-input",
-      target
-    );
-    const newLabelColor = this._getElement("new-label-color", target);
-    const labelCancelButton = this._getElement("label-cancel-button", target);
-    const labelCreateButton = this._getElement("label-create-button", target);
+    const find = this._getElement();
 
-    labelNameInput.addEventListener("keyup", (e) => {
+    const name = find(NAME);
+    const color = find(COLOR);
+    const description = find(DESCRIPTION);
+
+    const newColorBtn = find(COLOR_BUTTON);
+    const cancelBtn = find(CANCEL_BUTTON);
+    const createBtn = find(CREATE_BUTTON);
+
+    name.addEventListener(KEYUP, (e) => {
       this._name.value = e.target.value;
     });
-    labelColorValue.addEventListener("keyup", (e) => {
+    color.addEventListener(KEYUP, (e) => {
       this._color.value = e.target.value;
     });
-    labelDescriptionInput.addEventListener("keyup", (e) => {
+    description.addEventListener(KEYUP, (e) => {
       this._description.value = e.target.value;
     });
-    newLabelColor.addEventListener("click", () => {
+
+    newColorBtn.addEventListener(CLICK, () => {
       this._color.value = this._createColor();
     });
-
-    labelCancelButton.addEventListener("click", () => this.clear());
-    labelCreateButton.addEventListener("click", () => {
+    cancelBtn.addEventListener(CLICK, () => this.clear());
+    createBtn.addEventListener(CLICK, () => {
       if (this._name.value) {
         this._labelStore.add({
           name: this._name.value,

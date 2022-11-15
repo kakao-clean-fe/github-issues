@@ -45,3 +45,7 @@ export const updateUI =
       el.innerText = `${data[idx].length} ${prefix[idx]}`;
     });
   };
+
+export const createColor = () => {
+  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+};
