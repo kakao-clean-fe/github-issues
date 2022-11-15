@@ -61,4 +61,28 @@ export const LABEL_CREATOR_EVENT = {
       },
     ],
   ],
+  _error: [
+    [
+      "label-create-button",
+      (el, store) => {
+        el.classList.toggle("opacity-50", store.value);
+        if (!store.value) {
+          el.removeAttribute("disabled");
+          return;
+        }
+        el.setAttribute("disabled", "true");
+      },
+    ],
+    [
+      "label--name-error",
+      (el, store) => {
+        el.innerText = store.value;
+        if (store.value) {
+          el.removeAttribute("hidden");
+          return;
+        }
+        el.setAttribute("hidden", "true");
+      },
+    ],
+  ],
 };

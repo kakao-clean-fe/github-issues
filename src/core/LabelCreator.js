@@ -17,6 +17,7 @@ export default class LabelCreator {
     this._name = new Item("");
     this._color = new Item("");
     this._description = new Item("");
+    this._error = new Item("");
     this._labelStore = labelStore;
 
     this.addEvent();
@@ -71,6 +72,7 @@ export default class LabelCreator {
   }
 
   clear() {
+    this._error.value = "";
     this._name.value = "";
     this._color.value = this._createColor();
     this._description.value = "";
@@ -99,6 +101,10 @@ export default class LabelCreator {
 
     name.addEventListener(KEYUP, (e) => {
       this._name.value = e.target.value;
+      const duplicate = this._labelStore.some(
+        (item) => item.name === this._name.value
+      );
+      this._error.value = duplicate ? "이미 등록된 이름입니다." : "";
     });
     color.addEventListener(KEYUP, (e) => {
       this._color.value = e.target.value;
