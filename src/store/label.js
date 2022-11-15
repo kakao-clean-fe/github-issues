@@ -1,7 +1,7 @@
 import { getRandom, isHexColor } from '../util/feature';
-import {createStoreObservable} from './proxyStore';
+import {createStoreObservable} from './proxy';
 import {renderLabelItem, renderLabelCount, renderLabelColor} from '../page/label'
-import {getPromiseData} from './reusableStore';
+import {getPromiseData} from './default';
 
 /**
  * week2 객체 지향 프로그래밍

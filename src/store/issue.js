@@ -1,4 +1,4 @@
-import {store, createDerivedStore, fetchData} from './reusableStore.js';
+import {store, createDerivedStore, fetchData} from './default.js';
 
 export const pageStore$ = store('');
 

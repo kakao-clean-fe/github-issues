@@ -1,7 +1,7 @@
 import { labelFormSelector, createLabelButtonSelector, formColorValueSelector, formNameSelector, formHiddenClass } from "../template/selector"
 import { $, activateButton, deactivateButton, toggleClass } from "../util/dom"
 import {labelStore$, newLabelColorStore$} from '../store/label';
-import {updateProperty} from '../store/proxyStore';
+import {updateProperty} from '../store/proxy';
 import { showLabelFormFirst } from "../const";
 import { isValid } from "../util/feature";
 
