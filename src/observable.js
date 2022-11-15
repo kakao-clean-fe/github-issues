@@ -1,20 +1,24 @@
 export default class Observable {
+  
+  constructor(target = {}) {
+    const _handlers = Symbol('handlers');
     
-  constructor() {
-    this._observers = new Set();
-  }
+    target[_handlers] = [];
 
-  subscribe(observer) {
-    this._observers.add(observer);
-  }
+    target.subscribe = function (handler) {
+      this[_handlers].push(handler);
+    };
 
-  unsubscribe(observer) {
-    this._observers = [...this._observers].filter(
-      (subscriber) => subscriber !== observer
-    );
-  }
+    return new Proxy(target, {
+      set(target, property, value) {
+        const success = Reflect.set(...arguments);
 
-  notify(data) {
-    this._observers.forEach((subscriber) => subscriber(data));
+        if (success) {
+          target[_handlers].forEach(handler => handler(property, value));
+        }
+
+        return success;
+      }
+    });
   }
 }
