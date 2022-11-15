@@ -1,7 +1,7 @@
 import {Component} from "..";
 import { labelListBodyStr, labelListHeaderStr } from "../../constants/template-label";
-import LabelListBody from "./LabelListBody";
-import LabelListHeader from "./LabelListHeader";
+import { querySelector } from "../../utils/dom-selector";
+import { getLabelItemTpl } from "../../tpl";
 
 export default class LabelList extends Component{
   constructor(templateStr, targetQuery, model){
@@ -13,5 +13,31 @@ export default class LabelList extends Component{
   }
   updatedLabelList(){
     this.header.setCountTemplate(this.model.labelList.length);
+  }
+}
+class LabelListBody extends Component{
+  constructor(templateStr, targetQuery, labelList){
+    super(templateStr, targetQuery);
+    this.labelListTemplate = labelList.map(labelData => new LabelListRow(labelData, '.label-list'));
+  }
+}
+class LabelListHeader extends Component{
+  constructor(templateStr, targetQuery, count){
+    super(templateStr, targetQuery);
+    this.count = count;
+
+    this.setCountTemplate(count);
+  }
+  setCountTemplate(count){
+    querySelector('.open-count').innerHTML = `${count} Labels`;
+  }
+} 
+class LabelListRow extends Component{
+  constructor(labelData, targetQuery){
+    super(getLabelItemTpl(labelData), targetQuery);
+    this.labelData = labelData;
+  }
+  setLabelData = (labelData) => {
+    this.labelData = labelData;
   }
 }

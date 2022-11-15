@@ -16,10 +16,12 @@ export default class LabelForm extends Component{
 class LabelInputDiv extends Component{
   constructor(templateStr, targetQuery, model){
     super(templateStr, targetQuery);
-    this.labelNameInput = new LabelNameInput(labelNameInputStr ,'#label-input-wrapper');
-    this.labelDescriptionInput = new LabelDescriptionInput(labelDescriptionInputStr, '#label-input-wrapper');
-    this.labelColorInput = new LabelColorInput(labelColorInputStr,'#label-input-wrapper');
-    this.labelCreateActionDiv = new LabelCreateActionDiv(labelCreateActionDivStr, '#label-input-wrapper', model);
+    const childTargetQuery = '#label-input-wrapper';
+
+    this.labelNameInput = new LabelNameInput(labelNameInputStr, childTargetQuery);
+    this.labelDescriptionInput = new LabelDescriptionInput(labelDescriptionInputStr, childTargetQuery);
+    this.labelColorInput = new LabelColorInput(labelColorInputStr, childTargetQuery);
+    this.labelCreateActionDiv = new LabelCreateActionDiv(labelCreateActionDivStr, childTargetQuery, model);
   }
 }
 
@@ -56,7 +58,6 @@ class CancelButton extends Button{
 class SubmitButton extends Button{
   constructor(templateStr, targetQuery, model) {
     super(templateStr, targetQuery);
-    // const event = () => formModel.isOpen = false;
     this.setOnClickListener(this.template, (e)=>{
       const newLabel = {name: 'enhancement', color: 'a2eeef', description: 'thi'};
       model.label.addLabelList(newLabel);
