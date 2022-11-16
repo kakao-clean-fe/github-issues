@@ -1,6 +1,6 @@
-import ComponentRefactor from '../../core/component_refactor';
+import Component from '../../core/component';
 
-export default class IssueList extends ComponentRefactor {
+export default class IssueList extends Component {
   static getInstance(...args) {
     return new IssueList(...args);
   }

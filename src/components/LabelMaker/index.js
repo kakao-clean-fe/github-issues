@@ -1,7 +1,7 @@
-import ComponentRefactor from "../../core/component_refactor"
+import Component from "../../core/component"
 import { labelStoreMixin } from "../../core/mixin/labelStore";
 
-export class LabelMaker extends ComponentRefactor {
+export class LabelMaker extends Component {
   static getInstance (...args) {
     Object.assign(LabelMaker.prototype, labelStoreMixin);
 

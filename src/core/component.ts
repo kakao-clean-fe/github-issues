@@ -1,7 +1,6 @@
 import { clearInnerHTML, convertTemplateToElement, getElement } from '../utils/element';
 
-// TODO wes: 임시 컴포넌트 추후 Component로 변경 예정
-export default class ComponentRefactor {
+export default class Component {
   $target: HTMLElement;
   $root: HTMLElement;
   rootInnerHTML: string;

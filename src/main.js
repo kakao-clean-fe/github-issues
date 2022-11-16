@@ -5,9 +5,9 @@ import IssueHeader from './components/IssueHeader';
 import IssueInnerWrapper from './components/IssueInnerWrapper';
 import { getElement } from './utils/element';
 import { STATUS } from './type/issue';
-import ComponentRefactor from './core/component_refactor';
+import Component from './core/component';
 
-class Main extends ComponentRefactor {
+class Main extends Component {
   static getInstance(...args) {
     return new Main(...args)
   }

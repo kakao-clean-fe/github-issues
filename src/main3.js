@@ -1,10 +1,10 @@
 import { getElement } from './utils/element';
-import ComponentRefactor from './core/component_refactor';
+import Component from './core/component';
 import { LabelMaker } from './components/LabelMaker';
 import { LabelList } from './components/LabelList';
 import { labelStoreMixin } from './core/mixin/labelStore';
 
-class Main extends ComponentRefactor {
+class Main extends Component {
   static getInstance(...args) {
     Object.assign(Main.prototype, labelStoreMixin);
 

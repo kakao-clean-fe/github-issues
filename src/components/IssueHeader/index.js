@@ -1,6 +1,6 @@
-import ComponentRefactor from '../../core/component_refactor';
+import Component from '../../core/component';
 
-export default class IssueHeader extends ComponentRefactor {
+export default class IssueHeader extends Component {
   static getInstance (...args) {
     return new IssueHeader(...args);
   }

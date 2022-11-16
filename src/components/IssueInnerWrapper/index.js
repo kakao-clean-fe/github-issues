@@ -1,7 +1,7 @@
 import { STATUS } from '../../type/issue';
-import ComponentRefactor from '../../core/component_refactor';
+import Component from '../../core/component';
 
-export default class IssueInnerHeader extends ComponentRefactor {
+export default class IssueInnerHeader extends Component {
   static getInstance(...args) {
     return new IssueInnerHeader(...args);
   }
