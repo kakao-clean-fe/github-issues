@@ -4,17 +4,17 @@ import { querySelector } from "../../utils/dom-selector";
 import { getLabelItemTpl } from "../../tpl";
 
 export default class LabelList extends Component{
-  constructor(templateStr, targetQuery, model){
+  constructor(templateStr, targetQuery, store){
     super(templateStr, targetQuery);
-    this.labelListModel = model;
-    this.header = new LabelListHeader(labelListHeaderStr, '#labels-wrapper', this.labelListModel.labelList.length);
-    this.body = new LabelListBody(labelListBodyStr, '#labels-wrapper', this.labelListModel.labelList);
+    this.store = store;
+    this.header = new LabelListHeader(labelListHeaderStr, '#labels-wrapper', this.store.labelList.length);
+    this.body = new LabelListBody(labelListBodyStr, '#labels-wrapper', this.store.labelList);
 
-    this.labelListModel.subscribe(() => this.updatedLabelList());
+    this.store.subscribe(() => this.updatedLabelList());
   }
   updatedLabelList(){
-    this.header.setCountTemplate(this.labelListModel.labelList.length);
-    this.body.updateTemplate(this.labelListModel.labelList);
+    this.header.setCountTemplate(this.store.labelList.length);
+    this.body.updateTemplate(this.store.labelList);
   }
 }
 class LabelListBody extends Component{

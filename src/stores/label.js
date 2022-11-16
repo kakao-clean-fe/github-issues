@@ -1,9 +1,11 @@
 import Observer from ".";
 
-export class FormStateModel extends Observer {
-  constructor() {
+export class LabelStore extends Observer {
+  constructor(labelList) {
     super();
     this.isOpen = false;
+    this.labelList = labelList;
+    this.label = {};
   }
   get isOpen() {
     return this._isOpen;
@@ -12,12 +14,7 @@ export class FormStateModel extends Observer {
     this._isOpen = isOpen; //상태 변경
     this.notify(); //등록된 렌더링 함수들 호출
   }
-}
-export class LabelListModel extends Observer {
-  constructor(labelList) {
-    super();
-    this.labelList = labelList;
-  }
+
   get labelList() {
     return this._labelList;
   }
@@ -29,13 +26,7 @@ export class LabelListModel extends Observer {
     this.labelList = [...this.labelList, label];
     this.notify(); //등록된 렌더링 함수들 호출
   }
-}
 
-export class LabelModel extends Observer {
-  constructor() {
-    super();
-    this.label = {};
-  }
   get label() {
     return this._label;
   }

@@ -2,17 +2,17 @@ import { Component, Button } from "..";
 import { newLabelButtonStr } from "../../constants/template-label";
 
 export default class Header extends Component{
-  constructor(templateStr, targetQuery, model){
+  constructor(templateStr, targetQuery, store){
     super(templateStr, targetQuery);
-    this.newLabelButton = new NewLabelButton(newLabelButtonStr,'#header', model);
+    this.newLabelButton = new NewLabelButton(newLabelButtonStr,'#header', store);
   }
 }
 class NewLabelButton extends Button{
-  constructor(templateStr, targetQuery, model){
+  constructor(templateStr, targetQuery, store){
     super(templateStr, targetQuery);
-    this.setOnClickListener(this.template, () => this.clickEvent(model));
+    this.setOnClickListener(this.template, () => this.clickEvent(store));
   }
-  clickEvent(model){
-    model.isOpen = true;
+  clickEvent(store){
+    store.isOpen = true;
   }
 }
