@@ -23,8 +23,8 @@ class LabelInputDiv extends Component{
   constructor(templateStr, targetQuery, model, labelModel){
     super(templateStr, targetQuery);
 
-    this.model = labelModel; // 새로 생성할 라벨 정보를 가지는 모델
-    this.model.subscribe(() => this.updatedLabel());
+    this.labelModel = labelModel; // 새로 생성할 라벨 정보를 가지는 모델
+    this.labelModel.subscribe(() => this.updatedLabel());
 
     this.inputs = querySelectorAll(`${this.#childTargetQuery} input`);
     this.inputs.forEach(inputElement => this.addInputEvent(inputElement));
@@ -36,9 +36,9 @@ class LabelInputDiv extends Component{
   addInputEvent(inputElement){
     const event = (e) => {
       const key = LABEL_NAME_TO_KEY[e.target.name];
-      const newLabel = {...this.model.label};
+      const newLabel = {...this.labelModel.label};
       newLabel[key] = e.target.value;
-      this.model.label = newLabel;
+      this.labelModel.label = newLabel;
     }
     inputElement.addEventListener('input', event);
   }
@@ -50,14 +50,14 @@ class LabelInputDiv extends Component{
   addChangeLabelColorEvent(element){
     const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
     const event = (e) => {
-      const label = {...this.model.label};
+      const label = {...this.labelModel.label};
       label.color = LABEL_COLOR[rand(0,5)];
-      this.model.label = label;
+      this.labelModel.label = label;
     }
     element.addEventListener('click', event);
   }
   setColorTemplate(){
-    const color = this.model.label.color;
+    const color = this.labelModel.label.color;
     [ this.changeColorButton, querySelector('#label-preview')]
       .forEach(element => element.style.backgroundColor = `#${color}`);
     ;
@@ -65,14 +65,14 @@ class LabelInputDiv extends Component{
   setLabelText(){
     this.inputs.forEach(inputElement => {
       const key = LABEL_NAME_TO_KEY[inputElement.name];
-      const value = this.model.label[key];
+      const value = this.labelModel.label[key];
       if(value){
-        inputElement.value = this.model.label[key];
+        inputElement.value = this.labelModel.label[key];
       }
     })
   }
   checkInputCondition(){
-    const label = this.model.label;
+    const label = this.labelModel.label;
     return label.name && label.description && label.color ? true : false;
   }
 }

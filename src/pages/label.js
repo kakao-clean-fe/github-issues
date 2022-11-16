@@ -11,10 +11,10 @@ export default class LabelPage extends Component {
     super(templateStr, targetQuery);
 
     this.formModel = new FormStateModel();
-    this.labelModel = new LabelListModel(labelList);
+    this.labelListModel = new LabelListModel(labelList);
 
     this.header = new Header(labelHeaderStr,'#label-wrapper',this.formModel);
-    this.labelForm = new LabelForm(labelFormStr,'#label-wrapper',{label: this.labelModel, form: this.formModel});
-    this.labelList = new LabelList(labelListStr, '#label-wrapper', this.labelModel);
+    this.labelForm = new LabelForm(labelFormStr,'#label-wrapper',{label: this.labelListModel, form: this.formModel});
+    this.labelList = new LabelList(labelListStr, '#label-wrapper', this.labelListModel);
   }
 }

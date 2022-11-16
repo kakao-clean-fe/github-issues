@@ -6,15 +6,15 @@ import { getLabelItemTpl } from "../../tpl";
 export default class LabelList extends Component{
   constructor(templateStr, targetQuery, model){
     super(templateStr, targetQuery);
-    this.model = model;
-    this.header = new LabelListHeader(labelListHeaderStr, '#labels-wrapper', model.labelList.length);
-    this.body = new LabelListBody(labelListBodyStr, '#labels-wrapper', model.labelList);
+    this.labelListModel = model;
+    this.header = new LabelListHeader(labelListHeaderStr, '#labels-wrapper', this.labelListModel.labelList.length);
+    this.body = new LabelListBody(labelListBodyStr, '#labels-wrapper', this.labelListModel.labelList);
 
-    this.model.subscribe(() => this.updatedLabelList());
+    this.labelListModel.subscribe(() => this.updatedLabelList());
   }
   updatedLabelList(){
-    this.header.setCountTemplate(this.model.labelList.length);
-    this.body.updateTemplate(this.model.labelList);
+    this.header.setCountTemplate(this.labelListModel.labelList.length);
+    this.body.updateTemplate(this.labelListModel.labelList);
   }
 }
 class LabelListBody extends Component{
