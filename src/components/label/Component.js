@@ -1,11 +1,11 @@
-import {getLabelItemsTpl} from "../../tpl.js";
-import {selectElement, selectElementById} from "../../lib/utils.js";
+import {selectElement} from "../../lib/utils.js";
 
 export class Component {
-    constructor({rootSelector, templateFn, templateDataFn}) {
+    constructor({rootSelector, templateFn, templateDataFn, labelStore}) {
         this.rootSelector = rootSelector
         this.templateFn = templateFn
         this.templateDataFn = templateDataFn
+        this.labelStore = labelStore
 
     }
 
@@ -13,7 +13,7 @@ export class Component {
         selectElement(this.rootSelector).innerHTML = this.templateFn(this.templateDataFn(data))
     }
 
-    bind(labelStore) {
-        labelStore.subscribe((labels) => this._render(labels))
+    bind() {
+        this.labelStore.subscribe((labels) => this._render(labels))
     }
 }

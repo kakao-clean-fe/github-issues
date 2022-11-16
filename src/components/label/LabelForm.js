@@ -10,10 +10,10 @@ export class LabelForm extends Component {
                 rootSelector,
                 templateFn: getLabelForm,
                 templateDataFn: function () {
-                }
+                },
+                labelStore
             }
         )
-        this.labelStore=labelStore
     }
 
     render() {

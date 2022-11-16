@@ -6,14 +6,14 @@ export class LabelItems extends Component {
         super({
             rootSelector,
             templateFn: getLabelItemsTpl,
-            templateDataFn: (data) => (data)
+            templateDataFn: (data) => (data),
+            labelStore
         });
-        this.labelStore=labelStore
     }
 
     render() {
         this._render(this.labelStore.get())
-        this.bind(this.labelStore)
+        this.bind()
     }
 
 }

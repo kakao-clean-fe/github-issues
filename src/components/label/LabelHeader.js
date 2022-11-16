@@ -6,14 +6,14 @@ export class LabelHeader extends Component {
         super({
             rootSelector,
             templateFn: getLabelTpl,
-            templateDataFn: (data) => data.length
+            templateDataFn: (data) => data.length,
+            labelStore
         });
-        this.labelStore=labelStore
     }
 
     render() {
         this._render(this.labelStore.get())
-        this.bind(this.labelStore)
+        this.bind()
     }
 
 }
