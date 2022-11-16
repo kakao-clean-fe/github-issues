@@ -1,18 +1,17 @@
 import {renderLabel} from "./components/label/index.js";
 import {renderIssue} from "./components/issue/index.js";
-import {COMMON} from "./lib/constants/selector.js";
+import {COMMON_SELECTOR} from "./lib/constants/selector.js";
+import {selectElement} from "./lib/utils.js";
 
 (() => {
-
-    renderIssue(COMMON.APP)
-
-    document.querySelector('.buttonNav')
+    renderIssue(COMMON_SELECTOR.APP)
+    selectElement(COMMON_SELECTOR.NAV_TAB)
         .addEventListener('click', function (event) {
             const tabName = event.target.id
             if (tabName === 'issue') {
-                renderIssue(COMMON.APP)
+                renderIssue(COMMON_SELECTOR.APP)
             } else if (tabName === "label") {
-                renderLabel(COMMON.APP)
+                renderLabel(COMMON_SELECTOR.APP)
             }
         })
 })();

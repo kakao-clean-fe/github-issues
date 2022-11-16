@@ -9,3 +9,6 @@ export const pipe =
     (...functions) =>
         (args) =>
             functions.reduce((arg, nextFn) => nextFn(arg), args);
+
+export const selectElement = (selector) => document.querySelector(selector)
+export const selectElementById = (selector) => document.getElementById(selector)

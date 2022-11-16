@@ -1,4 +1,4 @@
-export function getIssueTpl(openItemsCount = 0 , closedItemsCount= 0 ) {
+export function getIssueTpl(openItemsCount = 0, closedItemsCount = 0) {
     return `
     <div id="issue-wrapper" class="w-9/12 m-auto min-w-min">
     <div id="header" class="flex justify-between">
@@ -76,11 +76,11 @@ export function getIssueItemTpl(item) {
               <div class="issue-title font-bold flex">
                   <div>${item.title}</div>
                   <div class='tags ml-4'>
-                    ${item.tags.reduce((html, { tagName, color }) => {
-                      return `
+                    ${item.tags.reduce((html, {tagName, color}) => {
+        return `
                         ${html} <span class="rounded-lg border text-white p-1" style="background-color:${color}">${tagName}</span>
                       `;
-                    }, ``)}
+    }, ``)}
                   </div>
               </div>
               <div class="issue-description text-xs mt-2">
@@ -90,8 +90,8 @@ export function getIssueItemTpl(item) {
         </li>`;
 }
 
-export function getLabelTpl() {
-  return `
+export function getLabelForm() {
+    return `
   <div id="label-wrapper" class="w-9/12 m-auto min-w-min">
 
   <div id="header" class="flex justify-between">
@@ -191,7 +191,7 @@ export function getLabelTpl() {
         class="form-group my-2 flex mt-10">
         <button type="button" class="base-outer p-2 mr-4"> Cancel
         </button>
-        <button id="label-create-button" type="submit" class="base-outer p-2 mr-4 bg-green-700 opacity-50 text-white" disabled=""> Create label
+        <button id="label-create-button" type="button" class="base-outer p-2 mr-4 bg-green-700 opacity-50 text-white"> Create label
         </button>
       </div>
       <!--END new label actions-->
@@ -199,13 +199,17 @@ export function getLabelTpl() {
     </div>
 
   </form>
+  <span class="label-header"></span>
+`
+}
 
-
+export function getLabelTpl(itemsCount) {
+    return `
   <div id="labels-wrapper" class="m-auto  base-outer mt-6 bg-slate-100">
     <div class="label-header h-16 flex justify-between items-center border-b">
 
       <div class="mr-3 d-none pl-4">
-        <div class="whitespace-nowrap open-count font-bold cursor-pointer">6 Labels</div>
+        <div class="whitespace-nowrap open-count font-bold cursor-pointer">${itemsCount} Labels</div>
       </div>
 
       <div class="details-list flex ml-auto">
@@ -224,8 +228,8 @@ export function getLabelTpl() {
   `
 }
 
-export function getLabelItemTpl({ name, color, description }) {
-		return `
+export function getLabelItemTpl({name, color, description}) {
+    return `
             <li class="label-item flex items-center ml-4 py-3 justify-between border-b ">
                 <div class="issue-title flex"> 
                     <span class="rounded-lg border p-1 px-2" style="background-color:#${color}">${name}</span> 
@@ -238,4 +242,9 @@ export function getLabelItemTpl({ name, color, description }) {
                 </div>
             </li>
         `;
+}
+
+
+export function getLabelItemsTpl (labels) {
+    return labels.map(label => getLabelItemTpl({name: label.name, color: label.color, description: label.description})).join('')
 }
