@@ -1,22 +1,17 @@
 import { getApi } from '~/utils/api';
 import { Labels } from '~/types/label';
 import { ref, watch } from '~/utils/reactive';
+import { unwrapRefValues } from '~/utils/store';
 
-const state = {
+const refObject = {
   labels: ref<Labels>([])
 };
 
 export const labelStore = {
-  get labels () {
-    return state.labels.value;
-  },
-
-  set labels (newLabels: Labels) {
-    state.labels.value = newLabels;
-  },
+  state: unwrapRefValues(refObject),
 
   setLabelsWatcher (effectFunction: (labels: Labels) => void) {
-    watch(state.labels, effectFunction);
+    watch(refObject.labels, effectFunction);
   },
 
   async fetchLabels (): Promise<Labels> {
@@ -25,7 +20,7 @@ export const labelStore = {
 
   fetchAndSetLabels () {
     this.fetchLabels()
-      .then((labels: Labels) => { this.labels = labels; })
+      .then((labels: Labels) => { this.state.labels = labels; })
       .catch((error: Error) => error);
   }
 
