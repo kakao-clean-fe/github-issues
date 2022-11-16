@@ -1,5 +1,3 @@
-import {getElement } from '../../utils/element';
-import IssueItem from '../IssueItem';
 import ComponentRefactor from '../../core/component_refactor';
 
 export default class IssueList extends ComponentRefactor {
