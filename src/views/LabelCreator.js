@@ -51,7 +51,6 @@ export const LabelCreator = class {
   }
 
   onInputLabelName ({target}) {
-    console.log(target.value);
     this.name = target.value;
   }
 
