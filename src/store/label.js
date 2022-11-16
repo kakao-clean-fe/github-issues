@@ -12,10 +12,10 @@ export const colorList = [
  * week2 객체 지향 프로그래밍
  * label 관련
  */
-export let labelStore$;
-export const getLabelStore$ = () => {
+export let labelStore$ = null;
+export const getLabelStore$ = (watchers) => {
   getPromiseData('../../data-sources/labels.json').then((labels = []) => {
-    labelStore$ = createStoreObservable(labels, [labelPage.renderLabelItem, labelPage.renderLabelCount]);
+    labelStore$ = createStoreObservable(labels, watchers);
   });
 }
 
@@ -28,7 +28,7 @@ const initialColorValue = {
 
 export const newLabelColorStore$ = (function(target) {
   let _iterator = target.colors.values();
-  let cur = _iterator.next().value;
+  let cur = _iterator.next().value ?? colorList[0];
 
   const observable = new Proxy(target, {
     get(obj, prop, receiver) {

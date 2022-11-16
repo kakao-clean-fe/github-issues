@@ -61,7 +61,7 @@ export const labelPage = {
       renderWrapper,
       renderInitialLabelColor,
       this.addNewLabelFormListener.bind(this),
-      getLabelStore$, // get data
+      () => getLabelStore$([this.renderLabelItem, this.renderLabelCount]), // get data
       // test용 임시, new form 보이기
       () => this.toggleLabelForm(),
     )();
