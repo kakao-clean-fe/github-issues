@@ -1,86 +1,10 @@
-import {getRandomColorCode, isHexColor, selectOne} from "../utils.js";
-import {getLabelFormTpl, getLabelItemTpl, getLabelTpl} from "../tpl.js";
-import {TAB} from "../constants.js";
-import Observer from "../libs/observer.js";
-import AppState from "../libs/state.js";
-import LabelStore from "../stores/label.js";
+import View from "@/libs/view.js";
+import {getRandomColorCode, isHexColor, selectOne} from "@/utils.js";
+import {getLabelFormTpl} from "@/tpl.js";
+import LabelStore from "@/stores/label.js";
+import AppState from "@/libs/state.js";
 
-
-export class LabelTab extends Observer {
-  get $targetEl() {
-    return selectOne('#app')
-  }
-
-  mountFunction(node) {
-    this.$targetEl.innerHTML = ''
-    return super.mountFunction(node);
-  }
-
-  getTemplate(state) {
-    const {activeTab, labels} = state
-    return getLabelTpl({
-      numLabels: labels?.length || 0,
-      show: activeTab === 'label',
-    })
-  }
-
-  bindEvents() {
-    // toggle new label button
-    this.$newLabelButton.addEventListener('click', () => {
-      const {showNewLabel} = AppState.get()
-      AppState.update({showNewLabel: !showNewLabel})
-    })
-  }
-
-  get $newLabelButton() {
-    return this.$targetEl.querySelector(".new-label-button")
-  }
-
-  render() {
-    const {activeTab} = AppState.get()
-    if (activeTab === TAB.LABEL) super.render()
-  }
-}
-
-
-export class LabelModel extends Observer {
-  constructor(item = {}) {
-    super();
-    this.data = item
-  }
-
-  get $targetEl() {
-    return selectOne('#app ul.label-list')
-  }
-
-  getTemplate(state) {
-    return getLabelItemTpl(this.data)
-  }
-
-  bindEvents() {
-    const {deleteButton} = this.$
-
-    deleteButton.addEventListener('click', () => {
-      LabelStore.remove(this)
-    })
-  }
-
-  get $() {
-    const querySelector = (selector) => this.contents?.querySelector(selector)
-    return {
-      editButton: querySelector('.edit-button'),
-      deleteButton: querySelector('.delete-button'),
-    }
-  }
-
-  render() {
-    const {activeTab} = AppState.get()
-    if (activeTab === TAB.LABEL) super.render()
-  }
-}
-
-
-export class LabelForm extends Observer {
+class LabelForm extends View {
   get $targetEl() {
     return selectOne('#label-wrapper')
   }
@@ -120,11 +44,8 @@ export class LabelForm extends Observer {
     })
 
     // color input 입력시 hexColor이면 preview color 수정
-    labelColorInput.addEventListener('input', (e) => {
-      const value = e.target.value
-      if (isHexColor(value)) {
-        changeColorCode(value.slice(1))
-      }
+    labelColorInput.addEventListener('input', ({target: {value}}) => {
+      isHexColor(value) && changeColorCode(value.slice(1))
     })
 
     // input validation을 체크하여 create-button을 활성화/비활성화
@@ -141,7 +62,7 @@ export class LabelForm extends Observer {
     labelDescInput.addEventListener('input', handleInputs)
 
     // create button 클릭시 store에 LabelModel을 추가
-    labelCreateButton.addEventListener('click', (e) => {
+    const handleCreateLabel = (e) => {
       e.preventDefault()
       const item = {
         name: labelNameInput.value,
@@ -153,7 +74,8 @@ export class LabelForm extends Observer {
         AppState.update({previewLabelColor: getRandomColorCode()}, false)
         LabelStore.add(item)
       }
-    })
+    }
+    labelCreateButton.addEventListener('click', handleCreateLabel)
 
     // cancel 버튼 클릭시 Form 숨김
     labelCancelButton.addEventListener('click', () => {
@@ -182,3 +104,5 @@ export class LabelForm extends Observer {
     }
   }
 }
+
+export default LabelForm

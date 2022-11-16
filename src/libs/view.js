@@ -4,7 +4,7 @@ import AppState from "./state.js";
  * Observer class
  * - instance 생성과 함께 AppState에 subscribe합니다.
  * */
-class Observer {
+class View {
   constructor() {
     AppState.subscribe(this)
     this.contents = null
@@ -54,4 +54,4 @@ class Observer {
   }
 }
 
-export default Observer;
+export default View;

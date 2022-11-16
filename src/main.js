@@ -1,11 +1,13 @@
 import IssueStore from "./stores/issue.js";
 import LabelStore from "./stores/label.js";
 import Nav from "./components/nav.js";
-import {IssueTab} from "./components/issue.js"
+import IssueTab from "./components/issue/tab.js"
 import {STATUS, TAB} from "./constants.js";
 import AppState from "./libs/state.js";
-import {LabelForm, LabelTab} from "./components/label.js";
 import {getRandomColorCode} from "./utils.js";
+import LabelTab from "./components/label/tab.js";
+import LabelForm from "./components/label/form.js";
+
 
 (
   () => {

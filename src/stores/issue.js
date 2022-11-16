@@ -1,6 +1,6 @@
-import {fetchData, removeItem} from "../utils.js";
-import AppState from "../libs/state.js";
-import {IssueModel} from "../components/issue.js";
+import {fetchData, removeItem} from "@/utils.js";
+import AppState from "@/libs/state.js";
+import IssueModel from "@/components/issue/model.js";
 
 const IssueStore = {
   getInitialData() {

@@ -10,8 +10,7 @@ class Nav {
 
   bindEvents() {
     this.$tabButtons.forEach(($tabBtn) => {
-      $tabBtn.addEventListener("click", (e) => {
-        const {classList} = e.target
+      $tabBtn.addEventListener("click", ({target: {classList}}) => {
         AppState.update({activeTab: classList.contains("issue") ? TAB.ISSUE : TAB.LABEL})
       })
     })
