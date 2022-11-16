@@ -10,9 +10,9 @@ export const initLabelPage = (): void => {
 
   new LabelPageLayout({ labelFormComponent: new LabelForm() }).init();
 
-  const labelList = new LabelList({ labels: labelStore.labels });
+  const labelList = new LabelList();
   labelStore.setLabelsWatcher((labels: Labels) => { labelList.init({ labels }); });
 
-  const labelCount = new LabelCount({ labels: labelStore.labels });
+  const labelCount = new LabelCount();
   labelStore.setLabelsWatcher((labels: Labels) => { labelCount.init({ labels }); });
 };
