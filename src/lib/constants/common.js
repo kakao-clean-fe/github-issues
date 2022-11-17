@@ -1,4 +1,4 @@
-export const ISSUE_STATUS={
+export const ISSUE_STATUS = {
     OPEN: "open",
     CLOSE: "close"
 }
