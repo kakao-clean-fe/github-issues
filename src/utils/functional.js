@@ -1,0 +1,1 @@
+export const pipe = (...fns) => (...args) => fns.reduce((result, fn) => fn.length === 1 ? fn(result) : fn.apply(undefined, result), args);
