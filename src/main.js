@@ -1,58 +1,22 @@
-import { getIssueItemTpl, getIssueTpl } from './tpl';
-import { fetchIssues } from './common/api';
-import { OPEN, CLOSED } from './constants/status';
 import { SELECTOR } from './constants/selector';
-import { getIssuesWithStatus } from './utils/status';
-import { createIssue, createIssueList, updateIssueList, boldToStatusButton } from './utils/template';
-import { hasClass } from './utils/dom';
-import { pipe } from './utils/pipe';
-import { bindClickEvent } from './utils/event';
+import {selectElement } from './utils/dom';
+import { createIssuePage } from './pages/issues';
+import { EVENT } from './constants/event';
+import { LabelPage } from './pages/label';
+import { fetchLabelsData } from './common/api';
+import { labelDataProxy } from './store/dataStore';
 
-const renderIssue = (issues) => {
-  /** 데이터 가져오기 */
-  const getIssues = getIssuesWithStatus(issues);
-  const openIssues = getIssues(OPEN);
-  const closedIssues = getIssues(CLOSED);
+const issueTabButton = selectElement(SELECTOR.ISSUE_TAB);
+const labelTabButton = selectElement(SELECTOR.LABEL_TAB);
 
-  /** issueTemplate 그리기 */
-  pipe(getIssueTpl, createIssue)({openIssueCount: openIssues.length, closedIssueCount: closedIssues.length});
+issueTabButton.addEventListener(EVENT.CLICK, () => {
+  createIssuePage();
+});
 
-  /** issueItemTemplate 그리기 */
-  const getIssueListTableTemplate = issues => issues
-    .map(issue => getIssueItemTpl(issue))
-    .join('');
+labelTabButton.addEventListener(EVENT.CLICK, async () => {
+  // TODO: 프록시 사용 방법 개선
+  const labelData = await fetchLabelsData();
+  labelDataProxy.labelData = labelData;
+});
 
-  pipe(getIssueListTableTemplate, createIssueList)(issues);
-};
-
-const clickStatusTab = ({target}) => {
-  const OPEN_COUNT_CLASS = '_open_count';
-  const isOpenCountButton = hasClass(OPEN_COUNT_CLASS);
-  const status = isOpenCountButton(target) ? OPEN : CLOSED;
-  boldToStatusButton(status);
-
-  return status; // status가 문맥에 맞는 반환인지 고려해야함
-};
-
-const setStatusTabEvent = issues => {
-  /** 이벤트 바인딩 */
-  const bindTabClickEvent = bindClickEvent(SELECTOR.STATUS_TAB);
-  bindTabClickEvent(
-    clickStatusTab,
-    getIssuesWithStatus(issues), // currying 함수
-    updateIssueList,
-  );
-};
-
-const init = async (issues) => {
-  await renderIssue(issues);
-  setStatusTabEvent(issues);
-}
-
-const main = async () => {
-  const issues = await fetchIssues();
-
-  init(issues);
-};
-
-main();
+createIssuePage();

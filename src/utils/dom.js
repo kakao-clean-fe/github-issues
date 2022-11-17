@@ -17,3 +17,15 @@ export const removeClass = className => selector => {
 export const hasClass = className => element => {
   return element.classList.contains(className);
 };
+
+export const toggleClass = (element, className) => {
+  const selectedElement = selectElement(element);
+
+  if (selectedElement) {
+    return selectElement(element).classList.toggle(className);
+  }
+}
+
+export const addEventListener = eventType => (selector, handler) => {
+  selectElement(selector).addEventListener(eventType, handler);
+};
