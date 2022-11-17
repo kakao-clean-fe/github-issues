@@ -1,3 +1,6 @@
+import {ISSUE_TAB} from "./store/index.js";
+import {getIssueTpl, getLabelTpl} from "./tpl.js";
+
 export function curry(fn) {
   return function curryFn(...args1) {
     if (args1.length >= fn.length) {
@@ -37,9 +40,15 @@ export function removeChildren(target) {
   target.innerHTML = '';
 }
 
-// create boolean function finding same status
-export function createIssueStatus(status) {
-  return function (issue) {
-    return issue?.status === status;
-  }
+
+/**
+ * @param tab is ISSUE_TAB or LABEL_TAB
+ */
+export function createTabElement(tab) {
+  const getTab = tab === ISSUE_TAB ? getIssueTpl : getLabelTpl;
+  document.getElementById('tab')?.remove();
+  const div = document.createElement('div');
+  div.setAttribute('id', 'tab');
+  div.innerHTML = getTab();
+  return div;
 }

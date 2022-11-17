@@ -103,7 +103,7 @@ export function getLabelTpl() {
       </form>
     </div>
 
-    <div class="new-label-button cursor-pointer p-1 py-1 base-outer flex items-center justify-center w-2/12 ml-4 bg-green-700 text-white">
+    <div id="new-label" class="new-label-button cursor-pointer p-1 py-1 base-outer flex items-center justify-center w-2/12 ml-4 bg-green-700 text-white">
       <a href="#">New label</a>
     </div>
   </div>
@@ -131,7 +131,7 @@ export function getLabelTpl() {
         </dt>
         <dd class="relative mt-2">
           <text-expander keys=":" data-emoji-url="/autocomplete/emoji?use_colon_emoji=true">
-            <input type="text" data-maxlength="50" autocomplete="off" required="" pattern="^(?!(\.|\.\.)$).*$"
+            <input type="text" data-maxlength="50" autocomplete="off" required=""
               id="label-name-input" name="label[name]"
               class="w-full p-2 base-outer focus:outline-none" placeholder="Label name" value="" >
           </text-expander>
@@ -189,7 +189,7 @@ export function getLabelTpl() {
       <!--new label actions-->
       <div
         class="form-group my-2 flex mt-10">
-        <button type="button" class="base-outer p-2 mr-4"> Cancel
+        <button id="label-cancel-button" type="button" class="base-outer p-2 mr-4"> Cancel
         </button>
         <button id="label-create-button" type="submit" class="base-outer p-2 mr-4 bg-green-700 opacity-50 text-white" disabled=""> Create label
         </button>
