@@ -17,14 +17,20 @@ export const getIssuesData = async (store) => {
   }
 };
 
-// [To-Do] Labels 구현 하기
-export const getLabelsData = (store) => {
-  fetch("../data-sources/label.json")
-    .then((response) => response.json())
-    .then((resJson) => {
-      console.log(resJson);
-    })
-    .catch((err) => {
-      console.error("[getLabelsData]", err);
-    });
+export const getLabelsData = async () => {
+  try {
+    const response = await fetch("../data-sources/labels.json");
+
+    if (response) {
+      const data = await response.json();
+      if (data) {
+        return data;
+      }
+    }
+
+    return [];
+  } catch (err) {
+    console.error("[getLabelsData]", err);
+    return [];
+  }
 };
