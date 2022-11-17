@@ -1,13 +1,14 @@
 import {Component} from "../component.js";
 import {getLabelFormTpl} from "../../tpl.js";
 import {labelsAtom} from "../../store/atom.js";
-import {useAtom} from "../../store/atomHooks.js";
+import {useSetAtom} from "../../store/atomHooks.js";
 import {RENDER_TYPE} from "../../consts/const.js";
 import {SELECTOR} from "../../consts/selector.js";
 import {pipe} from "../../utils/functional.js";
 import {getRandomColor} from "../../utils/util.js";
+import {saveLabelData} from "../../utils/fetch.js";
 
-const [getLabels, setLabels] = useAtom(labelsAtom);
+const setLabels = useSetAtom(labelsAtom);
 
 export class LabelForm extends Component {
     constructor(key, props, parentSelector) {
@@ -31,8 +32,8 @@ export class LabelForm extends Component {
         const name = document.querySelector(SELECTOR.LABEL_FORM_NAME);
         const description = document.querySelector(SELECTOR.LABEL_FORM_DESCRIPTION);
         const color = document.querySelector(SELECTOR.LABEL_FORM_COLOR);
-        const newData = {name: name.value, color: color.value.substring(1), description: description.value};
-        setLabels([...getLabels(), newData]);
+        const newLabel = {name: name.value, color: color.value.substring(1), description: description.value};
+        saveLabelData(newLabel).then(newLabels => setLabels(newLabels)).catch(({message}) => alert(message));
         [name, description, color].forEach((e) => e.value = '');
     }
 
