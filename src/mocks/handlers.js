@@ -24,8 +24,8 @@ export const handlers = [
     rest.post('/labels', async (req, res, ctx) => {
         const newData = await req.json();
 
-        if (Math.floor(Math.random() * 10) > 5) {
-            return res(ctx.status(500), ctx.json({"error": "서버에러 발생"}));
+        if (labels.filter((label) => label.name === newData.name).length) {
+            return res(ctx.status(400), ctx.json({"error": "Label의 name이 중복됩니다."}));
         }
 
         labels.push(newData);
