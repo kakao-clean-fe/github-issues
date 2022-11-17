@@ -1,19 +1,13 @@
-import {get} from "../api.js";
 import {Observable} from "./models.js";
 
 export class LabelStore extends Observable {
-    constructor(url) {
+    constructor(initialData) {
         super();
-        this._list = [];
-        this.#getInitialData(url)
+        this._list = Array.isArray(initialData) ? initialData : []
     }
 
-    #getInitialData(url) {
-        get(url).then(data => this._list = [...data])
-    }
-
-    add(element) {
-        this._list = [...this._list, element];
+    add(...element) {
+        this._list = [...this._list, ...element];
         this.notify(this._list);
     }
 
@@ -22,5 +16,5 @@ export class LabelStore extends Observable {
     }
 }
 
-export let labelStore = new LabelStore("/data-sources/labels.json")
+export let labelStore = new LabelStore([])
 
