@@ -4,6 +4,9 @@ import {labelsAtom, navBtnStatusAtom} from "./store/atom.js";
 import {NAV_BTN_STATUS} from "./consts/const.js";
 import {LabelPage} from "./pages/label.js";
 import {SELECTOR} from "./consts/selector.js";
+import { worker } from './mocks/browser';
+
+worker.start().then(r => console.log("mock server start"));
 
 const [getNavBtnStatus, setNavBtnStatus] = useAtom(navBtnStatusAtom);
 const getLabels = useAtomValue(labelsAtom);
