@@ -111,7 +111,7 @@ export function getLabelTpl() {
   </div>
 
 
-  <form class="hidden p-3 mb-3 mt-6 border rounded-sm font-bold" id="new-label-form" action="/labels" accept-charset="UTF-8" method="post">
+  <form class="hidden p-3 mb-3 mt-6 border rounded-sm font-bold" id="new-label-form" action="/labels" accept-charset="UTF-8" method="post" onsubmit="return false">
     <div class="form-group mt-0 mb-2"
       data-url-template="/labels/preview/" data-default-name="Label preview">
 
@@ -163,7 +163,7 @@ export function getLabelTpl() {
       <!--END new label description-->
 
       <!--new label color-->
-      <dl class="form-group my-2">
+      <dl class="form-group my-2" >
         <dt>
           <label class="f5">Color</label>
         </dt>
@@ -221,7 +221,7 @@ export function getLabelTpl() {
 
     </ul>
   </div>
-    <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
+    <!--<button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>-->
 </div>
   `;
 }

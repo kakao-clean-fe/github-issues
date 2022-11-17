@@ -1,22 +1,18 @@
-import { getIssueTpl, getIssueItemTpl } from "./template";
-import { getData } from "./api";
-import { issueUtils } from "./utils";
+import { renderIssue, renderLabel } from "./page";
+import { MENU } from "./constants";
 
-const issueData = await getData("issues");
-const opens = issueUtils.getIssueWith(issueData, "open");
-const closed = issueUtils.getIssueWith(issueData, "close");
+const { ISSUE, LABEL } = MENU;
+const renderMenu = async (selectedMenu) => {
+  if (selectedMenu === ISSUE) {
+    await renderIssue();
+  } else if (selectedMenu === LABEL) {
+    await renderLabel();
+  }
+};
 
-const app = document.querySelector("#app");
-app.innerHTML = getIssueTpl(opens.length, closed.length);
-
-const openCloseTab = [
-  document.querySelector(".open-count"),
-  document.querySelector(".close-count"),
-];
-openCloseTab.forEach((tab, idx) => {
-  tab.addEventListener("click", () => {
-    issueUtils.toggleOpenCloseTab(issueData, openCloseTab, idx === 0);
-  });
+document.querySelector("nav").addEventListener("click", function (e) {
+  const option = e.target.innerHTML.toUpperCase();
+  renderMenu(MENU[option]);
 });
 
-issueUtils.setIssueItems(opens);
+renderMenu(LABEL);
