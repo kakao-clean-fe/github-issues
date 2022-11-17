@@ -67,13 +67,19 @@ export const labelFormComponent = {
     formData$.name = value;
     this.toggleCreateButton(value);
   },
-  addColorInputListener({target:{value}}) {
+  addColorInputListener({target}) {
+    const {value} = target;
+    
     if (!value.startsWith('#')) {
       this.value = '#' + value;
     }
 
-    if (isValid(this)) {
-      newLabelColorStore$.temp = this.value;
+    /**
+     * 유효한 색상 값일 때만 버튼 & 라벨 프리뷰 색상 변경
+     * formData$에 저장하는 것도
+     */
+    if (isValid(target)) {
+      newLabelColorStore$.store.temp = this.value;
       formData$.color = this.value;
     }
   },
@@ -89,7 +95,7 @@ export const labelFormComponent = {
     
     const {name, color, description} = formData$;
 
-    newLabelColorStore$.colors = newLabelColorStore$.colors.add(color);
+    newLabelColorStore$.store.colors.add(color);
     labelStore$.push({name, color, description});
   },
   addFormEventListener() {

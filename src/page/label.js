@@ -1,7 +1,7 @@
 import { getLabelItemTpl, getLabelTpl } from '../template/tpl';
 import { labelPreviewSelector, newLabelColorSelector, newLabelBtnSelector, labelListContainerSelector, labelCountSelector, labelCreateCancelButtonSelector, formColorValueSelector} from '../template/selector';
 import { $ ,addTargetsListener,clearElement, renderPageInApp, setRenderTarget } from '../util/dom';
-import { getLabelStore$, newLabelColorStore$ } from '../store/label';
+import { getLabelStore$, labelStore$, newLabelColorStore$ } from '../store/label';
 import { labelFormComponent, formData$ } from './labelForm';
 import { compose, pipe } from '../util/operator';
 
@@ -14,7 +14,7 @@ export const labelPage = {
     formData$.isCreating = !formData$.isCreating;
   },
   updateLabelColor() {
-    formData$.color = newLabelColorStore$.next;
+    formData$.color = newLabelColorStore$.store.next;
   },
   /**
    * add Event Listener
@@ -26,7 +26,7 @@ export const labelPage = {
     addTargetsListener([$(newLabelBtnSelector),$(labelCreateCancelButtonSelector)], this.toggleLabelForm);
     labelFormComponent.addFormEventListener();
   },
-  // store에 watcher로
+  // store에 watcher로 > 버튼, 라벨 프리뷰에 색 입히기
   renderLabelCount(labels) {
     $(labelCountSelector).textContent = labels.length;
   },
@@ -53,9 +53,12 @@ export const labelPage = {
    * render
    */
   render() {
+    newLabelColorStore$.addGetNextPropWatchers([labelPage.renderLabelColor]);
+    newLabelColorStore$.addSetTempPropWatchers([labelPage.renderLabelColor]);
+
     // 한 번 쓰는 함수는 지역 함수로 정의
     const renderWrapper = () => renderPageInApp(getLabelTpl());
-    const renderInitialLabelColor = () => this.renderLabelColor(newLabelColorStore$.curr);
+    const renderInitialLabelColor = () => this.renderLabelColor(newLabelColorStore$.store.cur);
 
     pipe(
       renderWrapper,
