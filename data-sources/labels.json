@@ -1,32 +1,32 @@
 [
     {
         "name":"bug",
-        "color":"bfdadc",
+        "color":"#bfdadc",
         "description":"this is red"
     },
     {
         "name":"documentation",
-        "color":"0075ca",
+        "color":"#0075ca",
         "description":"this is documetation"
     },
     {
         "name":"enhancement",
-        "color":"a2eeef",
+        "color":"#a2eeef",
         "description":"this is enhancement"
     },
     {
         "name":"question",
-        "color":"d876e3",
+        "color":"#d876e3",
         "description":"this is question"
     },
     {
         "name":"invalid",
-        "color":"e4e669",
+        "color":"#e4e669",
         "description":"this is not valid"
     },
     {
         "name":"duplicate",
-        "color":"cfd3d7",
+        "color":"#cfd3d7",
         "description":"this is dulicate"
     }
 ]
