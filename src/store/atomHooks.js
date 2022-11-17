@@ -22,7 +22,7 @@ export const atom = (init) => {
 }
 
 /* Proxy를 사용하면서 useSet, useAtom 훅 방식으로 atom 값을 사용하기 위해 래핑되는 함수 */
-export const useSetAtom = (prop) => (atom) => (newValue) => {
+const useSetAtom = (prop) => (atom) => (newValue) => {
     let target = atomMap.get(atom);
     if (prop === ATOM_PROP.VALUE) {
         target[prop] = newValue;

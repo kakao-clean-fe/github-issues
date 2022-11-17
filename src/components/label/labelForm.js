@@ -1,14 +1,14 @@
 import {Component} from "../component.js";
 import {getLabelFormTpl} from "../../tpl.js";
 import {labelsAtom} from "../../store/atom.js";
-import {useSetAtom} from "../../store/atomHooks.js";
+import {useSetAtomValue} from "../../store/atomHooks.js";
 import {RENDER_TYPE} from "../../consts/const.js";
 import {SELECTOR} from "../../consts/selector.js";
 import {pipe} from "../../utils/functional.js";
 import {getRandomColor} from "../../utils/util.js";
 import {saveLabels} from "../../utils/fetch.js";
 
-const setLabels = useSetAtom(labelsAtom);
+const setLabels = useSetAtomValue(labelsAtom);
 
 export class LabelForm extends Component {
     constructor(key, props, parentSelector) {
