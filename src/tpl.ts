@@ -1,4 +1,6 @@
-export function getIssueTpl () {
+import { Label } from '~/types/label';
+import { Issue } from '~/types/issue';
+export function getIssueTpl (): string {
   return /* html */`
     <div id="issue-wrapper" class="w-9/12 m-auto min-w-min">
     <div id="header" class="flex justify-between">
@@ -66,7 +68,7 @@ export function getIssueTpl () {
     `;
 }
 
-export function getIssueItemTpl (item) {
+export function getIssueItemTpl (item: Issue): string {
   return /* html */`
         <li> 
           <div class="py-4">
@@ -90,7 +92,7 @@ export function getIssueItemTpl (item) {
         </li>`;
 }
 
-export function getLabelTpl () {
+export function getLabelTpl (): string {
   return /* html */`
   <div id="label-wrapper" class="w-9/12 m-auto min-w-min">
 
@@ -205,7 +207,7 @@ export function getLabelTpl () {
     <div class="label-header h-16 flex justify-between items-center border-b">
 
       <div class="mr-3 d-none pl-4">
-        <div class="whitespace-nowrap open-count font-bold cursor-pointer">6 Labels</div>
+        <div class="whitespace-nowrap open-count font-bold cursor-pointer">0 Labels</div>
       </div>
 
       <div class="details-list flex ml-auto">
@@ -224,7 +226,7 @@ export function getLabelTpl () {
   `;
 }
 
-export function getLabelItemTpl ({ name, color, description }) {
+export function getLabelItemTpl ({ name, color, description }: Label): string {
   return /* html */`
             <li class="label-item flex items-center ml-4 py-3 justify-between border-b">
                 <div class="issue-title flex"> 

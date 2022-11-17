@@ -20,6 +20,14 @@ const setEventToEventListener = (event: string) => (args: Omit<SetEventListenerT
 
 export const addClickEventListener = setEventToEventListener('click');
 
-export const toggleClass = (element: Element | null, style: string): void => {
-  element?.classList.toggle(style);
+export const toggleClass = (element: Element | null, className: string): void => {
+  element?.classList.toggle(className);
+};
+
+export const removeClass = (element: Element | null, className: string): void => {
+  element?.classList.remove(className);
+};
+
+export const addClass = (element: Element | null, className: string): void => {
+  element?.classList.add(className);
 };
