@@ -1,6 +1,6 @@
-import {asyncPipe} from "./fp-helpers.js";
+import {asyncPipe} from "../helpers/fp-helpers.js";
 
-const fetchLabels = asyncPipe(
+export const fetchLabels = asyncPipe(
   () => fetch('/data-sources/labels.json'),
   res => res.json()
 );
