@@ -2,11 +2,14 @@ import {$} from '../utils';
 import {Label} from "../types";
 import {getLabelItemTpl, getLabelTpl} from "../tpl";
 import LabelPresenter, {LabelPresenterType} from "../presenter/labels";
+import NewLabelForm from "./newLabelForm";
 
 export default class LabelView {
-    private presenter: LabelPresenterType;
+    private newLabelform?: NewLabelForm;
+    private readonly presenter: LabelPresenterType;
     private readonly $app: HTMLDivElement | null;
     private $openCount: HTMLDivElement | null = null;
+    private $newLabel: HTMLDivElement | null = null;
     private $list: HTMLUListElement | null = null;
 
     public constructor() {
@@ -17,9 +20,12 @@ export default class LabelView {
     public attach () {
         if (!this.$app) return;
         this.$app.innerHTML = getLabelTpl();
-        this.$openCount = $('.label-header > .open-count');
+        this.newLabelform = new NewLabelForm(this.presenter);
         this.$list = $('.label-list', this.$app);
+        this.$openCount = $('.label-header .open-count');
+        this.$newLabel = $('.new-label-button');
         this.presenter.loadLabelList();
+        this.attachEvent();
     }
 
     public updateLabels (labels: Array<Label>) {
@@ -34,6 +40,11 @@ export default class LabelView {
 
     private updateLabelCounts (labels: Array<Label>) {
         if (!this.$openCount) return;
-        this.$openCount.innerHTML = `${labels} Labels`;
+        this.$openCount.innerHTML = `${labels.length} Labels`;
+    }
+
+    private attachEvent() {
+        if (!this.$newLabel) return;
+        this.$newLabel.addEventListener('click', () => this.newLabelform?.toggle());
     }
 }

@@ -1,6 +1,6 @@
 import {Issue} from "../types";
 import {IssueContactType} from "../presenter/issue";
-import {readIssues} from "../utils";
+import {readIssues} from "../request";
 
 let resource: Array<Issue> = [];
 

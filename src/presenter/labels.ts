@@ -3,7 +3,7 @@ import {Label} from "../types";
 import LabelView from "../view/label";
 
 export type LabelPresenterType = Omit<LabelPresenter, 'notifyLoaded'>;
-export type LabelContactType = Pick<LabelPresenter, 'notifyLoaded'>;
+export type LabelContactType = Pick<LabelPresenter, 'notify'>;
 
 export default class LabelPresenter {
     private view: LabelView;
@@ -25,7 +25,11 @@ export default class LabelPresenter {
         return issues;
     }
 
-    public notifyLoaded(labels: Array<Label>) {
+    public appendLabelList(label: Label) {
+        this.model.setResource([...this.model.getResource(), label]);
+    }
+
+    public notify(labels: Array<Label>) {
         this.view.updateLabels(labels);
     }
 
