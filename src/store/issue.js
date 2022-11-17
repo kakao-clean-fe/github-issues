@@ -1,5 +1,10 @@
-import {store, createDerivedStore, fetchData} from './util/storeUtil.js';
+import {store, createDerivedStore, fetchData} from './default.js';
 
+export const pageStore$ = store('');
+
+/**
+ * issue store 관련
+ */
 export const issueStore$ = store([]);
 export const statusStore$ = store('open');
 

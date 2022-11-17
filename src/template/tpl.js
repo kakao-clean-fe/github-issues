@@ -1,9 +1,5 @@
-export const openCountSelector = '.open-count .num-open';
-export const closeCountSelector = '.close-count .num-close'
-export const openIssueTabSelector = '.open-count';
-export const closeIssueTabSelector = '.close-count';
-export const activateTabClass = 'font-bold';
-export const issueContainerSelector = '#issues-wrapper div.issue-list ul';
+import {formHiddenClass} from './selector';
+import {showLabelFormFirst} from '../const'
 
 export function getIssueTpl() {
 	return `
@@ -116,11 +112,11 @@ export function getLabelTpl() {
   </div>
 
 
-  <form class="hidden p-3 mb-3 mt-6 border rounded-sm font-bold" id="new-label-form" action="/labels" accept-charset="UTF-8" method="post">
+  <form class="${showLabelFormFirst ? '' : formHiddenClass} p-3 mb-3 mt-6 border rounded-sm font-bold" id="new-label-form" action="/labels" accept-charset="UTF-8" method="post">
     <div class="form-group mt-0 mb-2"
       data-url-template="/labels/preview/" data-default-name="Label preview">
 
-      <span id="label-preview" class="rounded-lg border bg-pink-700 p-2 px-3 mt-2 inline-block">
+      <span id="label-preview" class="rounded-lg border p-2 px-3 mt-2 inline-block">
         Label preview
       </span>
     </div>
@@ -186,7 +182,10 @@ export function getLabelTpl() {
           <div class="ml-2">
             <input type="text" id="label-color-value" name="label-color[description]"
             class="w-full p-2 base-outer focus:outline-none"
-            placeholder="#color" value="" maxlength="100">
+            placeholder="#color" value="" maxlength="7"
+            pattern="^#[0-9A-Fa-f]{6}$"
+            autocomplete="off"
+            >
           </div>
 
         </dd>
@@ -196,9 +195,9 @@ export function getLabelTpl() {
       <!--new label actions-->
       <div
         class="form-group my-2 flex mt-10">
-        <button type="button" class="base-outer p-2 mr-4"> Cancel
+        <button id="label-cancel-button" type="button" class="base-outer p-2 mr-4"> Cancel
         </button>
-        <button id="label-create-button" type="submit" class="base-outer p-2 mr-4 bg-green-700 opacity-50 text-white" disabled=""> Create label
+        <button id="label-create-button" type="submit" value="submit" class="base-outer p-2 mr-4 bg-green-700 opacity-50 text-white" disabled=""> Create label
         </button>
       </div>
       <!--END new label actions-->
@@ -212,7 +211,7 @@ export function getLabelTpl() {
     <div class="label-header h-16 flex justify-between items-center border-b">
 
       <div class="mr-3 d-none pl-4">
-        <div class="whitespace-nowrap open-count font-bold cursor-pointer">6 Labels</div>
+        <div class="whitespace-nowrap open-count font-bold cursor-pointer"><span id="label-num">0</span> Labels</div>
       </div>
 
       <div class="details-list flex ml-auto">
@@ -235,7 +234,7 @@ export function getLabelItemTpl({ name, color, description }) {
 		return `
             <li class="label-item flex items-center ml-4 py-3 justify-between border-b ">
                 <div class="issue-title flex"> 
-                    <span class="rounded-lg border p-1 px-2" style="background-color:#${color}">${name}</span> 
+                    <span class="rounded-lg border p-1 px-2" style="background-color:${color.startsWith('#') ? '' : '#'}${color}">${name}</span> 
                 </div>
                 <div class="issue-description ">${description}</div>
                 <div class="issue-description ">3 issues </div>

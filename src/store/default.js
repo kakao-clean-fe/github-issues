@@ -1,25 +1,22 @@
-import {pipe} from './componentUtil';
+import {pipe} from '../util/operator';
 
 /** STORE */
 export const store = (initialValue) => {
   let currentValue = initialValue;
   let watchers = [];
 
-  return {
-    getValue() {
-      return currentValue;
-    },
-    setValue(newValue) {
-      if (currentValue !== newValue) {
-        currentValue = newValue;
-        watchers.forEach(watcher => watcher(newValue));
-      }
-
-    },
-    addWatchers(newWatchers) {
-      newWatchers.forEach(watcher => watchers.push(watcher));
+  const getValue = () => currentValue;
+  const setValue = (newValue) => {
+    if (currentValue !== newValue) {
+      currentValue = newValue;
+      watchers.forEach(watcher => watcher(newValue));
     }
+  };
+  const addWatchers = (newWatchers) => {
+    newWatchers.forEach(watcher => watchers.push(watcher));
   }
+
+  return { getValue, setValue, addWatchers };
 };
 
 const updateDerivedValue = (upstreams) => (fn) => fn(...upstreams.map(upstream => upstream.getValue()));
@@ -47,7 +44,7 @@ export const createDerivedStore = (fn, ...upstreams) => {
   }
 }
 
-const getPromiseData = (url) => {
+export const getPromiseData = (url) => {
   return fetch(url).then(res => res.json())
 }
 
