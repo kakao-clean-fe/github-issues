@@ -6,7 +6,7 @@ import {RENDER_TYPE} from "../../consts/const.js";
 import {SELECTOR} from "../../consts/selector.js";
 import {pipe} from "../../utils/functional.js";
 import {getRandomColor} from "../../utils/util.js";
-import {saveLabelData} from "../../utils/fetch.js";
+import {saveLabels} from "../../utils/fetch.js";
 
 const setLabels = useSetAtom(labelsAtom);
 
@@ -33,7 +33,7 @@ export class LabelForm extends Component {
         const description = document.querySelector(SELECTOR.LABEL_FORM_DESCRIPTION);
         const color = document.querySelector(SELECTOR.LABEL_FORM_COLOR);
         const newLabel = {name: name.value, color: color.value.substring(1), description: description.value};
-        saveLabelData(newLabel).then(newLabels => setLabels(newLabels)).catch(({message}) => alert(message));
+        saveLabels(newLabel).then(newLabels => setLabels(newLabels)).catch(({message}) => alert(message));
         [name, description, color].forEach((e) => e.value = '');
     }
 

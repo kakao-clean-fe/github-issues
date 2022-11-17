@@ -1,8 +1,8 @@
-export const fetchIssueData = async () => await ((await fetch("/issues")).json());
+export const fetchIssues = async () => await ((await fetch("/issues")).json());
 
-export const fetchLabelData = async () => await ((await fetch("/labels")).json());
+export const fetchLabels = async () => await ((await fetch("/labels")).json());
 
-export const saveLabelData = async (newLabel) => {
+export const saveLabels = async (newLabel) => {
     const response = await fetch("/labels", {
         method: "POST",
         body: JSON.stringify(newLabel)

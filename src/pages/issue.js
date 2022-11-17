@@ -1,4 +1,4 @@
-import {fetchIssueData} from "../utils/fetch.js";
+import {fetchIssues} from "../utils/fetch.js";
 import {getIssueTpl} from "../tpl.js";
 import {issuesAtom} from "../store/atom.js";
 import {initIssueItems} from "../components/Issue/issueItem.js";
@@ -11,7 +11,7 @@ const setIssuesListener = useSetAtomListener(issuesAtom);
 
 export default async () => {
     setIssuesListener(fetchIssueAtomListeners);
-    setIssues(await fetchIssueData());
+    setIssues(await fetchIssues());
     initIssueLayout();
     initIssueStatus();
     initIssueItems();
