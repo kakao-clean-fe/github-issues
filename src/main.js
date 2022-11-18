@@ -4,6 +4,9 @@ import { mainSelector } from './constants/selector';
 // Router
 import Router from './router';
 
+// Mock Server
+import { worker } from './mocks/browser';
+
 // Utils
 import { findElement } from './utils/dom';
 import { BASE_URL, navigate } from './utils/navigate';
@@ -21,9 +24,12 @@ class App {
 }
 
 window.onload = () => {
+  // Running Mock Server
+  worker.start();
+
+  // Running Front App
   const rootContainer = findElement(mainSelector.ROOT);
   const navbar = findElement(mainSelector.NAVBAR);
-
   new Router(rootContainer);
   new App(navbar);
 };

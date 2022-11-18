@@ -1,6 +1,6 @@
 const IssueApi = {
   async fetchIssues() {
-    const res = await fetch('../../data-sources/issues.json');
+    const res = await fetch('/issues');
     return res.json();
   },
 };

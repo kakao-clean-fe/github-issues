@@ -1,6 +1,6 @@
 const LabelApi = {
   async fetchLabels() {
-    const res = await fetch('../../data-sources/labels.json');
+    const res = await fetch('/labels');
     return res.json();
   },
 };
