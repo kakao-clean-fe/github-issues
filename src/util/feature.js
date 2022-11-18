@@ -7,3 +7,11 @@ export const isHexColor = (value) => {
 }
 
 export const isValid = (target) => target.validity.valid;
+
+const getPromiseData = (url) => {
+  return fetch(url).then(res => res.json())
+}
+
+export const fetchStoreData = (url) => (store) => {
+  getPromiseData(url).then(data => store.setValue(data));
+}

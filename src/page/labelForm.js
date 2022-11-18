@@ -96,7 +96,7 @@ export const labelFormComponent = {
     const {name, color, description} = formData$;
 
     newLabelColorStore$.store.colors.add(color);
-    labelStore$.push({name, color, description});
+    labelStore$.add([{name, color, description}]);
   },
   addFormEventListener() {
     // name
@@ -114,8 +114,8 @@ export const labelFormComponent = {
 export const validator = {
   checkName() {
     const {name} = formData$;
-
-    if (!labelStore$.every(label => label.name !== name)) {
+    
+    if (!labelStore$.value.every(label => label.name !== name)) {
       return {valid: false, message: '이미 있는 라벨 이름입니다.'};
     }
 

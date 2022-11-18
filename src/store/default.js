@@ -43,11 +43,3 @@ export const createDerivedStore = (fn, ...upstreams) => {
     }
   }
 }
-
-export const getPromiseData = (url) => {
-  return fetch(url).then(res => res.json())
-}
-
-export const fetchData = (url) => (store) => {
-  getPromiseData(url).then(data => store.setValue(data));
-}
