@@ -1,6 +1,7 @@
 /* For Main Page */
 export const mainSelector = {
   ROOT: '#app',
+  NAVBAR: '#navbar',
   ISSUE_PAGE_BUTTON: '#issuePageButton',
   LABEL_PAGE_BUTTON: '#labelPageButton',
 };

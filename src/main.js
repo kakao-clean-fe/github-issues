@@ -1,74 +1,29 @@
-// Components
-import { IssuePage } from './pages/issuePage';
-import { LabelPage } from './pages/labelPage';
-
 // Constants
 import { mainSelector } from './constants/selector';
 
-// Store
-import GlobalStore, { SET_CURRENT_PAGEG } from './store/global';
+// Router
+import Router from './router';
 
 // Utils
 import { findElement } from './utils/dom';
+import { BASE_URL, navigate } from './utils/navigate';
 class App {
-  constructor(issuePage, labelPage) {
-    this.issuePage = issuePage;
-    this.labelPage = labelPage;
+  constructor(navbar) {
+    navbar.addEventListener('click', (e) => {
+      const target = e.target.closest('a');
+      if (!(target instanceof HTMLAnchorElement)) return;
 
-    // 첫 디폴트 페이지는 이슈 페이지
-    this.issuePage.initPage();
-
-    // subscribe 등록
-    GlobalStore.subscribe(SET_CURRENT_PAGEG, this.renderPage);
-
-    // 이벤트 등록
-    Object.keys(this.#pageButtons).forEach((pageType) => {
-      const pageButton = findElement(this.#pageButtons[pageType]);
-
-      pageButton.addEventListener('click', () => {
-        // 같은 탭을 클릭했다면
-        if (GlobalStore.getState().currentPage === pageType) {
-          return;
-        }
-
-        GlobalStore.dispatch({
-          type: SET_CURRENT_PAGEG,
-          payload: pageType,
-        });
-      });
+      e.preventDefault();
+      const targetURL = e.target.href.replace(BASE_URL, '');
+      navigate(targetURL);
     });
   }
-
-  #pageButtons = {
-    issue: mainSelector.ISSUE_PAGE_BUTTON,
-    label: mainSelector.LABEL_PAGE_BUTTON,
-  };
-
-  clearPage = () => {
-    while (findElement(mainSelector.ROOT).firstChild) {
-      findElement(mainSelector.ROOT).removeChild(
-        findElement(mainSelector.ROOT).firstChild
-      );
-    }
-  };
-
-  renderPage = () => {
-    this.clearPage();
-
-    switch (GlobalStore.getState().currentPage) {
-      case 'issue':
-        this.issuePage.initPage();
-        break;
-      case 'label':
-        this.labelPage.initPage();
-        break;
-    }
-  };
 }
 
 window.onload = () => {
-  const issuePage = new IssuePage();
-  const labelPage = new LabelPage();
+  const rootContainer = findElement(mainSelector.ROOT);
+  const navbar = findElement(mainSelector.NAVBAR);
 
-  new App(issuePage, labelPage);
+  new Router(rootContainer);
+  new App(navbar);
 };

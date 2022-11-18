@@ -24,6 +24,7 @@ a {
 }
 a:hover {
   color: #b1b4ee;
+  cursor: pointer;
 }
 
 li {
@@ -66,6 +67,6 @@ li {
   
 }
 
-#label-wrapper, #issue-wrapper {
+#label-wrapper, #issue-wrapper, #error-wrapper {
   min-width: 960px;
 }

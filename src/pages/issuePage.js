@@ -6,7 +6,7 @@ import { IssueItem } from '../components/issue/issueItem';
 import { getIssueTpl } from '../tpl';
 
 // Constants
-import { mainSelector, issueSelector } from '../constants/selector';
+import { issueSelector } from '../constants/selector';
 
 // Api
 import IssueApi from '../api/issue';
@@ -23,12 +23,13 @@ import IssueStore, {
 import { pipe, filter } from '../utils/fx';
 import { findElement } from '../utils/dom';
 
-export class IssuePage extends BaseComponent {
-  constructor() {
+export default class IssuePage extends BaseComponent {
+  constructor($container) {
     super(getIssueTpl());
+
+    this.$container = $container;
   }
 
-  #rootEl = null;
   #tabs = {
     open: issueSelector.OPEN_TAB,
     close: issueSelector.CLOSE_TAB,
@@ -38,9 +39,8 @@ export class IssuePage extends BaseComponent {
     // 데이터 패치
     const issues = await IssueApi.fetchIssues();
 
-    // 루트 선택 및 페이지 렌더링
-    this.#rootEl = findElement(mainSelector.ROOT);
-    this.attatchTo(this.#rootEl);
+    // 페이지 렌더링
+    this.attatchTo(this.$container);
 
     // subscribe 등록
     IssueStore.subscribe(SET_ISSUE_LIST, this.loadIssuePage);
@@ -77,9 +77,9 @@ export class IssuePage extends BaseComponent {
   };
 
   loadIssuePage = () => {
-    this.removeFrom(this.#rootEl);
+    this.removeFrom(this.$container);
     this.setElement(getIssueTpl());
-    this.attatchTo(this.#rootEl);
+    this.attatchTo(this.$container);
 
     // 이슈 리스트 렌더링
     this.renderIssues();
@@ -94,7 +94,9 @@ export class IssuePage extends BaseComponent {
 
   clearIssues = () => {
     while (findElement(issueSelector.ISSUE_LIST).firstChild) {
-      findElement(issueSelector.ISSUE_LIST).removeChild(findElement(issueSelector.ISSUE_LIST).firstChild);
+      findElement(issueSelector.ISSUE_LIST).removeChild(
+        findElement(issueSelector.ISSUE_LIST).firstChild
+      );
     }
   };
 

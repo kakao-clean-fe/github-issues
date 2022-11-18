@@ -6,7 +6,7 @@ import { LabelItem } from '../components/label/labelItem';
 import { getLabelTpl } from '../tpl';
 
 // Constants
-import { mainSelector, labelSelector } from '../constants/selector';
+import { labelSelector } from '../constants/selector';
 
 // Utils
 import { findElement } from '../utils/dom';
@@ -22,20 +22,19 @@ import LabelStore, {
   ADD_LABEL,
 } from '../store/labelStore';
 
-export class LabelPage extends BaseComponent {
-  constructor() {
+export default class LabelPage extends BaseComponent {
+  constructor($container) {
     super(getLabelTpl());
-  }
 
-  #rootEl = null;
+    this.$container = $container;
+  }
 
   initPage = async () => {
     // 데이터 패치
     const labels = await LabelApi.fetchLabels();
 
-    // 루트 선택 및 페이지 렌더링
-    this.#rootEl = findElement(mainSelector.ROOT);
-    this.attatchTo(this.#rootEl);
+    // 페이지 렌더링
+    this.attatchTo(this.$container);
 
     // subscribe 등록
     LabelStore.subscribe(SET_LABEL_LIST, this.loadLabelPage);
@@ -78,9 +77,9 @@ export class LabelPage extends BaseComponent {
   };
 
   loadLabelPage = () => {
-    this.removeFrom(this.#rootEl);
+    this.removeFrom(this.$container);
     this.setElement(getLabelTpl());
-    this.attatchTo(this.#rootEl);
+    this.attatchTo(this.$container);
 
     // 라벨 리스트 렌더링
     this.renderLabels();
