@@ -6,7 +6,7 @@ import { IssueItem } from '../components/issue/issueItem';
 import { getIssueTpl } from '../tpl';
 
 // Constants
-import { ROOT, ISSUE_LIST, OPEN_TAB, CLOSE_TAB } from '../constants/selector';
+import { mainSelector, issueSelector } from '../constants/selector';
 
 // Api
 import IssueApi from '../api/issue';
@@ -30,8 +30,8 @@ export class IssuePage extends BaseComponent {
 
   #rootEl = null;
   #tabs = {
-    open: OPEN_TAB,
-    close: CLOSE_TAB,
+    open: issueSelector.OPEN_TAB,
+    close: issueSelector.CLOSE_TAB,
   };
 
   initPage = async () => {
@@ -39,7 +39,7 @@ export class IssuePage extends BaseComponent {
     const issues = await IssueApi.fetchIssues();
 
     // 루트 선택 및 페이지 렌더링
-    this.#rootEl = findElement(ROOT);
+    this.#rootEl = findElement(mainSelector.ROOT);
     this.attatchTo(this.#rootEl);
 
     // subscribe 등록
@@ -93,19 +93,19 @@ export class IssuePage extends BaseComponent {
   };
 
   clearIssues = () => {
-    while (findElement(ISSUE_LIST).firstChild) {
-      findElement(ISSUE_LIST).removeChild(findElement(ISSUE_LIST).firstChild);
+    while (findElement(issueSelector.ISSUE_LIST).firstChild) {
+      findElement(issueSelector.ISSUE_LIST).removeChild(findElement(issueSelector.ISSUE_LIST).firstChild);
     }
   };
 
   renderOpenCount = () => {
-    const openTab = findElement(OPEN_TAB);
+    const openTab = findElement(issueSelector.OPEN_TAB);
     openTab.innerText = `${IssueStore.getState().openCount} Opens`;
   };
 
   renderCloseCount = () => {
-    const closeTab = findElement(CLOSE_TAB);
-    closeTab.innerText = `${IssueStore.getState().closeCount} Opens`;
+    const closeTab = findElement(issueSelector.CLOSE_TAB);
+    closeTab.innerText = `${IssueStore.getState().closeCount} Closed`;
   };
 
   renderIssues = () => {
@@ -115,7 +115,7 @@ export class IssuePage extends BaseComponent {
     const filteredIssues = this.filterIssues(IssueStore.getState().currentTab);
     filteredIssues.forEach((issue) => {
       const issueItem = new IssueItem(issue);
-      issueItem.attatchTo(findElement(ISSUE_LIST), 'beforeend');
+      issueItem.attatchTo(findElement(issueSelector.ISSUE_LIST), 'beforeend');
     });
   };
 

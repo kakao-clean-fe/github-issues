@@ -3,11 +3,7 @@ import { IssuePage } from './pages/issuePage';
 import { LabelPage } from './pages/labelPage';
 
 // Constants
-import {
-  ROOT,
-  ISSUE_PAGE_BUTTON,
-  LABEL_PAGE_BUTTON,
-} from './constants/selector';
+import { mainSelector } from './constants/selector';
 
 // Store
 import GlobalStore, { SET_CURRENT_PAGEG } from './store/global';
@@ -44,13 +40,15 @@ class App {
   }
 
   #pageButtons = {
-    issue: ISSUE_PAGE_BUTTON,
-    label: LABEL_PAGE_BUTTON,
+    issue: mainSelector.ISSUE_PAGE_BUTTON,
+    label: mainSelector.LABEL_PAGE_BUTTON,
   };
 
   clearPage = () => {
-    while (findElement(ROOT).firstChild) {
-      findElement(ROOT).removeChild(findElement(ROOT).firstChild);
+    while (findElement(mainSelector.ROOT).firstChild) {
+      findElement(mainSelector.ROOT).removeChild(
+        findElement(mainSelector.ROOT).firstChild
+      );
     }
   };
 

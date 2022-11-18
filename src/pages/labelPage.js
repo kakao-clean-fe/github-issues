@@ -6,23 +6,11 @@ import { LabelItem } from '../components/label/labelItem';
 import { getLabelTpl } from '../tpl';
 
 // Constants
-import {
-  ROOT,
-  LABEL_COUNT,
-  NEW_LABEL_BUTTON,
-  LABEL_INPUT_FORM,
-  LABEL_NAME_INPUT,
-  LABEL_DESCRIPTION_INPUT,
-  NEW_LABEL_COLOR,
-  LABEL_COLOR_VALUE,
-  LABEL_PREVIEW,
-  LABEL_CANCEL_BUTTON,
-  LABEL_CREATE_BUTTON,
-  LABEL_LIST,
-} from '../constants/selector';
+import { mainSelector, labelSelector } from '../constants/selector';
 
 // Utils
 import { findElement } from '../utils/dom';
+import { reduce } from '../utils/fx';
 
 // Api
 import LabelApi from '../api/label';
@@ -46,7 +34,7 @@ export class LabelPage extends BaseComponent {
     const labels = await LabelApi.fetchLabels();
 
     // 루트 선택 및 페이지 렌더링
-    this.#rootEl = findElement(ROOT);
+    this.#rootEl = findElement(mainSelector.ROOT);
     this.attatchTo(this.#rootEl);
 
     // subscribe 등록
@@ -62,28 +50,30 @@ export class LabelPage extends BaseComponent {
     });
 
     // 이벤트 등록
-    const newLabelButton = findElement(NEW_LABEL_BUTTON);
+    const newLabelButton = findElement(labelSelector.NEW_LABEL_BUTTON);
     newLabelButton.addEventListener('click', this.onNewLabelButtonClick);
 
-    const labelNameInput = findElement(LABEL_NAME_INPUT);
+    const labelNameInput = findElement(labelSelector.LABEL_NAME_INPUT);
     labelNameInput.addEventListener('input', this.onLabelNameInputChange);
 
-    const labelDescriptionInput = findElement(LABEL_DESCRIPTION_INPUT);
+    const labelDescriptionInput = findElement(
+      labelSelector.LABEL_DESCRIPTION_INPUT
+    );
     labelDescriptionInput.addEventListener(
       'input',
       this.onLabelDescriptionInputChange
     );
 
-    const newLabelColorButton = findElement(NEW_LABEL_COLOR);
+    const newLabelColorButton = findElement(labelSelector.NEW_LABEL_COLOR);
     newLabelColorButton.addEventListener(
       'click',
       this.onNewLabelColorButtonClick
     );
 
-    const labelCancelButton = findElement(LABEL_CANCEL_BUTTON);
+    const labelCancelButton = findElement(labelSelector.LABEL_CANCEL_BUTTON);
     labelCancelButton.addEventListener('click', this.onLabelCancelButtonClick);
 
-    const labelSubmitButton = findElement(LABEL_INPUT_FORM);
+    const labelSubmitButton = findElement(labelSelector.LABEL_INPUT_FORM);
     labelSubmitButton.addEventListener('submit', this.onSubmit);
   };
 
@@ -97,15 +87,17 @@ export class LabelPage extends BaseComponent {
   };
 
   renderLabelCount = () => {
-    const labelCountArea = findElement(LABEL_COUNT);
+    const labelCountArea = findElement(labelSelector.LABEL_COUNT);
     labelCountArea.innerText = `${
       LabelStore.getState().labelList.length
     } Labels`;
   };
 
   clearLabels = () => {
-    while (findElement(LABEL_LIST).firstChild) {
-      findElement(LABEL_LIST).removeChild(findElement(LABEL_LIST).firstChild);
+    while (findElement(labelSelector.LABEL_LIST).firstChild) {
+      findElement(labelSelector.LABEL_LIST).removeChild(
+        findElement(labelSelector.LABEL_LIST).firstChild
+      );
     }
   };
 
@@ -116,12 +108,12 @@ export class LabelPage extends BaseComponent {
     const labelList = LabelStore.getState().labelList;
     labelList.forEach((label) => {
       const labelItem = new LabelItem(label);
-      labelItem.attatchTo(findElement(LABEL_LIST), 'beforeend');
+      labelItem.attatchTo(findElement(labelSelector.LABEL_LIST), 'beforeend');
     });
   };
 
   onNewLabelButtonClick = () => {
-    const labelInputForm = findElement(LABEL_INPUT_FORM);
+    const labelInputForm = findElement(labelSelector.LABEL_INPUT_FORM);
     labelInputForm.classList.remove('hidden');
   };
 
@@ -144,9 +136,9 @@ export class LabelPage extends BaseComponent {
   };
 
   onNewLabelColorButtonClick = () => {
-    const labelPreview = findElement(LABEL_PREVIEW);
-    const newLabelColorButton = findElement(NEW_LABEL_COLOR);
-    const labelColorInput = findElement(LABEL_COLOR_VALUE);
+    const labelPreview = findElement(labelSelector.LABEL_PREVIEW);
+    const newLabelColorButton = findElement(labelSelector.NEW_LABEL_COLOR);
+    const labelColorInput = findElement(labelSelector.LABEL_COLOR_VALUE);
 
     const [r, g, b] = this.randomRgb();
     const colorStyle = `background-color: rgb(${r}, ${g}, ${b})`;
@@ -154,7 +146,7 @@ export class LabelPage extends BaseComponent {
     labelPreview.style = colorStyle;
 
     const labelItem = { ...LabelStore.getState().labelItem };
-    const hexRgb = this.rgbToHex(r, g, b);
+    const hexRgb = this.rgbToHex([r, g, b]);
     labelColorInput.value = `#${hexRgb}`;
     labelItem.color = hexRgb;
     LabelStore.dispatch({
@@ -164,7 +156,7 @@ export class LabelPage extends BaseComponent {
   };
 
   onLabelCancelButtonClick = () => {
-    const labelInputForm = findElement(LABEL_INPUT_FORM);
+    const labelInputForm = findElement(labelSelector.LABEL_INPUT_FORM);
     labelInputForm.classList.add('hidden');
   };
 
@@ -184,16 +176,21 @@ export class LabelPage extends BaseComponent {
     return [r, g, b];
   };
 
-  rgbToHex = (r, g, b) => {
-    r = r.toString(16).length === 1 ? '0' + r.toString(16) : r.toString(16);
-    g = g.toString(16).length === 1 ? '0' + g.toString(16) : g.toString(16);
-    b = b.toString(16).length === 1 ? '0' + b.toString(16) : b.toString(16);
-
-    return r + g + b;
+  rgbToHex = (rgb) => {
+    return reduce(
+      (a, b) => {
+        return (
+          a +
+          (b.toString(16).length === 1 ? '0' + b.toString(16) : b.toString(16))
+        );
+      },
+      '',
+      rgb
+    );
   };
 
   validateForm = () => {
-    const labelCreateButton = findElement(LABEL_CREATE_BUTTON);
+    const labelCreateButton = findElement(labelSelector.LABEL_CREATE_BUTTON);
     const labelItem = LabelStore.getState().labelItem;
 
     let flag = true;
