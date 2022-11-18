@@ -11,12 +11,28 @@ export const asyncPipe = (...functions) =>
   args => functions.reduce((promise, nextFn) => promise.then(nextFn), Promise.resolve(args));
 
 /** fetch의 try/catch를 추가합니다. */
-export const fetchData = (url) => fetch(url)
-  .then((res) => res.json())
-  .catch((err) => {
-    console.error("Fetch Failed", err)
-    throw err
-  })
+export const getRequest = (url) => (
+  fetch(url)
+    .then((res) => res.json())
+    .catch((err) => {
+      console.error("Fetch Failed", err)
+      throw err
+    })
+)
+export const postRequest = (url, data = {}) => (
+  fetch(
+    url,
+    {
+      method: "POST",
+      body: data ? JSON.stringify(data) : {}
+    }
+  )
+    .then((res) => res.json())
+    .catch((err) => {
+      console.error("Fetch Failed", err)
+      throw err
+    })
+)
 
 /** random color code를 생성합니다 */
 export const getRandomColorCode = () => {

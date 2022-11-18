@@ -1,8 +1,8 @@
-import {selectOne} from "@/utils.js";
-import {getLabelTpl} from "@/tpl.js";
-import {TAB} from "@/constants.js";
-import View from "@/libs/view.js";
-import AppState from "@/libs/state.js";
+import {selectOne} from "../../utils.js";
+import {getLabelTpl} from "../../tpl.js";
+import {TAB} from "../../constants.js";
+import View from "../../libs/view.js";
+import AppState from "../../libs/state.js";
 
 
 class LabelTab extends View {

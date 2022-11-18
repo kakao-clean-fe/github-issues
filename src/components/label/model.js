@@ -1,9 +1,9 @@
-import View from "@/libs/view.js";
-import {selectOne} from "@/utils.js";
-import {getLabelItemTpl} from "@/tpl.js";
-import LabelStore from "@/stores/label.js";
-import AppState from "@/libs/state.js";
-import {TAB} from "@/constants.js";
+import View from "../../libs/view.js";
+import {selectOne} from "../../utils.js";
+import {getLabelItemTpl} from "../../tpl.js";
+import LabelStore from "../../stores/label.js";
+import AppState from "../../libs/state.js";
+import {TAB} from "../../constants.js";
 
 class LabelModel extends View {
   constructor(item = {}) {

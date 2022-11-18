@@ -1,5 +1,5 @@
 export default {
   resolve: {
-    alias: [{find: '@', replacement: '/src'}],
+    alias: [{find: '$', replacement: '/src'}],
   },
 }

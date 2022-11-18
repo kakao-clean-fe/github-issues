@@ -7,10 +7,13 @@ import AppState from "./libs/state.js";
 import {getRandomColorCode} from "./utils.js";
 import LabelTab from "./components/label/tab.js";
 import LabelForm from "./components/label/form.js";
+import {worker} from './mocks/browser';
 
 
 (
   () => {
+    /* worker start */
+    worker.start();
 
     /* 초기 상태 정의 */
     const initState = {

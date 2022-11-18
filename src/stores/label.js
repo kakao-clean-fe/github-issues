@@ -1,11 +1,11 @@
-import {fetchData, isHexColor, removeItem} from "@/utils.js";
-import AppState from "@/libs/state.js";
-import LabelModel from "@/components/label/model.js";
+import {getRequest, isHexColor, removeItem} from "../utils.js";
+import AppState from "../libs/state.js";
+import LabelModel from "../components/label/model.js";
 
 /* Label Store를 object literal로 정의합니다. */
 const LabelStore = {
   getInitialData() {
-    return fetchData("data-sources/labels.json")
+    return getRequest("/labels")
       .then(
         (data) => {
           AppState.update({labels: data.map(item => new LabelModel(item))}, false)

@@ -1,8 +1,8 @@
-import View from "@/libs/view.js";
-import {getRandomColorCode, isHexColor, selectOne} from "@/utils.js";
-import {getLabelFormTpl} from "@/tpl.js";
-import LabelStore from "@/stores/label.js";
-import AppState from "@/libs/state.js";
+import View from "../../libs/view.js";
+import {getRandomColorCode, isHexColor, selectOne} from "../../utils.js";
+import {getLabelFormTpl} from "../../tpl.js";
+import LabelStore from "../../stores/label.js";
+import AppState from "../../libs/state.js";
 
 class LabelForm extends View {
   get $targetEl() {
