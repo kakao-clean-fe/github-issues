@@ -161,13 +161,17 @@ export function getLabelItemTpl({name, color, description}) {
 }
 
 
-export function getLabelFormTpl({showNewLabel, previewLabelColor}) {
+export function getLabelFormTpl(
+  {
+    showNewLabel,
+    randomColor,
+    lastInputs = {}
+  }
+) {
+  const {name, description, color = randomColor} = lastInputs
   const $parent = document.createElement('form')
   $parent.id = 'new-label-form'
   $parent.className = `${showNewLabel ? '' : 'hidden'} p-3 mb-3 mt-6 border rounded-sm font-bold`
-  // $parent.action = '/labels'
-  // $parent.acceptCharset = 'UTF-8'
-  // $parent.method = 'post'
   $parent.innerHTML = `
     <div class="form-group mt-0 mb-2"
       data-url-template="/labels/preview/" data-default-name="Label preview">
@@ -175,7 +179,7 @@ export function getLabelFormTpl({showNewLabel, previewLabelColor}) {
       <span 
       id="label-preview" 
       class="rounded-lg border p-2 px-3 mt-2 inline-block" 
-      style="background-color: #${previewLabelColor};">
+      style="background-color: #${color};">
         Label preview
       </span>
     </div>
@@ -194,7 +198,8 @@ export function getLabelFormTpl({showNewLabel, previewLabelColor}) {
         <dd class="relative mt-2">
           <text-expander keys=":" data-emoji-url="/autocomplete/emoji?use_colon_emoji=true">
             <input type="text" data-maxlength="50" autocomplete="off" required="" pattern="^(?!(\.|\.\.)$).*$"
-              id="label-name-input" name="label[name]"
+              id="label-name-input" name="label[name]" 
+              ${name ? `value="${name}"` : ""}
               class="w-full p-2 base-outer focus:outline-none" placeholder="Label name" value="" >
           </text-expander>
         </dd>
@@ -214,6 +219,7 @@ export function getLabelFormTpl({showNewLabel, previewLabelColor}) {
         </dt>
         <dd class="mt-2">
           <input type="text" id="label-description-input" name="label[description]"
+            ${description ? `value="${description}"` : ""}
             class="w-full p-2 base-outer focus:outline-none"
             placeholder="Description" value="" 
             maxlength="100">
@@ -233,7 +239,7 @@ export function getLabelFormTpl({showNewLabel, previewLabelColor}) {
             data-view-component="true"
             class="rounded-md border px-1 font-bold text-4xl"
             aria-labelledby="tooltip-1664858299420-7732"
-            style="background-color: #${previewLabelColor};">
+            style="background-color: #${color};">
             ⟳
           </button>
           <tool-tip for="new-label-color" data-direction="s" data-type="label" data-view-component="true"
@@ -242,7 +248,7 @@ export function getLabelFormTpl({showNewLabel, previewLabelColor}) {
           <div class="ml-2">
             <input type="text" id="label-color-value" name="label-color[description]"
             class="w-full p-2 base-outer focus:outline-none"
-            value="#${previewLabelColor}"
+            value="#${color}"
             placeholder="#color" value="" maxlength="100">
           </div>
 
@@ -264,4 +270,9 @@ export function getLabelFormTpl({showNewLabel, previewLabelColor}) {
   `
 
   return $parent
+}
+
+
+export const notiTpl = () => {
+
 }

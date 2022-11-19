@@ -5,7 +5,7 @@ import LabelStore from "../../stores/label.js";
 import AppState from "../../libs/state.js";
 import {TAB} from "../../constants.js";
 
-class LabelModel extends View {
+class LabelItem extends View {
   constructor(item = {}) {
     super();
     this.data = item
@@ -21,7 +21,6 @@ class LabelModel extends View {
 
   bindEvents() {
     const {deleteButton} = this.$
-
     deleteButton.addEventListener('click', () => {
       LabelStore.remove(this)
     })
@@ -41,4 +40,4 @@ class LabelModel extends View {
   }
 }
 
-export default LabelModel
+export default LabelItem

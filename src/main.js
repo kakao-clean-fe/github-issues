@@ -6,7 +6,6 @@ import {STATUS, TAB} from "./constants.js";
 import AppState from "./libs/state.js";
 import {getRandomColorCode} from "./utils.js";
 import LabelTab from "./components/label/tab.js";
-import LabelForm from "./components/label/form.js";
 import {worker} from './mocks/browser';
 
 
@@ -20,7 +19,7 @@ import {worker} from './mocks/browser';
       activeTab: TAB.LABEL,
       activeStatus: STATUS.OPEN,
       showNewLabel: false,
-      previewLabelColor: getRandomColorCode()
+      randomColor: getRandomColorCode()
     }
     AppState.update(initState)
 
@@ -39,7 +38,6 @@ import {worker} from './mocks/browser';
     /* Issue, Label, LabelForm 생성 -> 생성과 함께 subscribe */
     new IssueTab()
     new LabelTab()
-    new LabelForm()
     // notify는 데이터 로딩 후 실행하므로 notify X
 
   }
