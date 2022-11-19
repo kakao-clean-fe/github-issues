@@ -11,16 +11,17 @@ export const LabelCreator = class {
   description = null;
   color = null;
 
-  get template () {
-    return getLabelCreatorTpl();
-  }
-
   constructor () {
     this.parentElement = selectElement(SELECTOR.LABEL_CREATOR_WRAPPER);
 
     this.initData();
     this.initTemplate();
   }
+
+  get template () {
+    return getLabelCreatorTpl();
+  }
+
 
   initData () {
 

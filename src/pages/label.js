@@ -1,22 +1,23 @@
 import { getLabelTpl } from '../tpl';
 import { createApp } from '../utils/template';
 import { LabelList } from '../views/LabelList';
-import { selectElement, removeClass, toggleClass } from '../utils/dom';
+import { selectElement, toggleClass } from '../utils/dom';
 import { SELECTOR } from '../constants/selector';
 import { EVENT } from '../constants/event';
 import { LabelCreator } from '../views/LabelCreator';
 import { HIDDEN } from '../constants/status';
 
 export const LabelPage = class {
-  get template () {
-    return getLabelTpl();
-  }
 
   constructor (labelData) {
     this.labelData = labelData;
 
     this.initTemplate();
     this.initLabelChildrenView();
+  }
+
+  get template () {
+    return getLabelTpl();
   }
 
   initTemplate () {
