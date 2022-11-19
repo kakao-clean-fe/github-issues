@@ -215,7 +215,7 @@ export function getLabelTpl() {
       </div>
 
     </div>
-    <ul class="label-list ml-auto text-sm bg-white">
+    <ul class="label-list ml-auto text-sm bg-white" id="label-list">
 
     </ul>
   </div>

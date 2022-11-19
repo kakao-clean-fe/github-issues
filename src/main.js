@@ -1,5 +1,5 @@
-// import {initIssuePage} from "./issue-page";
-import {initLabelPage} from "./label-page.js";
+// import {initIssuePage} from "./issue/issue-page";
+import { initLabelPage } from "./label/label-page";
 
 // initIssuePage();
 initLabelPage();
