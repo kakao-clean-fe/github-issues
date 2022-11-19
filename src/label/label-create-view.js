@@ -1,6 +1,5 @@
 import { Observable } from "../helpers/observable.js";
 import { $ } from "../helpers/render-helpers.js";
-import { LabelCreateView } from "./label-create-view.js";
 
 export class LabelCreateView {
   refreshColorBtnClick$ = new Observable();

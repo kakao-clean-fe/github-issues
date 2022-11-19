@@ -1,4 +1,4 @@
-import { fetchLabels } from "../api/fetch.js";
+import { createLabel, getLabels } from "../api/fetch.js";
 
 export class LabelStore {
   _labelList = [];
@@ -7,12 +7,17 @@ export class LabelStore {
     this._getLabels();
   }
   _getLabels() {
-    fetchLabels().then((res) => {
+    getLabels().then((res) => {
       this.labelList = res;
     });
   }
   createLabel(formValue) {
-    this.labelList = this._labelList.concat(formValue);
+    createLabel(formValue)
+      .then((res) => {
+        console.log(res);
+        this.labelList = res;
+      })
+      .catch((e) => console.error(e));
   }
   generateRandomColor() {
     const randomRGBValue = () => Math.floor(Math.random() * 256 * 256 * 256);
