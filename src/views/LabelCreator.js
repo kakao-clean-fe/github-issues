@@ -4,12 +4,15 @@ import { SELECTOR } from '../constants/selector';
 import { addLabelData } from "../store/dataStore";
 import { EVENT } from '../constants/event';
 import { HIDDEN } from '../constants/status';
+import { LABEL_COLOR } from "../constants/labelColor";
+import { generateColor } from '../utils/label';
 
 export const LabelCreator = class {
 
   name = null;
   description = null;
   color = null;
+  colorIndex = 0;
 
   constructor () {
     this.parentElement = selectElement(SELECTOR.LABEL_CREATOR_WRAPPER);
@@ -59,8 +62,15 @@ export const LabelCreator = class {
     this.description = target.value;
   }
 
-  onClickColorButton ({target}) {
+  onClickColorButton () {
+    const {colorIndex, color} = generateColor(LABEL_COLOR, this.colorIndex);
+    /** 색상확인 편의를 위해 미리 #을 붙여서 color에 넣어줄 땐 제거 */
+    const refinedColorString = color.slice(1);
+    const labelColorInput = selectElement(SELECTOR.LABEL_COLOR_INPUT);
 
+    labelColorInput.value = color;
+    this.colorIndex = colorIndex;
+    this.color = refinedColorString;
   }
 
   onInputLabelColor () {
@@ -73,8 +83,7 @@ export const LabelCreator = class {
     this.createLabel({
       name: this.name,
       description: this.description,
-      color: 'bfdadc', // 임시 코드
-      // color: this.color
+      color: this.color
     });
 
     this.toggleLabelCreator();

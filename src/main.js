@@ -19,4 +19,6 @@ labelTabButton.addEventListener(EVENT.CLICK, async () => {
   labelDataProxy.labelData = labelData;
 });
 
-createIssuePage();
+// createIssuePage();
+const labelData = await fetchLabelsData();
+labelDataProxy.labelData = labelData;

@@ -211,7 +211,7 @@ export function getLabelCreatorTpl() {
             <div class="ml-2">
               <input type="text" id="label-color-value" name="label-color[description]"
               class="w-full p-2 base-outer focus:outline-none _label_color_input"
-              placeholder="#color" value="" maxlength="100">
+              placeholder="#color" value="" maxlength="100" disabled>
             </div>
 
           </dd>
