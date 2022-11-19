@@ -9,9 +9,9 @@ import { generateColor } from '../utils/label';
 
 export const LabelCreator = class {
 
-  name = null;
-  description = null;
-  color = null;
+  name = '';
+  description = '';
+  color = '';
   colorIndex = 0;
 
   constructor () {
@@ -80,6 +80,10 @@ export const LabelCreator = class {
   onClickCreateLabelButton (e) {
     e.preventDefault();
 
+    const canCreateLabel = this.name && this.description && this.color;
+    if (!canCreateLabel) { return; }
+
+
     this.createLabel({
       name: this.name,
       description: this.description,
@@ -91,12 +95,20 @@ export const LabelCreator = class {
 
   onClickCancelButton () {
     this.resetLabelData();
+    this.resetLabelInput();
     this.toggleLabelCreator();
   }
 
   resetLabelData () {
-    // 데이터 초기화
-    // 입력란 초기화
+    this.name = '';
+    this.description = '';
+    this.color = ''
+  }
+
+  resetLabelInput () {
+    selectElement(SELECTOR.LABEL_NAME_INPUT).value = '';
+    selectElement(SELECTOR.LABEL_DESC_INPUT).value = '';
+    selectElement(SELECTOR.LABEL_COLOR_INPUT).value = '';
   }
 
   toggleLabelCreator () {
