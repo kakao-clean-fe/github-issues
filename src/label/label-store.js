@@ -12,12 +12,14 @@ export class LabelStore {
     });
   }
   createLabel(formValue) {
-    createLabel(formValue)
-      .then((res) => {
-        console.log(res);
-        this.labelList = res;
-      })
-      .catch((e) => console.error(e));
+    createLabel(formValue).then((res) => {
+      if (res.error) {
+        console.error(res.error);
+        alert(res.error);
+        return;
+      }
+      this.labelList = res;
+    });
   }
   generateRandomColor() {
     const randomRGBValue = () => Math.floor(Math.random() * 256 * 256 * 256);

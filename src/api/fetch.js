@@ -18,15 +18,17 @@ export const getLabelsWithDelay = asyncPipe(
 );
 
 // 새 요청이 들어왔을 때 이미 진행 중인 요청이 있다면 취소한다.
-export const createLabel = (label) =>
-  asyncPipe(
-    () =>
-      fetch("/labels", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(label),
-      }),
-    (res) => res.json()
-  )();
+export const createLabel = async (label) => {
+  try {
+    const res = await fetch("/labels", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(label),
+    });
+    return await res.json();
+  } catch (e) {
+    console.error("Unknown Error");
+  }
+};
