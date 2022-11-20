@@ -31,6 +31,7 @@ export function initLabelPage() {
       labelCreateView.renderColor(form.color);
       labelCreateView.renderLabelPreview(form);
       labelCreateView.checkCreateButtonActive(form);
+      labelCreateView.updateForm(form);
       this._form = form;
     },
     get() {

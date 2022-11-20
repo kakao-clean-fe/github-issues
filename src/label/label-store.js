@@ -1,14 +1,22 @@
 import { createLabel, getLabels, getLabelsWithDelay } from "../api/fetch.js";
 
 export class LabelStore {
-  _labelList = [];
-  _form = {
+  _DEFAULT_FORM = {
     color: "",
     name: "",
     description: "",
   };
+  _labelList = [];
+  _form = { ...this._DEFAULT_FORM };
   constructor() {
     this.getLabels();
+    window.addEventListener("unload", () => {
+      localStorage.setItem("label-create", JSON.stringify(this._form));
+    });
+    window.addEventListener("load", () => {
+      const savedForm = localStorage.getItem("label-create");
+      if (savedForm) this.form = JSON.parse(savedForm);
+    });
   }
   getLabels() {
     getLabelsWithDelay().then((res) => {
@@ -25,6 +33,7 @@ export class LabelStore {
         return;
       }
       this.labelList = res;
+      this.form = { ...this._DEFAULT_FORM };
     });
   }
   generateRandomColor() {

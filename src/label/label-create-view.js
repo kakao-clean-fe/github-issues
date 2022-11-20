@@ -42,6 +42,11 @@ export class LabelCreateView {
       $("label-create-button").classList.add("opacity-50");
     }
   }
+  updateForm(form) {
+    console.log("updateForm", form);
+    $("label-name-input").value = form.name;
+    $("label-description-input").value = form.description;
+  }
   _toggleCreateView() {
     if ($("new-label-form").classList.contains("hidden")) {
       $("new-label-form").classList.remove("hidden");
