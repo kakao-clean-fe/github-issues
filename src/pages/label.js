@@ -18,7 +18,7 @@ export class LabelPage extends Component {
     constructor(props, parentSelector) {
         super(COMPONENT_KEY.LABEL_PAGE, props, parentSelector);
         this._mountEvent = this.#initLabels.bind(this);
-        this._afterMountEvent = pipe(this.#addEventToNewLabelBtn, this.#updateLabelsCount.bind(this), setIsLabelLayoutInit.bind(undefined, true));
+        this._afterMountEvent = pipe(this.#addEventToNewLabelBtn, this.#updateLabelsCount.bind(this), setIsLabelLayoutInit.bind(undefined, true), this.#addEventToUpdateBtn.bind(this));
         setLabelsListener(pipe(this.#updateChildAndLabelsCount.bind(this), this._renderChild.bind(this, [COMPONENT_KEY.LABEL_FORM], true)));
     }
 
@@ -31,6 +31,21 @@ export class LabelPage extends Component {
         document.querySelector(SELECTOR.LABEL_NEW_LABEL_BUTTON)?.addEventListener('click', () => {
             document.querySelector(SELECTOR.LABEL_FORM).classList.toggle(STYLE.HIDDEN);
         });
+    }
+
+    #addEventToUpdateBtn() {
+        document.querySelector(SELECTOR.LABEL_UPDATE_BUTTON)?.addEventListener('click', this.#onUpdateBtnClick.bind(this))
+    }
+
+    #onUpdateBtnClick() {
+        const controller = this._props?.updateLabelController;
+        const isFetching = !!controller;
+        if (isFetching) controller.abort();
+        this._props.updateLabelController = new AbortController();
+        updateLabels(this._props.updateLabelController.signal).then(({data: labels}) => {
+            this._props.updateLabelController = null;
+            setLabels(labels);
+        }).catch((e) => e);
     }
 
     #updateChildAndLabelsCount() {
