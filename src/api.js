@@ -1,6 +1,6 @@
 export const getIssuesData = async (store) => {
   try {
-    const response = await fetch("../data-sources/issues.json");
+    const response = await fetch("/issues");
 
     if (response) {
       const data = await response.json();
@@ -19,7 +19,7 @@ export const getIssuesData = async (store) => {
 
 export const getLabelsData = async () => {
   try {
-    const response = await fetch("../data-sources/labels.json");
+    const response = await fetch("/labels");
 
     if (response) {
       const data = await response.json();
