@@ -13,6 +13,9 @@ export function initLabelPage() {
   labelCreateView.labelFormSubmit$.subscribe((value) => {
     labelStore.createLabel(value);
   });
+  labelListView.updateLabelsButtonClick$.subscribe(() => {
+    labelStore.getLabels();
+  });
 
   Object.defineProperty(labelStore, "labelList", {
     set(labels) {

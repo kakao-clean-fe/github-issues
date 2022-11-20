@@ -1,14 +1,16 @@
-import { createLabel, getLabels } from "../api/fetch.js";
+import { createLabel, getLabels, getLabelsWithDelay } from "../api/fetch.js";
 
 export class LabelStore {
   _labelList = [];
   _color = "";
   constructor() {
-    this._getLabels();
+    this.getLabels();
   }
-  _getLabels() {
-    getLabels().then((res) => {
-      this.labelList = res;
+  getLabels() {
+    getLabelsWithDelay().then((res) => {
+      if (res) {
+        this.labelList = res;
+      }
     });
   }
   createLabel(formValue) {

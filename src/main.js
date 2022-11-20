@@ -1,5 +1,4 @@
 // import {initIssuePage} from "./issue/issue-page";
-import { getLabels } from "./api/fetch";
 import { initLabelPage } from "./label/label-page";
 
 //entry point 에 해당하는 파일 상단에 아래 내용을 추가
