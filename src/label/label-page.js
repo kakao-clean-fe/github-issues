@@ -10,8 +10,11 @@ export function initLabelPage() {
   labelCreateView.refreshColorBtnClick$.subscribe(() => {
     labelStore.generateRandomColor();
   });
-  labelCreateView.labelFormSubmit$.subscribe((value) => {
-    labelStore.createLabel(value);
+  labelCreateView.labelFormSubmit$.subscribe(() => {
+    labelStore.createLabel();
+  });
+  labelCreateView.labelFormChange$.subscribe((value) => {
+    labelStore.setLabelForm(value);
   });
   labelListView.updateLabelsButtonClick$.subscribe(() => {
     labelStore.getLabels();
@@ -23,10 +26,15 @@ export function initLabelPage() {
       this._labelList = labels;
     },
   });
-  Object.defineProperty(labelStore, "color", {
-    set(color) {
-      labelCreateView.renderColor(color);
-      this._color = color;
+  Object.defineProperty(labelStore, "form", {
+    set(form) {
+      labelCreateView.renderColor(form.color);
+      labelCreateView.renderLabelPreview(form);
+      labelCreateView.checkCreateButtonActive(form);
+      this._form = form;
+    },
+    get() {
+      return this._form;
     },
   });
 }

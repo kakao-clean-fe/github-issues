@@ -4,6 +4,7 @@ import { $ } from "../helpers/render-helpers.js";
 export class LabelCreateView {
   refreshColorBtnClick$ = new Observable();
   labelFormSubmit$ = new Observable();
+  labelFormChange$ = new Observable();
   constructor() {
     $("new-label-button").addEventListener(
       "click",
@@ -18,34 +19,22 @@ export class LabelCreateView {
       this._onClickLabelCreateButton.bind(this)
     );
     $("label-name-input").addEventListener("change", (e) =>
-      this._onChangeLabelForm(e)
+      this._onChangeLabelName(e)
     );
     $("label-description-input").addEventListener("change", (e) =>
-      this._onChangeLabelForm(e)
+      this._onChangeLabelDescription(e)
     );
-    $("new-label-color").addEventListener("click", (e) =>
-      this._onChangeLabelForm(e)
-    );
-  }
-
-  // TODO: 없애기
-  get labelFormValue() {
-    return {
-      name: $("label-name-input").value,
-      description: $("label-description-input").value,
-      color: $("label-color-value").value,
-    };
   }
 
   renderColor(color) {
     $("new-label-color").style.backgroundColor = "#" + color;
     $("label-color-value").value = color;
   }
-  _renderLabelPreview({ color, name }) {
+  renderLabelPreview({ color, name }) {
     $("label-preview").style.backgroundColor = "#" + color;
     $("label-preview").innerText = name ? name : "Label Preview";
   }
-  _checkCreateButtonActive({ name, description, color }) {
+  checkCreateButtonActive({ name, description, color }) {
     $("label-create-button").disabled = !(name && description && color);
     if (name && description && color) {
       $("label-create-button").classList.remove("opacity-50");
@@ -66,13 +55,14 @@ export class LabelCreateView {
   _onClickRefreshColorButton() {
     this.refreshColorBtnClick$.next();
   }
-  _onChangeLabelForm(e) {
-    const formValue = this.labelFormValue;
-    this._checkCreateButtonActive(this.labelFormValue);
-    this._renderLabelPreview(formValue);
+  _onChangeLabelName(e) {
+    this.labelFormChange$.next({ name: e.target.value });
+  }
+  _onChangeLabelDescription(e) {
+    this.labelFormChange$.next({ description: e.target.value });
   }
   _onClickLabelCreateButton(e) {
     e.preventDefault();
-    this.labelFormSubmit$.next(this.labelFormValue);
+    this.labelFormSubmit$.next();
   }
 }
