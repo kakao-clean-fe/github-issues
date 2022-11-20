@@ -1,7 +1,7 @@
 import {getLabelTpl} from "../tpl.js";
 import {Component} from "../components/component.js";
 import {LabelItem} from "../components/label/labelItem.js";
-import {fetchLabels} from "../utils/fetch.js";
+import {fetchLabels, updateLabels} from "../utils/fetch.js";
 import {useAtom, useSetAtomListener, useSetAtomValue} from "../store/atomHooks.js";
 import {isLabelLayoutInit, labelsAtom} from "../store/atom.js";
 import {pipe} from "../utils/functional.js";
@@ -63,7 +63,8 @@ export class LabelPage extends Component {
     }
 
     async #initLabels() {
-        setLabels(await fetchLabels());
+        const labels = (await fetchLabels()).data;
+        setLabels(labels);
         this._initChild(this.#initChild());
     }
 
