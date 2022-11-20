@@ -7,7 +7,7 @@ export function Observable(initialValue){
   this.value = initialValue;
 }
 
-Observable.prototype.setValue = function(newValue) {
+Observable.prototype.setValue = function(newValue = []) {
   this.value = newValue;
   this.notify(newValue);
 }

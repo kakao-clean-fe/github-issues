@@ -1,72 +1,61 @@
-import { labelFormSelector, createLabelButtonSelector, formColorValueSelector, formNameSelector, formHiddenClass } from "../template/selector"
+import { labelFormSelector, createLabelButtonSelector, formColorValueSelector, formNameSelector, formHiddenClass, labelPreviewTextContentSelector, formDescriptionSelector } from "../template/selector"
 import { $, activateButton, deactivateButton, toggleClass } from "../util/dom"
-import {labelStore$, newLabelColorStore$, colorList} from '../store/label';
-import {updateProperty} from '../store/proxy';
-import { showLabelFormFirst } from "../const";
+import {labelStore$, newLabelColorStore$} from '../store/label';
 import { isValid } from "../util/feature";
-
-/**
- * 다른 곳에서 쓰지 않아 page에서 store 정의
- */
-const initLabelForm = () => {
-  formData$.name = '';
-  formData$.description = '';
-
-  labelFormComponent.activateCreateButton(false);
-}
-
-const formData = {
-  isCreating: showLabelFormFirst,
-  name: '',
-  description: '',
-  color: colorList[0],
-};
-
-export const formData$ = new Proxy(formData, {
-  set(obj, prop, value, receiver) {
-    if (prop === 'name') {
-      return updateProperty({
-        obj, prop, value, receiver, 
-        callback: () => {
-          $(formNameSelector).value = value;
-        }
-      })
-    }
-
-    if (prop === 'isCreating') {
-      if (typeof value !== 'boolean') {
-        return false;
-      }
-
-      return updateProperty({
-        obj, prop, value, receiver, 
-        callback: () => {
-          toggleClass(formHiddenClass)($(labelFormSelector));
-          // obj[prop] = value 동작 안 함
-          value === false && initLabelForm();
-        }
-      })
-    }
-
-    return updateProperty({obj, prop, value, receiver});
-  }
-})
+import {formData$, formHandlers} from "../store/labelForm";
 
 /**
  * dom 관련, add event listener
  */
-export const labelFormComponent = {
+export class LabelFormComponent {
+  constructor() {
+    this.addObservers();
+    this.addFormEventListener();
+  }
+
+  initLabelForm() {
+    formData$.name = '';
+    formData$.description = '';
+  
+    this.activateCreateButton(false);
+  }
+
+  renderFormName(value) {
+    $(formNameSelector).value = value;
+    $(labelPreviewTextContentSelector).textContent = value.trim() === '' ? 'Label preview' : value;
+  }
+
+  renderCreatingStatus(value) {
+    toggleClass(formHiddenClass)($(labelFormSelector));
+    value === false && this.initLabelForm();
+  }
+
+  addObservers() {
+    formHandlers.addSetNameObserver([this.renderFormName.bind(this)]);
+    formHandlers.addSetIsCreatingObservers([this.renderCreatingStatus.bind(this)]);
+  }
+
   activateCreateButton(isActivate = false) {
     isActivate ? activateButton($(createLabelButtonSelector)) : deactivateButton($(createLabelButtonSelector));
     $(createLabelButtonSelector).disabled = !isActivate;
-  },
+  }
+
   toggleCreateButton(nameInputValue) {
     nameInputValue.trim() !== '' ? this.activateCreateButton(true) : this.activateCreateButton(false);
-  },
+  }
+
+  /**
+   * add form Event Listener 
+   */
   addNameInputListener({target:{value}}) {
     formData$.name = value;
     this.toggleCreateButton(value);
-  },
+  }
+
+  addDescriptionInputListener({target:{value}}) {
+    formData$.description = value;
+  }
+
   addColorInputListener({target}) {
     const {value} = target;
     
@@ -82,7 +71,8 @@ export const labelFormComponent = {
       newLabelColorStore$.store.temp = this.value;
       formData$.color = this.value;
     }
-  },
+  }
+
   addLabel(e) {
     e.preventDefault();
   
@@ -96,13 +86,16 @@ export const labelFormComponent = {
     const {name, color, description} = formData$;
 
     newLabelColorStore$.store.colors.add(color);
-    labelStore$.add([{name, color, description}]);
-  },
+    labelStore$.add({name, color, description});
+  }
+
   addFormEventListener() {
     // name
     $(formNameSelector).addEventListener('input', this.addNameInputListener.bind(this));
     // color
     $(formColorValueSelector).addEventListener('input', this.addColorInputListener);
+    // description
+    $(formDescriptionSelector).addEventListener('input', this.addDescriptionInputListener);
     // submit
     $(labelFormSelector).addEventListener('submit', this.addLabel);
   }

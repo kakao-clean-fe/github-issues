@@ -1,15 +1,6 @@
 /**
  * week2. 객체 지향 프로그래밍 - proxy
- * addWatchers
  */
-export const updateProperty = ({obj, prop, value, receiver, callback}) => {
-  if (obj[prop] !== value) {
-    Reflect.set(obj, prop, value, receiver);
-    callback && callback();
-  }
-  
-  return true;
-}
 
 /**
  * current, next value값을 받을 수 있는 스토어

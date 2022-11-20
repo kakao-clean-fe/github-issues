@@ -21,7 +21,8 @@ export const createLabelButtonSelector = '#label-create-button';
 export const opacityClass = 'opacity-50';
 export const formHiddenClass = 'hidden';
 export const labelCreateCancelButtonSelector = '#label-cancel-button';
-
+export const labelPreviewTextContentSelector = 'span#label-preview';
+export const updateLabelSelector = 'button.refresh-labels';
 /**
  * issue 관련 selector
  */

@@ -1,15 +1,16 @@
 import { getLabelItemTpl, getLabelTpl } from '../template/tpl';
-import { labelPreviewSelector, newLabelColorSelector, newLabelBtnSelector, labelListContainerSelector, labelCountSelector, labelCreateCancelButtonSelector, formColorValueSelector} from '../template/selector';
-import { $ ,addTargetsListener,clearElement, renderPageInApp, setRenderTarget } from '../util/dom';
+import { labelPreviewSelector, newLabelColorSelector, newLabelBtnSelector, labelListContainerSelector, labelCountSelector, labelCreateCancelButtonSelector, formColorValueSelector, updateLabelSelector} from '../template/selector';
+import { $ ,addClickEventListener,addTargetsListener,clearElement, renderPageInApp, setRenderTarget } from '../util/dom';
 import { labelStore$, newLabelColorStore$ } from '../store/label';
-import { labelFormComponent, formData$ } from './labelForm';
 import { compose, pipe } from '../util/operator';
+import { formData$ } from '../store/labelForm';
 
 /**
  * week2. 객체지향으로 짜보기
  * label page
  */
 export class LabelPage {
+  #labelForm = null;
   #unsubscribeList = [];
 
   constructor() {
@@ -34,6 +35,10 @@ export class LabelPage {
     this.#unsubscribeList = [_renderLabels, _renderLabelItem, this.renderLabelCount];
   }
 
+  addUpdateLabelsEventListener() {
+    addClickEventListener(updateLabelSelector, (e) => labelStore$.updateLabels());
+  }
+
   /**
    * render
    */
@@ -44,18 +49,44 @@ export class LabelPage {
     // 한 번 쓰는 함수는 지역 함수로 정의
     const renderWrapper = () => renderPageInApp(getLabelTpl());
     const renderInitialLabelColor = () => this.renderLabelColor(newLabelColorStore$.store.cur);
+    const addEventListeners = pipe(
+      this.addNewLabelFormListener.bind(this), // form 관련 이벤트 리스너
+      this.addUpdateLabelsEventListener.bind(this) // 하단 update labels
+    );
 
     pipe(
       renderWrapper,
       renderInitialLabelColor,
-      this.addNewLabelFormListener.bind(this),
+      addEventListeners,
       // test용 임시, new form 보이기
-      () => this.toggleLabelForm(),
+      // () => this.toggleLabelForm(),
     )();
   }
 
+  checkLabelFormExist() {
+    if (this.#labelForm !== null) {
+      return true;
+    }
+
+    /**
+     * [ TO DO ] MSW warning 처리하기
+     * Warning: captured a request without a matching request handler:
+     * • GET /src/page/labelForm.js
+     * prefetch 적용은 SPA라 보류...
+     */
+    import('./labelForm').then(({LabelFormComponent}) => {
+      this.#labelForm = new LabelFormComponent();
+
+      formData$.isCreating = !formData$.isCreating;
+    })
+
+    return false;
+  }
+
   toggleLabelForm() {
-    formData$.isCreating = !formData$.isCreating;
+    if (this.checkLabelFormExist()) {
+      formData$.isCreating = !formData$.isCreating;
+    }
   }
 
   updateLabelColor() {
@@ -69,8 +100,7 @@ export class LabelPage {
     // color 새로고침
     $(newLabelColorSelector).addEventListener('click', this.updateLabelColor);
   
-    addTargetsListener([$(newLabelBtnSelector),$(labelCreateCancelButtonSelector)], this.toggleLabelForm);
-    labelFormComponent.addFormEventListener();
+    addTargetsListener([$(newLabelBtnSelector),$(labelCreateCancelButtonSelector)], this.toggleLabelForm.bind(this));
   }
 
   // store에 watcher로 > 버튼, 라벨 프리뷰에 색 입히기

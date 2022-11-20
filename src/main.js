@@ -4,6 +4,9 @@ import {pageStore$ } from './store/issue.js'
 import {LABEL_PAGE, ISSUE_PAGE} from './const';
 import {IssuePage} from './page/issue';
 import {LabelPage} from './page/label';
+import { worker } from './mocks/browser';
+
+worker.start();
 
 /**
  * initiate app
@@ -14,6 +17,7 @@ class App {
   constructor() {
     this.addWatchers();
     this.addRenderPageClickListener();
+    
     pageStore$.setValue(LABEL_PAGE);
   }
 
