@@ -1,15 +1,17 @@
-import Labels from "../store/labels";
 import { $, MENU, LABEL } from "../constants";
 import { renderUtils } from "../utils";
+import { inputEvent, clickEvent } from "../event";
 
 class LabelRenderer {
   constructor(labelStore) {
     this.labelStore = labelStore;
     this.render();
+    this.bindEvent();
   }
 
-  getStore() {
-    return this.labelStore;
+  bindEvent() {
+    inputEvent();
+    clickEvent(this.labelStore);
   }
 
   render() {
@@ -21,4 +23,3 @@ class LabelRenderer {
 }
 
 export default LabelRenderer;
-// export default new LabelRenderer(new Labels());

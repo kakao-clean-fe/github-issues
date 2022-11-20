@@ -19,6 +19,7 @@ const LABEL = {
   COLOR_PREVIEW: "#label-preview",
   NEW_FORM: "#new-label-form",
   WRAPPER: "#labels-wrapper ul",
+  NEW_INPUT: "dl.form-group.my-2 input",
 };
 
 const LABEL_CLASS = {

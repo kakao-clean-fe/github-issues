@@ -4,12 +4,7 @@ import Label from "../components/Label";
 
 const app = $("#app");
 
-export const bindEvent = (labelRenderer) => {
-  inputEvent();
-  clickEvent(labelRenderer);
-};
-
-const inputEvent = () =>
+export const inputEvent = () =>
   app.addEventListener("input", (e) => {
     const target = e.target;
     const targetInput = LABEL_CLASS.INPUT.every((className) =>
@@ -20,7 +15,7 @@ const inputEvent = () =>
     }
   });
 
-const clickEvent = (labelRenderer) =>
+export const clickEvent = (labelStore) =>
   app.addEventListener("click", (e) => {
     const target = e.target;
     if (
@@ -31,7 +26,7 @@ const clickEvent = (labelRenderer) =>
     } else if (target.id === LABEL.NEW_COLOR) {
       renderColor(target);
     } else if (target.id === LABEL.CREATE_BTN) {
-      createLabel(labelRenderer);
+      createLabel(labelStore);
     }
   });
 
@@ -45,14 +40,14 @@ const renderColor = (target) => {
   labelUtils.checkInput() && labelUtils.uselabelBtn();
 };
 
-const createLabel = (labelRenderer) => {
+const createLabel = (labelStore) => {
   const label = new Label(getNewLabelData());
-  labelRenderer.getStore().add(label.get());
+  labelStore.add(label.get());
 };
 
 const getNewLabelData = () => {
   const newLabel = {};
-  $$("dl.form-group.my-2 input").forEach((target) => {
+  $$(LABEL.NEW_INPUT).forEach((target) => {
     newLabel[target.id.split("-")[1]] = target.value;
   });
   return newLabel;
