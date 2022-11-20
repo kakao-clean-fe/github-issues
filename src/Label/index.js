@@ -13,25 +13,23 @@ import {
 } from "../constants";
 import { getLabelTpl } from "../tpl";
 import { getRandomHexColor } from "../utils";
+import CreateLabelModel from "./CreateLabelModel";
+import CreateLabelView from "./CreateLabelView";
 import ListLabelModel from "./ListLabelModel";
 import ListLabelView from "./ListLabelView";
 
 const labelsModel = new ListLabelModel();
+const createModel = new CreateLabelModel();
+const createView = new CreateLabelView({ model: createModel });
+const labelsView = new ListLabelView({ model: labelsModel });
 
 const evtNewLabelClick = () => {
-  const labelFormWrapper = document.querySelector(ID_NEW_LABEL_FORM);
-  labelFormWrapper.classList.remove(KEY_HIDDEN);
+  createModel.setIsOpen(!createModel.getIsOpen());
 };
 
 const evtColorChangeClick = () => {
   const randomHexColor = getRandomHexColor();
-  const labelPreview = document.querySelector(ID_LABEL_PREVIEW);
-  const labelColor = document.querySelector(ID_NEW_LABEL_COLOR);
-  const labelColorInput = document.querySelector(ID_NEW_LABEL_COLOR_INPUT);
-
-  labelPreview.style.backgroundColor = `#${randomHexColor}`;
-  labelColor.style.backgroundColor = `#${randomHexColor}`;
-  labelColorInput.value = `#${randomHexColor}`;
+  createModel.setHexColor(randomHexColor);
 };
 
 const evtCancelClick = () => {
@@ -72,6 +70,5 @@ export const LabelPageInit = async () => {
   document.querySelector(ID_APP).innerHTML = getLabelTpl();
   addEventHandler();
   await labelsModel.getInitialData();
-  const labelsView = new ListLabelView({ model: labelsModel });
   labelsView.render();
 };
