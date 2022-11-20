@@ -1,3 +1,6 @@
+const $ = document.querySelector.bind(document);
+const $$ = document.querySelectorAll.bind(document);
+
 const MENU = {
   ISSUE: 0,
   LABEL: 1,
@@ -35,4 +38,14 @@ const COMMON = {
   FONT_BOLD: "font-bold",
 };
 
-export { MENU, ISSUE_STATUS, LABEL, LABEL_CLASS, ISSUE, ISSUE_CLASS, COMMON };
+export {
+  $,
+  $$,
+  MENU,
+  ISSUE_STATUS,
+  LABEL,
+  LABEL_CLASS,
+  ISSUE,
+  ISSUE_CLASS,
+  COMMON,
+};

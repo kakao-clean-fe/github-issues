@@ -1,4 +1,4 @@
-import { LABEL } from "../constants";
+import { $$, LABEL } from "../constants";
 
 const uselabelBtn = () => {
   const createLabelBtn = app.querySelector(`#${LABEL.CREATE_BTN}`);
@@ -8,7 +8,7 @@ const uselabelBtn = () => {
 
 const checkInput = () => {
   let cond = true;
-  document.querySelectorAll("dl.form-group.my-2 input").forEach((target) => {
+  $$("dl.form-group.my-2 input").forEach((target) => {
     cond = cond && !!target.value;
   });
   return cond;

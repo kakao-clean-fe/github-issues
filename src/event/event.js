@@ -1,10 +1,15 @@
-import { classUtils, labelUtils, renderUtils } from "../utils";
-import { MENU, COMMON, LABEL, LABEL_CLASS } from "../constants";
+import { classUtils, labelUtils } from "../utils";
+import { $, $$, COMMON, LABEL, LABEL_CLASS } from "../constants";
 import Label from "../components/Label";
 
-const app = document.querySelector("#app");
+const app = $("#app");
 
-export const inputEvent = () =>
+export const bindEvent = (labelRenderer) => {
+  inputEvent();
+  clickEvent(labelRenderer);
+};
+
+const inputEvent = () =>
   app.addEventListener("input", (e) => {
     const target = e.target;
     const targetInput = LABEL_CLASS.INPUT.every((className) =>
@@ -15,29 +20,40 @@ export const inputEvent = () =>
     }
   });
 
-export const clickEvent = () =>
+const clickEvent = (labelRenderer) =>
   app.addEventListener("click", (e) => {
     const target = e.target;
     if (
       target.classList.contains(LABEL.NEW_BTN) ||
       target.parentNode.classList.contains(LABEL.NEW_BTN)
     ) {
-      classUtils.remove(app.querySelector(LABEL.NEW_FORM), COMMON.HIDDEN);
+      showLabel();
     } else if (target.id === LABEL.NEW_COLOR) {
-      const color = labelUtils.rancomColor();
-      app.querySelector(LABEL.COLOR_VALUE).value = color;
-      app.querySelector(
-        LABEL.COLOR_PREVIEW
-      ).style.backgroundColor = `#${color}`;
-      target.style.backgroundColor = `#${color}`;
-      labelUtils.checkInput() && labelUtils.uselabelBtn();
+      renderColor(target);
     } else if (target.id === LABEL.CREATE_BTN) {
-      const label = new Label();
-      app.querySelectorAll("dl.form-group.my-2 input").forEach((target) => {
-        label[target.id.split("-")[1]] = target.value;
-      });
-      const newLabelData = [JSON.parse(JSON.stringify(label))];
-      const labelWrapper = app.querySelector(LABEL.WRAPPER);
-      renderUtils.setItems(labelWrapper, newLabelData, MENU.LABEL);
+      createLabel(labelRenderer);
     }
   });
+
+const showLabel = () => classUtils.remove($(LABEL.NEW_FORM), COMMON.HIDDEN);
+
+const renderColor = (target) => {
+  const color = labelUtils.rancomColor();
+  $(LABEL.COLOR_VALUE).value = color;
+  $(LABEL.COLOR_PREVIEW).style.backgroundColor = `#${color}`;
+  target.style.backgroundColor = `#${color}`;
+  labelUtils.checkInput() && labelUtils.uselabelBtn();
+};
+
+const createLabel = (labelRenderer) => {
+  const label = new Label(getNewLabelData());
+  labelRenderer.getStore().add(label.get());
+};
+
+const getNewLabelData = () => {
+  const newLabel = {};
+  $$("dl.form-group.my-2 input").forEach((target) => {
+    newLabel[target.id.split("-")[1]] = target.value;
+  });
+  return newLabel;
+};
