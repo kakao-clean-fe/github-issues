@@ -18,6 +18,7 @@ export const CLASS_LABEL_TAB_BTN = '.label-tab';
 export const KEY_HIDDEN = 'hidden';
 
 export const CLASS_NEW_LABEL_OPEN_BTN = ".new-label-button";
+export const CLASS_UPDATE_LABEL_BTN = ".refresh-labels-button";
 export const CLASS_LABEL_LIST = ".label-list";
 
 export const ID_LABEL_PREVIEW = "#label-preview";

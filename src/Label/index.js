@@ -1,5 +1,6 @@
 import {
   CLASS_NEW_LABEL_OPEN_BTN,
+  CLASS_UPDATE_LABEL_BTN,
   ID_APP,
   ID_LABEL_PREVIEW,
   ID_NEW_LABEL_CANCEL_BTN,
@@ -33,8 +34,7 @@ const evtColorChangeClick = () => {
 };
 
 const evtCancelClick = () => {
-  const labelFormWrapper = document.querySelector(ID_NEW_LABEL_FORM);
-  labelFormWrapper.classList.add(KEY_HIDDEN);
+  createModel.setIsOpen(!createModel.getIsOpen());
 };
 
 const evtCreateLabelClick = (event) => {
@@ -51,6 +51,11 @@ const evtCreateLabelClick = (event) => {
   });
 };
 
+const evtRefreshLabelsClick = async (event) => {
+  event.preventDefault();
+  await labelsModel.getDelayInitialData();
+}
+
 const addEventHandler = () => {
   document
     .querySelector(CLASS_NEW_LABEL_OPEN_BTN)
@@ -64,6 +69,9 @@ const addEventHandler = () => {
   document
     .querySelector(ID_NEW_LABEL_CREATE_BTN)
     .addEventListener("click", evtCreateLabelClick);
+  document
+    .querySelector(CLASS_UPDATE_LABEL_BTN)
+    .addEventListener("click", evtRefreshLabelsClick);
 };
 
 export const LabelPageInit = async () => {

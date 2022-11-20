@@ -35,12 +35,15 @@ export const getLabelsData = async () => {
   }
 };
 
-export const getLabelsDataDelay = async () => {
+export const getLabelsDataDelay = async (signal, controller) => {
   try {
-    const response = await fetch("/labels-delay");
+    const response = await fetch("/labels-delay", {
+      signal,
+    });
 
     if (response) {
       const data = await response.json();
+      controller.abort();
       if (data) {
         return data;
       }
@@ -56,8 +59,8 @@ export const getLabelsDataDelay = async () => {
 export const postLabelsData = async (options) => {
   try {
     const response = await fetch("/labels", {
-      method: 'POST',
-      ...options
+      method: "POST",
+      ...options,
     });
 
     if (response) {
@@ -66,8 +69,6 @@ export const postLabelsData = async (options) => {
         return data;
       }
     }
-
-
   } catch (err) {
     console.error("[getLabelsData]", err);
     return [];

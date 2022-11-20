@@ -1,5 +1,5 @@
-import { CLASS_LABEL_LIST, CLASS_OPEN_BTN } from "../constants";
-import { getLabelItemTpl } from "../tpl";
+import { CLASS_LABEL_LIST, CLASS_OPEN_BTN, ID_APP } from "../constants";
+import { getLabelItemTpl, getLabelTpl } from "../tpl";
 
 export default class ListLabelView {
   constructor({ model }) {
@@ -10,7 +10,7 @@ export default class ListLabelView {
 
   render() {
     this.$target = document.querySelector(CLASS_LABEL_LIST);
-    const labels = this.ListModel.getLabels();
+    const labels = this.ListModel.labels;
     const count = labels.length;
 
     if (!this.$target && count === 0) return;
