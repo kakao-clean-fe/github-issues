@@ -1,9 +1,11 @@
+import { worker } from './mocks/browser';
 import { fetchIssues, fetchLabels } from './service';
 import { storeKey, pageType } from './constant';
 import { Store, EventBus } from './store';
 import { createHeader } from './components/Header';
 import { createIssuePage } from './components/IssuePage';
 import { createLabelPage } from './components/LabelPage';
+import { loadCreateForm } from './util';
 
 async function createApp() {
   const [issues, labels] = await Promise.all([fetchIssues(), fetchLabels()]);
@@ -18,6 +20,7 @@ async function createApp() {
         name: '',
         description: '',
         color: '#ffffff',
+        ...loadCreateForm()
       },
     },
   });
@@ -32,6 +35,7 @@ async function createApp() {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
+  worker.start();
   const app = await createApp();
   app.render();
 });

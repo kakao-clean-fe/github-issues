@@ -18,6 +18,7 @@ export const selector = {
   labelWrapper: '#label-wrapper',
   labelCreateButton: '#label-create-button',
   labelCancelButton: '#label-cancel-button',
+  updateLabelsButton: '.refresh-labels'
 };
 
 export const storeKey = {
@@ -32,3 +33,7 @@ export const pageType = {
   issue: 'issue',
   label: 'label',
 };
+
+export const localStorageKey = {
+  createForm: 'LC_CREATE_FORM',
+}
