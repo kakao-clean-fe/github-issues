@@ -19,4 +19,5 @@ export const SELECTOR = {
   LABEL_COLOR_BUTTON: '._label_color_button',
   CREATE_LABEL_BUTTON: '._create_label_button',
   CANCEL_LABEL_BUTTON: '._cancel_label_button',
+  UPDATE_LABEL_BUTTON: '._update_label_button',
 };

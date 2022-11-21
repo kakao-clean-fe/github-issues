@@ -6,6 +6,10 @@ import { SELECTOR } from '../constants/selector';
 import { EVENT } from '../constants/event';
 import { LabelCreator } from '../views/LabelCreator';
 import { HIDDEN } from '../constants/status';
+import { fetchData } from '../common/api';
+import { LABELS_DELAY_URL } from '../constants/api';
+
+let controller;
 
 export const LabelPage = class {
 
@@ -33,6 +37,7 @@ export const LabelPage = class {
 
   initEvent () {
     this.onClickNewLabel();
+    this.onClickUpdateLabels();
   }
 
   toggleLabelCreator () {
@@ -44,7 +49,25 @@ export const LabelPage = class {
     newLabelButton.addEventListener(EVENT.CLICK, this.toggleLabelCreator)
   }
 
-  onClickUpdateLabels () {
+  updateLabelData () {
+    controller = new AbortController();
+    const signal = controller.signal;
 
+    fetchData(LABELS_DELAY_URL, {
+      method: 'GET',
+      signal,
+    }).catch(error => {
+      // console.log(`Update error ${error}`)
+    });
+  }
+
+  onClickUpdateLabels () {
+    selectElement(SELECTOR.UPDATE_LABEL_BUTTON).addEventListener(EVENT.CLICK, () => {
+      if (controller) {
+        controller.abort();
+        console.log('Abort Update Labels');
+      }
+      this.updateLabelData();
+    });
   }
 }
