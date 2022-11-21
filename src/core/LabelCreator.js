@@ -1,6 +1,6 @@
-import Item from "../lib/Item";
+import Store from "../lib/Store";
 
-import { createColor } from "../utils/helper";
+import { toFetch, createColor } from "../utils/helper";
 
 import { LABEL_CREATOR_EVENT } from "../events";
 
@@ -14,10 +14,10 @@ const { KEYUP, CLICK } = EVENT_KEY;
 export default class LabelCreator {
   constructor(id, labelStore) {
     this._id = id;
-    this._name = new Item("");
-    this._color = new Item("");
-    this._description = new Item("");
-    this._error = new Item("");
+    this._name = new Store("");
+    this._color = new Store("");
+    this._description = new Store("");
+    this._error = new Store("");
     this._labelStore = labelStore;
 
     this.addEvent();
@@ -28,7 +28,7 @@ export default class LabelCreator {
 
   _createColor() {
     const newColor = createColor();
-    return this._labelStore.every((item) => item.color !== newColor)
+    return this._labelStore.value.every((item) => item.color !== newColor)
       ? newColor
       : this._createColor();
   }
@@ -92,7 +92,7 @@ export default class LabelCreator {
 
     name.addEventListener(KEYUP, (e) => {
       this._name.value = e.target.value;
-      const duplicate = this._labelStore.some(
+      const duplicate = this._labelStore.value.some(
         (item) => item.name === this._name.value
       );
       this._error.value = duplicate ? "이미 등록된 이름입니다." : "";
@@ -112,14 +112,34 @@ export default class LabelCreator {
 
     cancelBtn.addEventListener(CLICK, () => this.clear());
 
-    createBtn.addEventListener(CLICK, () => {
-      if (this._name.value) {
-        this._labelStore.add({
-          name: this._name.value,
-          color: this._color.value.replace("#", ""),
-          description: this._description.value,
+    createBtn.addEventListener(CLICK, async (e) => {
+      e.preventDefault();
+      try {
+        const data = await toFetch("/labels", {
+          body: JSON.stringify({
+            name: this._name.value,
+            color: this._color.value.replace("#", ""),
+            description: this._description.value,
+          }),
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
+        this._labelStore.value = data;
         this.clear();
+      } catch (e) {
+        const msg = await e.json();
+        if (e.status === 500) {
+          this.clear();
+          this._error.value = msg.error;
+          return;
+        }
+        if (e.status === 400) {
+          this._error.value = msg.error;
+          return;
+        }
+        throw e;
       }
     });
   }

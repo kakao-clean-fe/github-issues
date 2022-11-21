@@ -22,6 +22,13 @@ export const handlers = [
   rest.post("/labels", async (req, res, ctx) => {
     const newData = await req.json();
 
+    if (labels.some((label) => label.name === newData.name)) {
+      return res(
+        ctx.status(400),
+        ctx.json({ error: "이미 등록된 이름입니다." })
+      );
+    }
+
     if (Math.floor(Math.random() * 10) > 5) {
       return res(ctx.status(500), ctx.json({ error: "서버에러 발생" }));
     }

@@ -28,7 +28,7 @@ LabelList.prototype.updateItems = function () {
   if (typeof this._renderItems !== "function") {
     this.render();
   }
-  this._renderItems(this._store, this._store.items);
+  this._renderItems(this._store.value, this._store.value);
 };
 
 LabelList.prototype.addEvent = function (callback) {
