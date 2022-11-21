@@ -20,6 +20,15 @@ export class LabelFormComponent {
     this.checkLocalStorageFormData();
   }
 
+  addObservers() {
+    // formData 관련 observer
+    formHandlers.addSetNameObserver([this.renderFormName.bind(this)]);
+    formHandlers.addSetIsCreatingObservers([this.renderCreatingStatus.bind(this)]);
+  
+    // label 관련 observer
+    labelStore$.subscribeAdd([this.initForm.bind(this)]);
+  }
+
   /**
    * 로컬스토리지에 캐시된 폼 데이터가 있다면 화면에 렌더
    */
@@ -42,7 +51,7 @@ export class LabelFormComponent {
     needToActivateCreateButton ? this.activateCreateButton(true) : this.activateCreateButton(false);
   }
 
-  initLabelForm() {
+  initForm() {
     formData$.name = '';
     formData$.description = '';
   
@@ -54,14 +63,8 @@ export class LabelFormComponent {
     $(labelPreviewTextContentSelector).textContent = value.trim() === '' ? 'Label preview' : value;
   }
 
-  renderCreatingStatus(value) {
+  renderCreatingStatus() {
     toggleClass(formHiddenClass)($(labelFormSelector));
-    value === false && this.initLabelForm();
-  }
-
-  addObservers() {
-    formHandlers.addSetNameObserver([this.renderFormName.bind(this)]);
-    formHandlers.addSetIsCreatingObservers([this.renderCreatingStatus.bind(this)]);
   }
 
   activateCreateButton(isActivate = false) {
