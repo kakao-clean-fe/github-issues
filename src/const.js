@@ -9,8 +9,8 @@ export const POST = 'POST';
 export const ABORT_ERROR = 'AbortError';
 
 export const colorList = [
-  '#DC3535', '#f97516', '#fcd34d', '#22c55e', '#EE6983',
-  '#38bef8', '#4649FF', '#fde047', '#eef1ff', '#b1b2ff',
+  '#8080FF', '#fCD34D', '#FF0000', '#FFA1CF',  '#22C55E', '#FF577F',
+  '#6495ED', '#3CB371', '#FDE047', '#EEF1FF', '#B1b2FF',
 ];
 
 export const TEMP_LABEL_FORM_DATA_KEY = 'temp_label_form_data';

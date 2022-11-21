@@ -129,32 +129,32 @@ const issues = [{
 const labels =[
     {
         "name":"bug",
-        "color":"bfdadc",
+        "color":"ff0000",
         "description":"this is red"
     },
     {
         "name":"documentation",
-        "color":"0075ca",
+        "color":"22c55e",
         "description":"this is documetation"
     },
     {
         "name":"enhancement",
-        "color":"a2eeef",
+        "color":"fde047",
         "description":"this is enhancement"
     },
     {
         "name":"question",
-        "color":"d876e3",
+        "color":"eef1ff",
         "description":"this is question"
     },
     {
         "name":"invalid",
-        "color":"e4e669",
+        "color":"b1b2ff",
         "description":"this is not valid"
     },
     {
         "name":"duplicate",
-        "color":"cfd3d7",
+        "color":"FFA1CF",
         "description":"this is dulicate"
     }
 ]
