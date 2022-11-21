@@ -1,7 +1,7 @@
 import { LABEL_FORM_SELECTOR, CREATE_LABEL_BUTTON_SELECTOR, LABEL_NAME_INPUT_SELECTOR, LABEL_INPUT_WRAPPER, LABEL_DESCRIPTION_INPUT_SELECTOR, LABEL_COLOR_INPUT_SELECTOR, CANCEL_CREATE_LABEL_BUTTON } from '~/constants/selector';
 import { addElementToDOM, removeElementFromDOM } from '~/utils/page';
 import type { Component } from '~/types/component-interface';
-import { addClass, disableButton, enableButton, removeClass, setEventListenerToElement, clearEventListenerToElement } from '~/utils/dom';
+import { addClass, disableButton, enableButton, removeClass, setEventListenerToElement } from '~/utils/dom';
 import { getElement } from '~/store/element-store';
 import { DISABLED_CREATE_BUTTON_CLASS } from '~/tpl';
 import { labelStore } from '~/store/label-store';
@@ -56,28 +56,12 @@ export class LabelForm implements Component {
 
   unmount (): void {
     removeElementFromDOM(this.$labelForm);
-    this.clearEventHandler();
   }
 
   initEventHandler (): void {
     this.addSubmitLabelFormHandler();
     this.addInputLabelNameHandler();
     this.addClickCancelButtonHandler();
-    this.isEventHandlerInitialized = true;
-  }
-
-  clearEventHandler (): void {
-    clearEventListenerToElement({
-      element: this.$labelNameInput,
-      event: 'input',
-      eventHandler: this.labelNameInputHandler.bind(this)
-    });
-
-    clearEventListenerToElement({
-      element: this.$labelForm,
-      event: 'submit',
-      eventHandler: this.submitLabelFormHandler.bind(this)
-    });
     this.isEventHandlerInitialized = true;
   }
 
@@ -97,7 +81,7 @@ export class LabelForm implements Component {
     });
   }
 
-  private labelNameInputHandler (event: Event) {
+  private labelNameInputHandler (event: Event): void {
     event.stopPropagation();
     if (this.$labelNameInput === null) {
       return;
