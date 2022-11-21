@@ -23,14 +23,13 @@ class Main extends Component {
   }
 
   onClickCreateLabelButton () {
-    const nextLabelList = [...this.labelState.labelList, {
+    const label = {
       name: this.labelState.labelName,
       color: this.labelState.color,
       description: this.labelState.description,
-    }]
+    };
 
-    this.setLabelList(nextLabelList);
-    this.clearInputField();
+    this.fetchAddLabel(label)
   }
 
   initState () {
