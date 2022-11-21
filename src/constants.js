@@ -12,6 +12,7 @@ export const CLASS_NAME = {
     COLOR_BUTTON: "new-label-color",
     CANCEL_BUTTON: "label-cancel-button",
     CREATE_BUTTON: "label-create-button",
+    REFRESH_BUTTON: "refresh-labels",
   },
 };
 

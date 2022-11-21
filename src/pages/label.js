@@ -15,7 +15,7 @@ const initializeLabel = async (target) => {
       .then((module) => module.default)
       .then((LabelCreateUI) => {
         const itemUI = new LabelCreateUI(CLASS_NAME["label"].ADD_FORM, label);
-        listUI.addEvent(() => itemUI.toggle());
+        listUI.addNewLabelBtnEvent(() => itemUI.toggle());
         itemUI.toggle();
       })
       .catch((err) => {
