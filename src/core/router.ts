@@ -11,8 +11,11 @@ export default class Router {
     this.path = window.location.pathname;
     this.page = this.pages.filter(page => page.path === this.path)[0];
 
+    this.created();
     this.importPage(this.page.file);
   }
+
+  created() {}
 
   // 메인 페이지에서만 정의해야한다.
   get pages(): Page[] {

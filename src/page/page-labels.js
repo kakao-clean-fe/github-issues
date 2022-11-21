@@ -1,11 +1,8 @@
-import { worker } from '../mocks/browser';
 import { getElement } from '../utils/element';
 import Component from '../core/component';
 import { LabelMaker } from '../components/LabelMaker';
 import { LabelList } from '../components/LabelList';
 import { labelStoreMixin } from '../core/mixin/labelStore';
-
-worker.start();
 
 export default class LabelPage extends Component {
   static getInstance(...args) {
