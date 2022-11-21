@@ -1,5 +1,12 @@
 import { asyncPipe } from "./fp"; 
 
+const FetchMethod = {
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
+  DELETE: 'DELETE'
+}
+
 const signalKeyMap = new Map();
 
 const abortSignalController = () => {
@@ -20,13 +27,6 @@ const abortSignalController = () => {
     getSignal,
     handleAbortSignal,
   }
-}
-
-const FetchMethod = {
-  GET: 'GET',
-  POST: 'POST',
-  PUT: 'PUT',
-  DELETE: 'DELETE'
 }
 
 export const commonAPI = (() => {
