@@ -12,16 +12,18 @@ worker.start();
 const issueTabButton = selectElement(SELECTOR.ISSUE_TAB);
 const labelTabButton = selectElement(SELECTOR.LABEL_TAB);
 
+const initLabelPage = async () => {
+  const labelData = await getLabelData();
+  labelDataProxy.labelData = labelData;
+}
+
 issueTabButton.addEventListener(EVENT.CLICK, () => {
   createIssuePage();
 });
 
-labelTabButton.addEventListener(EVENT.CLICK, async () => {
-  // TODO: 프록시 사용 방법 개선
-  const labelData = await getLabelData();
-  labelDataProxy.labelData = labelData;
+labelTabButton.addEventListener(EVENT.CLICK, () => {
+  initLabelPage();
 });
 
 // createIssuePage();
-const labelData = await getLabelData();
-labelDataProxy.labelData = labelData;
+initLabelPage();

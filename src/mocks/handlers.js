@@ -12,7 +12,7 @@ export const handlers = [
 			return res(ctx.status(500), ctx.json({"error" : "서버에러 발생"}));
 		}
 
-		labels.push(newData);
+		labels.push(newLabel);
 
     return res(ctx.status(201), ctx.json(labels));
   }),

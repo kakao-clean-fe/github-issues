@@ -4,7 +4,7 @@ import { getIssueItemTpl, getIssueTpl } from '../tpl';
 import { hasClass } from '../utils/dom';
 import { boldToStatusButton, createApp, createIssueList, updateIssueList } from '../utils/template';
 import { bindClickEvent } from '../utils/event';
-import { fetchIssuesData } from '../common/api';
+import { getIssuesData } from '../common/api';
 import { CLOSED, OPEN } from '../constants/status';
 import { SELECTOR } from '../constants/selector';
 
@@ -50,7 +50,7 @@ const initApp = async (issues) => {
 }
 
 export const createIssuePage = async () => {
-  const issuesData = await fetchIssuesData();
+  const issuesData = await getIssuesData();
 
   initApp(issuesData);
 };

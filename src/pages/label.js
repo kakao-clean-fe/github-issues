@@ -6,10 +6,8 @@ import { SELECTOR } from '../constants/selector';
 import { EVENT } from '../constants/event';
 import { LabelCreator } from '../views/LabelCreator';
 import { HIDDEN } from '../constants/status';
-import { fetchData } from '../common/api';
-import { LABELS_DELAY_URL } from '../constants/api';
-
-let controller;
+import { updateLabelData } from '../common/api';
+import { setLabelData } from '../store/dataStore';
 
 export const LabelPage = class {
 
@@ -49,25 +47,12 @@ export const LabelPage = class {
     newLabelButton.addEventListener(EVENT.CLICK, this.toggleLabelCreator)
   }
 
-  updateLabelData () {
-    controller = new AbortController();
-    const signal = controller.signal;
-
-    fetchData(LABELS_DELAY_URL, {
-      method: 'GET',
-      signal,
-    }).catch(error => {
-      // console.log(`Update error ${error}`)
-    });
-  }
-
   onClickUpdateLabels () {
-    selectElement(SELECTOR.UPDATE_LABEL_BUTTON).addEventListener(EVENT.CLICK, () => {
-      if (controller) {
-        controller.abort();
-        console.log('Abort Update Labels');
+    selectElement(SELECTOR.UPDATE_LABEL_BUTTON).addEventListener(EVENT.CLICK, async () => {
+      const updatedLabelData = await updateLabelData()
+      if (updatedLabelData) {
+        setLabelData(updateLabelData);
       }
-      this.updateLabelData();
     });
   }
 }

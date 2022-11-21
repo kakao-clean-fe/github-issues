@@ -1,11 +1,11 @@
 import { getLabelCreatorTpl } from "../tpl"
 import { addEventListener, selectAllElement, selectElement, toggleClass } from '../utils/dom';
 import { SELECTOR } from '../constants/selector';
-import { addLabelData } from "../store/dataStore";
 import { EVENT } from '../constants/event';
 import { HIDDEN } from '../constants/status';
 import { LABEL_COLOR } from "../constants/labelColor";
 import { generateColor } from '../utils/label';
+import { addLabelData } from '../common/api';
 
 export const LabelCreator = class {
 
@@ -50,8 +50,9 @@ export const LabelCreator = class {
     addClickEventListener(SELECTOR.CANCEL_LABEL_BUTTON, this.onClickCancelButton.bind(this));
   }
 
-  createLabel ({name, description, color}) {
-    addLabelData({name, description, color});
+  async createLabel ({name, description, color}) {
+    const newLabel = await addLabelData({name, description, color});
+    console.log(newLabel);
   }
 
   onInputLabelName ({target}) {
