@@ -1,5 +1,5 @@
 import { getLabelTpl, getLabelItemTpl } from '/src/tpl';
-import { Q, on, toggleClass, fetchData } from '/src/util/common';
+import { Q, on, toggleClass, fetchData, fetchDataWithAbort } from '/src/util/common';
 import { $ } from '/src/util/constant';
 import LabelStore from '/src/store/LabelStore';
 import LabelFormStore from '/src/store/LabelFormStore';
@@ -11,6 +11,7 @@ export default class LabelPage {
     this.labelStore = null;
     this.labelFormStore = null;
     this.isLabelCreateLazyLoaded = false;
+    this.controller = { ref: null };
   }
   async init() {
     this.$app.innerHTML = this.html;
@@ -50,7 +51,7 @@ export default class LabelPage {
     });
 
     // 컬러 랜덤 선택기
-    on($.LABEL_COLOR_BTN, 'click', (e) => {
+    on($.LABEL_COLOR_BTN, 'click', () => {
       const getRandomColor = () => Math.floor((Math.random() * 256)).toString(16);
       const r = getRandomColor();
       const g = getRandomColor();
@@ -58,6 +59,11 @@ export default class LabelPage {
       const color = `${r}${g}${b}`;
       Q($.INPUT_LABEL_COLOR).value = color;
       this.setColor(color);
+    });
+
+    // Update Label
+    on($.UPDATE_LABELS_BTN, 'click', () => {
+      fetchDataWithAbort('labels-delay', this.controller);
     })
   }
   

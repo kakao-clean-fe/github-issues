@@ -9,4 +9,5 @@ export const $ = {
   LABEL_CREATE_BTN: '#label-create-button',
   LABEL_COLOR_BTN: '#new-label-color',
   LABEL_PREVIEW: '#label-preview',
+  UPDATE_LABELS_BTN: '.refresh-labels',
 }
