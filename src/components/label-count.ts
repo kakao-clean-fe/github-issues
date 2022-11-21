@@ -16,7 +16,7 @@ export class LabelCount implements Component {
     parentSelector = LABEL_OPEN_COUNT_SELECTOR,
     templateFunction = makeLabelCountTemplate
   }: LabelCountComponentArgs = {}) {
-    this.parent = getElement(parentSelector);
+    this.parent = getElement({ selector: parentSelector });
     this.templateFunction = templateFunction;
   }
 

@@ -1,7 +1,7 @@
 import type { FindElementArgs, RenderInnerHtmlArgs, SetEventListenerToElementArgs } from '~/types/utils/dom';
 
-export const findElement = ({ fromElement = document, selector }: FindElementArgs): Element | null => {
-  return fromElement.querySelector(selector);
+export const findElement = ({ fromElement, selector }: FindElementArgs): Element | null => {
+  return (fromElement ?? document).querySelector(selector) ?? null;
 };
 
 export const renderInnerHtml = ({ parent, html }: RenderInnerHtmlArgs): void => {

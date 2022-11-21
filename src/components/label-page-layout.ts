@@ -15,7 +15,7 @@ export class LabelPageLayout implements Component {
     templateFunction = getLabelTpl,
     labelFormComponent
   }: LabelPageLayoutArgs) {
-    this.parent = getElement(parentSelector);
+    this.parent = getElement({ selector: parentSelector });
     this.templateFunction = templateFunction;
     this.labelFormComponent = labelFormComponent;
   }
@@ -38,8 +38,8 @@ export class LabelPageLayout implements Component {
 
   private addNewLabelButtonHandler (): void {
     addClickEventListener({
-      element: getElement(NEW_LABEL_BUTTON_SELECTOR),
-      eventHandler: this.labelFormComponent.init.bind(this.labelFormComponent)
+      element: getElement({ selector: NEW_LABEL_BUTTON_SELECTOR }),
+      eventHandler: () => { this.labelFormComponent.init.bind(this.labelFormComponent)(); }
     });
   }
 

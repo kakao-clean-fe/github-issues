@@ -15,7 +15,7 @@ export class LabelList implements Component {
     parentSelector = LABEL_LIST_SELECTOR,
     labelItemTemplateFunction = getLabelItemTpl
   }: LabelListComponentArgs = {}) {
-    this.parent = getElement(parentSelector);
+    this.parent = getElement({ selector: parentSelector });
     this.labelItemTemplateFunction = labelItemTemplateFunction;
   }
 

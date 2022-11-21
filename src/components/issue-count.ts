@@ -10,8 +10,8 @@ const countIssueStatus = ({ issues }: { issues: Issue[] }): number => countArray
 
 const getIssueStatusCountData = () => {
   return [
-    { parent: getElement(ISSUE_OPEN_COUNT_SELECTOR), html: `${countIssueStatus({ issues: openedIssues() })} Opens` },
-    { parent: getElement(ISSUE_CLOSE_COUNT_SELECTOR), html: `${countIssueStatus({ issues: closedIssues() })} Closed` }
+    { parent: getElement({ selector: ISSUE_OPEN_COUNT_SELECTOR }), html: `${countIssueStatus({ issues: openedIssues() })} Opens` },
+    { parent: getElement({ selector: ISSUE_CLOSE_COUNT_SELECTOR }), html: `${countIssueStatus({ issues: closedIssues() })} Closed` }
   ];
 };
 
@@ -22,13 +22,13 @@ const render = (): void => {
 // 이벤트 핸들러
 const setActiveFilterStyle = () => {
   const style = 'font-bold';
-  toggleClass(getElement(ISSUE_OPEN_COUNT_SELECTOR), style);
-  toggleClass(getElement(ISSUE_CLOSE_COUNT_SELECTOR), style);
+  toggleClass(getElement({ selector: ISSUE_OPEN_COUNT_SELECTOR }), style);
+  toggleClass(getElement({ selector: ISSUE_CLOSE_COUNT_SELECTOR }), style);
 };
 
 const getOpenIssueEventData = () => {
   return {
-    element: getElement(ISSUE_OPEN_COUNT_SELECTOR),
+    element: getElement({ selector: ISSUE_OPEN_COUNT_SELECTOR }),
     eventHandler: () => {
       setIssueQuery({ status: 'open' });
       setActiveFilterStyle();
@@ -38,7 +38,7 @@ const getOpenIssueEventData = () => {
 
 const getClosedIssueEventData = () => {
   return {
-    element: getElement(ISSUE_CLOSE_COUNT_SELECTOR),
+    element: getElement({ selector: ISSUE_CLOSE_COUNT_SELECTOR }),
     eventHandler: () => {
       setIssueQuery({ status: 'close' });
       setActiveFilterStyle();

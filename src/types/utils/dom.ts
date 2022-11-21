@@ -1,6 +1,6 @@
 
 export interface FindElementArgs {
-  fromElement?: Element | Document
+  fromElement?: Element | Document | null
   selector: string
 }
 
