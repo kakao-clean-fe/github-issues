@@ -33,7 +33,11 @@ export class LabelForm extends Component {
         const description = document.querySelector(SELECTOR.LABEL_FORM_DESCRIPTION);
         const color = document.querySelector(SELECTOR.LABEL_FORM_COLOR);
         const newLabel = {name: name.value, color: color.value.substring(1), description: description.value};
-        saveLabels(newLabel).then((result) => setLabels(result.data)).catch(({data: {error}}) => alert(error));
+        saveLabels(newLabel).then((result) => {
+            result
+                .doOnSuccess((res) => setLabels(res.data))
+                .doOnError(({data: {error}}) => alert(error))
+        });
         [name, description, color].forEach((e) => e.value = '');
     }
 

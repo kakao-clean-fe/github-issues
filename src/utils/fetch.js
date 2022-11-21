@@ -1,3 +1,6 @@
+import {FetchError} from "../errors/fetchError.js";
+import {FetchResult} from "../errors/fetchResult.js";
+
 export const fetchIssues = async () => fetchUtils("/issues");
 
 export const fetchLabels = async () => fetchUtils("/labels");
@@ -12,7 +15,11 @@ export const saveLabels = async (newLabel) => {
 export const updateLabels = async (abortSignal) => fetchUtils("/labels-delay", {signal: abortSignal});
 
 const fetchUtils = async (path, config = {method: 'GET'}) => {
-    return await fetch(path, config).then(resolveResponse).catch(rejectResponse);
+    try {
+        return new FetchResult(await fetch(path, config).then(resolveResponse).catch(rejectResponse));
+    } catch (error) {
+        return new FetchResult(undefined, error);
+    }
 }
 
 const resolveResponse = (response) => {
@@ -28,22 +35,11 @@ const resolveResponse = (response) => {
 
 const rejectResponse = (e) => {
     let error;
-    if(e instanceof FetchError) error = e;
+    if (e instanceof FetchError) error = e;
     else {
         const ErrorMsg = e.name === 'AbortError' ? `[Abort Error] ${e}` : `[Request Error] ${e}`;
         error = new FetchError(ErrorMsg);
     }
     console.error(error);
     throw error;
-}
-
-export class FetchError extends Error {
-    data;
-    status;
-    constructor(message = null, status = 0, data = null) {
-        super(message);
-        this.data = data;
-        this.status = status;
-    }
-
 }

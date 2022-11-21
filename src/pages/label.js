@@ -42,10 +42,13 @@ export class LabelPage extends Component {
         const isFetching = !!controller;
         if (isFetching) controller.abort();
         this._props.updateLabelController = new AbortController();
-        updateLabels(this._props.updateLabelController.signal).then(({data: labels}) => {
-            this._props.updateLabelController = null;
-            setLabels(labels);
-        }).catch((e) => e);
+        updateLabels(this._props.updateLabelController.signal).then((result) => {
+            result
+                .doOnSuccess(({data: labels}) => {
+                    this._props.updateLabelController = null;
+                    setLabels(labels);
+                });
+        })
     }
 
     #updateChildAndLabelsCount() {
@@ -63,7 +66,7 @@ export class LabelPage extends Component {
     }
 
     async #initLabels() {
-        const labels = (await fetchLabels()).data;
+        const labels = (await fetchLabels()).get().data;
         setLabels(labels);
         this._initChild(this.#initChild());
     }

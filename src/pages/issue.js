@@ -10,7 +10,7 @@ const setIssues = useSetAtomValue(issuesAtom);
 const setIssuesListener = useSetAtomListener(issuesAtom);
 
 export default async () => {
-    const issues = (await fetchIssues()).data;
+    const issues = (await fetchIssues()).get().data;
     setIssuesListener(fetchIssueAtomListeners);
     setIssues(issues);
     initIssueLayout();
