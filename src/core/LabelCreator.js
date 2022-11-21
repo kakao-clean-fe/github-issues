@@ -28,24 +28,16 @@ export default class LabelCreator {
 
   _createColor() {
     const newColor = createColor();
-    if (!this._labelStore.isSuccess()) {
-      return newColor;
-    }
-
-    if (this._labelStore.every((item) => item.color !== newColor)) {
-      return newColor;
-    }
-
-    return this._createColor();
+    return this._labelStore.every((item) => item.color !== newColor)
+      ? newColor
+      : this._createColor();
   }
 
   _getElement(target = document) {
-    return (id = this._id) => {
-      if (target === document) {
-        return target.getElementById(id);
-      }
-      return target.querySelector(`#${id}`);
-    };
+    return (id = this._id) =>
+      target === document
+        ? target.getElementById(id)
+        : target.querySelector(`#${id}`);
   }
 
   _action(id, action) {
@@ -105,9 +97,11 @@ export default class LabelCreator {
       );
       this._error.value = duplicate ? "이미 등록된 이름입니다." : "";
     });
+
     color.addEventListener(KEYUP, (e) => {
       this._color.value = e.target.value;
     });
+
     description.addEventListener(KEYUP, (e) => {
       this._description.value = e.target.value;
     });
@@ -115,7 +109,9 @@ export default class LabelCreator {
     newColorBtn.addEventListener(CLICK, () => {
       this._color.value = this._createColor();
     });
+
     cancelBtn.addEventListener(CLICK, () => this.clear());
+
     createBtn.addEventListener(CLICK, () => {
       if (this._name.value) {
         this._labelStore.add({
