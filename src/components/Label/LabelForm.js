@@ -5,9 +5,10 @@ import { labelCreateActionDivStr, labelCreateCancelButtonStr, labelCreateSubmitB
 import { querySelector, querySelectorAll } from "../../utils/dom-selector";
 
 export default class LabelForm extends Component{
-  constructor(templateStr, targetQuery, store){
-    super(templateStr, targetQuery);
+  constructor(templateStr, targetQuery, store, appendOption){
+    super(templateStr, targetQuery, appendOption);
     this.store = store;
+    this.toggleForm();
     this.labelInputDiv = new LabelInputDiv(labelInputDivStr, '#new-label-form', store);
 
     this.store.subscribe(() => this.toggleForm());

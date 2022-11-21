@@ -1,13 +1,17 @@
 import { querySelector } from "../utils/dom-selector";
 
 export class Component{
-  constructor(templateStr, targetQuery){
+  constructor(templateStr, targetQuery, appendOption = null){
     this.template = this.convertElement(templateStr);
-    this.render(targetQuery);
+    this.render(targetQuery, appendOption);
   }
-  render(parent){
+  render(parent, appendOption){
     const parentElement = querySelector(parent);
-    parentElement.append(this.template);
+    if(appendOption?.position === 'after') {
+      parentElement.after(this.template);
+    }else {
+      parentElement.append(this.template);
+    }
   }
   convertElement(templateStr){
     const div = document.createElement('div');
