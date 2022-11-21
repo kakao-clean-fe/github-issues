@@ -40,7 +40,7 @@ export const clickEvent = (labelStore) =>
       if (controller) {
         controller.abort();
       }
-      updateLabels();
+      updateLabels(labelStore);
     }
   });
 
@@ -83,11 +83,15 @@ const getNewLabelData = () => {
   return newLabel;
 };
 
-const updateLabels = () => {
+const updateLabels = (labelStore) => {
   controller = new AbortController();
   fetch("/labels-delay", { signal: controller.signal })
     .then((res) => res.json())
-    .then((data) => console.log(data))
+    .then((labelData) => {
+      console.log(labelData);
+      labelStore.removeAll();
+      labelData.forEach((label) => labelStore.add(label));
+    })
     .catch((err) => {
       if (err.name === "AbortError") {
         console.error("AbortError");
