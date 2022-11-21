@@ -4,10 +4,15 @@ import { labelObserver } from '../../viewModel/LabelObserver';
 
 const LabelList = () => {
   const app = FunctionComponent();
-  const { setComponent } = app;
+  const { setComponent, addEventListener } = app;
   const appDiv = document.createElement('div');
-  const { subscribe, getLabelCount, getLabelList } = labelObserver;
+  const { subscribe, getLabelCount, getLabelList, updateLabels } =
+    labelObserver;
   subscribe(app);
+
+  addEventListener('.refresh-labels', 'click', () => {
+    updateLabels();
+  });
 
   return setComponent(
     () =>

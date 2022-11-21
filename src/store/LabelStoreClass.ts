@@ -8,14 +8,13 @@ export interface ILabelCls {
   description: string;
   isEmpty: () => boolean;
   isFull: () => boolean;
-  builder?: () => any;
 }
 @builder('name', 'color', 'description')
 export class LabelCls implements ILabelCls {
   #name: string;
   #color: string;
   #description: string;
-  static builder: any;
+  static builder: (props?: ILabelCls) => void;
   constructor(props = { name: '', color: '', description: '' }) {
     const { name, color, description } = props;
     this.#name = name || '';

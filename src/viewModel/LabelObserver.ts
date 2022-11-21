@@ -13,22 +13,49 @@ const LabelObservable = () => {
       createHidden: hidden,
     });
   };
+  const initLabelList = () =>
+    API.GET<Item[]>({
+      url: './labels',
+      errorMessage: '초기데이터 로딩에 실패했습니다.',
+    }).then((data) => {
+      observer.setData({
+        labelList: data,
+        createHidden: true,
+      });
+    });
   const getCreateHidden = () => observer.getData().createHidden;
   const getLabelList = () => observer.getData().labelList;
   const getLabelCount = () => observer.getData().labelList.length;
-  const addLabel = (label: Label) =>
-    observer.setData({
-      ...observer.getData(),
-      labelList: [...getLabelList(), label],
+  const addLabel = (label: Label) => {
+    const { name, description, color } = label;
+    API.POST<Label[]>({
+      url: './labels',
+      body: { color, name, description },
+    })
+      .then((data) => {
+        observer.setData({
+          ...observer.getData(),
+          labelList: data,
+        });
+      })
+      .catch((e) => {
+        debugger;
+      });
+  };
+  const updateLabels = () => {
+    API.GET<Item[]>({
+      url: './labels-delay',
+      errorMessage: '초기데이터 로딩에 실패했습니다.',
+    }).then((data) => {
+      observer.setData({
+        labelList: data,
+        createHidden: true,
+      });
     });
-  API.GET<Item[]>({
-    url: './data-sources/labels.json',
-    errorMessage: '초기데이터 로딩에 실패했습니다.',
-  }).then((data) => {
-    observer.setData({
-      labelList: data,
-      createHidden: true,
-    });
+  };
+
+  setTimeout(() => {
+    initLabelList();
   });
   return {
     subscribe,
@@ -37,6 +64,7 @@ const LabelObservable = () => {
     getLabelList,
     getLabelCount,
     addLabel,
+    updateLabels,
   };
 };
 const labelObserver = LabelObservable();

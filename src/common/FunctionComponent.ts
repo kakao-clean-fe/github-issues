@@ -60,8 +60,8 @@ const FunctionComponent = (...props): IFunctionComponent => {
         _eventList.forEach((event) => {
           event();
         });
-        afterRenderList.forEach((event) => event());
         _children.forEach((child) => _element.appendChild(child));
+        afterRenderList.forEach((event) => event());
       }
     }
   };

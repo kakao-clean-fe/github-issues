@@ -36,13 +36,15 @@ const ItemObservable = () => {
         .length
     }`;
   const getSelectedFilter = () => observer.getData().selectedFilter;
-  API.GET<Item[]>({
-    url: './data-sources/issues.json',
-    errorMessage: '초기데이터 로딩에 실패했습니다.',
-  }).then((data) => {
-    observer.setData({
-      initData: data,
-      selectedFilter: '',
+  setTimeout(() => {
+    API.GET<Item[]>({
+      url: './issues',
+      errorMessage: '초기데이터 로딩에 실패했습니다.',
+    }).then((data) => {
+      observer.setData({
+        initData: data,
+        selectedFilter: '',
+      });
     });
   });
   const subscribe = observer.subscribe;

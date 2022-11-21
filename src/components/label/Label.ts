@@ -1,5 +1,5 @@
 import FunctionComponent from '../../common/FunctionComponent';
-import LabelCreate from './LabelCreate';
+import LabelCreator from './LabelCreator';
 import LabelHeader from './LabelHeader';
 import LabelList from './LabelList';
 
@@ -14,9 +14,9 @@ const Label = (appDiv: Element) => {
 
   const { setComponent } = app;
   const labelHeader = LabelHeader();
-  const labelCreate = LabelCreate();
+  const labelCreator = LabelCreator();
   const labelList = LabelList();
-  return setComponent(() => '', wrapper, labelHeader, labelCreate, labelList);
+  return setComponent(() => '', wrapper, labelHeader, labelCreator, labelList);
 };
 
 export default Label;
