@@ -9,7 +9,6 @@ import { labelFormStr, labelHeaderStr, labelListStr, updateLabelButtonStr } from
 export default class LabelPage extends Component {
   constructor(templateStr, targetQuery, labelList){
     super(templateStr, targetQuery);
-
     this.store = new LabelStore(labelList);
     this.store.subscribe(() => this.createLabelForm());
     this.header = new Header(labelHeaderStr,'#label-wrapper', this.store);

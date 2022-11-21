@@ -31,11 +31,16 @@ class LabelInputDiv extends Component{
     this.store.subscribe(() => this.updatedLabel());
 
     this.inputs = querySelectorAll(`${this.#childTargetQuery} input`);
-    this.inputs.forEach(inputElement => this.addInputEvent(inputElement));
+    this.inputs.forEach(inputElement => this.initInput(inputElement));
     this.labelCreateActionDiv = new LabelCreateActionDiv(labelCreateActionDivStr, this.#childTargetQuery, store);
     
     this.changeColorButton = querySelector('#new-label-color');
     this.addChangeLabelColorEvent(this.changeColorButton);
+  }
+  initInput(inputElement){
+    const key = LABEL_NAME_TO_KEY[inputElement.name];
+    inputElement.value = this.store.label[key] || '';
+    this.addInputEvent(inputElement);
   }
   addInputEvent(inputElement){
     const event = (e) => {
@@ -62,7 +67,7 @@ class LabelInputDiv extends Component{
   }
   setColorTemplate(){
     const color = this.store.label.color;
-    [ this.changeColorButton, querySelector('#label-preview')]
+    [this.changeColorButton, querySelector('#label-preview')]
       .forEach(element => element.style.backgroundColor = `#${color}`);
     ;
   }

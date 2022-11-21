@@ -3,9 +3,9 @@ import Observer from ".";
 export class LabelStore extends Observer {
   constructor(labelList) {
     super();
-    this.isOpen = false;
-    this.labelList = labelList;
-    this.label = {};
+    this._isOpen = false;
+    this._labelList = labelList;
+    this._label = JSON.parse(localStorage.getItem('NEW_LABEL', {}));
   }
   get isOpen() {
     return this._isOpen;
@@ -32,6 +32,7 @@ export class LabelStore extends Observer {
   }
   set label(label) {
     this._label = label;
+    localStorage.setItem('NEW_LABEL', JSON.stringify(label));
     this.notify(); //등록된 렌더링 함수들 호출
   }
 }
