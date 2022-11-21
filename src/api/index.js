@@ -8,3 +8,14 @@ export const getFetchData = async (fileName) => {
   }
   return;
 }
+
+export const getDataFromMSW = async (path) => {
+  try{
+    const response = await fetch(path);
+    return await response.json();
+  } catch(e){
+    console.log(e);
+    return [];
+  }
+  return;
+}
