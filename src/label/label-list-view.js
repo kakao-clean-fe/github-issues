@@ -15,6 +15,7 @@ export class LabelListView {
   render(labels) {
     $("label-list").innerHTML = "";
     labels.forEach(this._renderLabel.bind(this));
+    $("labels-count").innerText = labels.length + " Labels";
   }
   _renderLabel(label) {
     return pipe(getLabelItemTpl, htmlToElement, (ele) =>
