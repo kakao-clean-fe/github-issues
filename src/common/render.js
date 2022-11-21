@@ -1,9 +1,13 @@
 import { FONT_BOLD, STATUS, HIDDEN, COLOR_POOL} from './const';
 import { getLabelTpl, getIssueTpl, getIssueItemTpl, getLabelItemTpl } from '../tpl';
 import { filterData } from '../init';
+import { store } from '../store/store';
+import { labelObj } from '../init';
 
 export const getAppDiv = () => document.getElementById('app');
 export const getElement = (selector) => document.querySelector(selector);
+export const getElementAll = (selector) => document.querySelectorAll(selector);
+
 
 const clickEventCallback = (listData, status) => {
     getElement('.open-count').classList.add(FONT_BOLD);
@@ -12,11 +16,23 @@ const clickEventCallback = (listData, status) => {
     filterData(listData, status);
 }
 
-const backgroundRandomChange = () => {
+export const initLabelEvents = () => {
+    renderLabelTpl();
+    setLabelFormToggleEvent();
+    setRandomColorChangeEvent();
+    setCreateLableClickEvent();
+    setFormChangeEvent();
+    setCancelLabelClickEvent();
+    backgroundRandomChange();
+}
+
+export const backgroundRandomChange = () => {
     const color = COLOR_POOL.sort(() => Math.random() - 0.5)[0];
 
     getElement('#label-preview').style.backgroundColor = color;
     getElement('#new-label-color').style.backgroundColor = color;
+    getElement('#labelColorValue').value = color;
+    store.setLabelFormValue('labelColorValue', color);
 }
 
 
@@ -79,5 +95,54 @@ export const renderLabelList = (labels) => {
 
 export const renderLabelTpl = () => {
     getAppDiv().innerHTML = getLabelTpl();
+}
+
+export const setCreateLableClickEvent = () => {
+    getElement('#label-create-button').addEventListener('click', (e) => {
+        e.preventDefault();
+
+        labelObj.addLabel();
+    })
+}
+
+export const setCancelLabelClickEvent = () => {
+    getElement('#label-cancel-button').addEventListener('click', () => {
+        
+        const formInputs = getElementAll('#label-input-wrapper input');
+
+        formInputs.forEach((el) => {
+        el.value = '';
+        })
+        
+        store.clearForm();
+        getElement('#new-label-form').classList.toggle(HIDDEN);
+    })
+}
+
+export const setCreateButtonEnable = (isShow) => {
+    const createLabelBtn = getElement('#label-create-button');
+
+    if (isShow) {
+        createLabelBtn.classList.remove('opacity-50');
+        createLabelBtn.classList.add('opacity-100');
+        createLabelBtn.style.cursor = 'pointer';
+        createLabelBtn.disabled = false;
+
+    } else {
+        createLabelBtn.classList.add('opacity-50');
+        createLabelBtn.classList.remove('opacity-100');
+        createLabelBtn.style.cursor = 'not-allowed';
+        createLabelBtn.disabled = true;
+    }
+}
+
+export const setFormChangeEvent = () => {
+    const formInputs = getElementAll('#label-input-wrapper input');
+
+    formInputs.forEach((el) => {
+        el.addEventListener('input', ({target}) => {
+            store.setLabelFormValue(target.id, target.value);
+        })
+    })
 }
 

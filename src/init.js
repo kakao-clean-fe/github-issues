@@ -1,9 +1,9 @@
 import {STATUS} from './common/const';
 import {renderCount, renderItems} from './common/render';
 import {fetchData} from './utils';
+import {Label} from './components/label';
 
-export const fetchIssues = () => fetchData("../data-sources/issues.json");
-export const fetchLabels = () => fetchData("../data-sources/labels.json");
+export const labelObj = new Label();
 
 export const setItemCounts = (listData) => {
     const openedItemCount = listData.filter((item) => item.status === STATUS.OPEN).length;

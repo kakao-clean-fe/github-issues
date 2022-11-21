@@ -124,7 +124,7 @@ export function getLabelTpl() {
       <dl
         class="form-group my-2">
         <dt class=" flex justify-between items-center">
-          <label for="label-name-input" class="f5">Label name</label>
+          <label for="labelNameInput" class="f5">Label name</label>
           <span class="text-sm " data-suffix="remaining" role="none" hidden="">
             50 remaining
           </span>
@@ -132,7 +132,7 @@ export function getLabelTpl() {
         <dd class="relative mt-2">
           <text-expander keys=":" data-emoji-url="/autocomplete/emoji?use_colon_emoji=true">
             <input type="text" data-maxlength="50" autocomplete="off" required="" pattern="^(?!(\.|\.\.)$).*$"
-              id="label-name-input" name="label[name]"
+              id="labelNameInput" name="label[name]"
               class="w-full p-2 base-outer focus:outline-none" placeholder="Label name" value="" >
           </text-expander>
         </dd>
@@ -144,14 +144,14 @@ export function getLabelTpl() {
       <dl
         class="form-group my-2">
         <dt class="flex justify-between items-center ">
-          <label for="label-description-input" class="f5">Description</label>
+          <label for="labelDescriptionInput" class="f5">Description</label>
           <span class="text-sm" data-suffix="remaining"
             role="none" hidden="">
             100 remaining
           </span>
         </dt>
         <dd class="mt-2">
-          <input type="text" id="label-description-input" name="label[description]"
+          <input type="text" id="labelDescriptionInput" name="label[description]"
             class="w-full p-2 base-outer focus:outline-none"
             placeholder="Description" value="" 
             maxlength="100">
@@ -177,7 +177,7 @@ export function getLabelTpl() {
             class="sr-only position-absolute" id="tooltip-1664858299420-7732" aria-hidden="true" role="tooltip">Get
             a new color</tool-tip>
           <div class="ml-2">
-            <input type="text" id="label-color-value" name="label-color[description]"
+            <input type="text" id="labelColorValue" name="label-color[description]"
             class="w-full p-2 base-outer focus:outline-none"
             placeholder="#color" value="" maxlength="100">
           </div>
@@ -189,7 +189,7 @@ export function getLabelTpl() {
       <!--new label actions-->
       <div
         class="form-group my-2 flex mt-10">
-        <button type="button" class="base-outer p-2 mr-4"> Cancel
+        <button id="label-cancel-button" type="button" class="base-outer p-2 mr-4"> Cancel
         </button>
         <button id="label-create-button" type="submit" class="base-outer p-2 mr-4 bg-green-700 opacity-50 text-white" disabled=""> Create label
         </button>
