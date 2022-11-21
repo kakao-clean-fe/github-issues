@@ -10,7 +10,7 @@ import { Label } from '~/types/label';
 export class LabelForm implements Component {
   isEventHandlerInitialized = false;
 
-  get $labelInputWrapper (): Element | null {
+  get $inputWrapper (): Element | null {
     return getElement({
       selector: LABEL_INPUT_WRAPPER
     });
@@ -22,23 +22,23 @@ export class LabelForm implements Component {
     });
   }
 
-  get $createLabelButton (): HTMLButtonElement | null {
+  get $createButton (): HTMLButtonElement | null {
     return getElement({
-      fromElement: this.$labelInputWrapper,
+      fromElement: this.$inputWrapper,
       selector: CREATE_LABEL_BUTTON_SELECTOR
     }) as HTMLButtonElement;
   }
 
-  get $labelNameInput (): HTMLInputElement | null {
+  get $nameInput (): HTMLInputElement | null {
     return getElement({
-      fromElement: this.$labelInputWrapper,
+      fromElement: this.$inputWrapper,
       selector: LABEL_NAME_INPUT_SELECTOR
     }) as HTMLInputElement;
   }
 
   get $cancelButton (): HTMLButtonElement | null {
     return getElement({
-      fromElement: this.$labelInputWrapper,
+      fromElement: this.$inputWrapper,
       selector: CANCEL_CREATE_LABEL_BUTTON
     }) as HTMLButtonElement;
   }
@@ -59,8 +59,8 @@ export class LabelForm implements Component {
   }
 
   initEventHandler (): void {
-    this.addSubmitLabelFormHandler();
-    this.addInputLabelNameHandler();
+    this.addSubmitFormHandler();
+    this.addInputNameHandler();
     this.addClickCancelButtonHandler();
     this.isEventHandlerInitialized = true;
   }
@@ -73,17 +73,17 @@ export class LabelForm implements Component {
     });
   }
 
-  private addInputLabelNameHandler (): void {
+  private addInputNameHandler (): void {
     setEventListenerToElement({
-      element: this.$labelNameInput,
+      element: this.$nameInput,
       event: 'input',
-      eventHandler: this.labelNameInputHandler.bind(this)
+      eventHandler: this.nameInputHandler.bind(this)
     });
   }
 
-  private labelNameInputHandler (event: Event): void {
+  private nameInputHandler (event: Event): void {
     event.stopPropagation();
-    if (this.$labelNameInput === null) {
+    if (this.$nameInput === null) {
       return;
     }
     if (this.isValidForm()) {
@@ -94,42 +94,42 @@ export class LabelForm implements Component {
   }
 
   private isValidForm (): boolean {
-    return !!(this.$labelNameInput?.value.length);
+    return !!(this.$nameInput?.value.length);
   }
 
   private enableCreateLabelButton (): void {
-    if (this.$createLabelButton === null) {
+    if (this.$createButton === null) {
       return;
     }
-    removeClass(this.$createLabelButton, DISABLED_CREATE_BUTTON_CLASS);
-    enableButton(this.$createLabelButton);
+    removeClass(this.$createButton, DISABLED_CREATE_BUTTON_CLASS);
+    enableButton(this.$createButton);
   }
 
   private disableCreateLabelButton (): void {
-    if (this.$createLabelButton === null) {
+    if (this.$createButton === null) {
       return;
     }
-    addClass(this.$createLabelButton, DISABLED_CREATE_BUTTON_CLASS);
-    disableButton(this.$createLabelButton);
+    addClass(this.$createButton, DISABLED_CREATE_BUTTON_CLASS);
+    disableButton(this.$createButton);
   }
 
-  private getLabelFormData (): Label {
+  private getFormData (): Label {
     return {
-      name: this.$labelNameInput?.value ?? '',
+      name: this.$nameInput?.value ?? '',
       description: 'description',
       color: 'red'
     };
   }
 
-  private addSubmitLabelFormHandler (): void {
+  private addSubmitFormHandler (): void {
     setEventListenerToElement({
       element: this.$labelForm,
       event: 'submit',
-      eventHandler: this.submitLabelFormHandler.bind(this)
+      eventHandler: this.submitFormHandler.bind(this)
     });
   }
 
-  private submitLabelForm (event: Event): void {
+  private submitForm (event: Event): void {
     event.stopPropagation();
     event.preventDefault();
     if (!this.isValidForm()) {
@@ -139,14 +139,14 @@ export class LabelForm implements Component {
 
     const newLabels = [
       ...labelStore.state.labels,
-      this.getLabelFormData()
+      this.getFormData()
     ];
 
     labelStore.setLabels(newLabels);
   }
 
-  private submitLabelFormHandler (event: Event): void {
-    this.submitLabelForm(event);
+  private submitFormHandler (event: Event): void {
+    this.submitForm(event);
     this.unmount();
   }
 }
