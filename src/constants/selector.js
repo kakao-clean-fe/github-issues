@@ -17,6 +17,7 @@ export const issueSelector = {
 export const labelSelector = {
   LABEL_COUNT: '#labelCount',
   NEW_LABEL_BUTTON: '#newLabelButton',
+  LABEL_FORM_WRAPPER: '#labelFormWrapper',
   LABEL_INPUT_FORM: '#labelInputForm',
   LABEL_NAME_INPUT: '#label-name-input',
   LABEL_DESCRIPTION_INPUT: '#label-description-input',

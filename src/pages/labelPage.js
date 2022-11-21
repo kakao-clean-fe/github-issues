@@ -38,6 +38,7 @@ export default class LabelPage extends BaseComponent {
 
     // subscribe 등록
     LabelStore.subscribe(SET_LABEL_LIST, this.renderLabels);
+    LabelStore.subscribe(SET_LABEL_LIST, this.renderLabelCount);
     LabelStore.subscribe(SET_LABEL_ITEM, this.validateForm);
     LabelStore.subscribe(ADD_LABEL, this.addLabel);
     LabelStore.subscribe(ADD_LABEL, this.renderLabelCount);
@@ -51,29 +52,6 @@ export default class LabelPage extends BaseComponent {
     // 이벤트 등록
     const newLabelButton = findElement(labelSelector.NEW_LABEL_BUTTON);
     newLabelButton.addEventListener('click', this.onNewLabelButtonClick);
-
-    const labelNameInput = findElement(labelSelector.LABEL_NAME_INPUT);
-    labelNameInput.addEventListener('input', this.onLabelNameInputChange);
-
-    const labelDescriptionInput = findElement(
-      labelSelector.LABEL_DESCRIPTION_INPUT
-    );
-    labelDescriptionInput.addEventListener(
-      'input',
-      this.onLabelDescriptionInputChange
-    );
-
-    const newLabelColorButton = findElement(labelSelector.NEW_LABEL_COLOR);
-    newLabelColorButton.addEventListener(
-      'click',
-      this.onNewLabelColorButtonClick
-    );
-
-    const labelCancelButton = findElement(labelSelector.LABEL_CANCEL_BUTTON);
-    labelCancelButton.addEventListener('click', this.onLabelCancelButtonClick);
-
-    const labelSubmitButton = findElement(labelSelector.LABEL_INPUT_FORM);
-    labelSubmitButton.addEventListener('submit', this.onSubmit);
   };
 
   renderLabelCount = () => {
@@ -108,9 +86,48 @@ export default class LabelPage extends BaseComponent {
     labelItem.attatchTo(findElement(labelSelector.LABEL_LIST), 'beforeend');
   };
 
-  onNewLabelButtonClick = () => {
-    const labelInputForm = findElement(labelSelector.LABEL_INPUT_FORM);
-    labelInputForm.classList.remove('hidden');
+  onNewLabelButtonClick = async () => {
+    const labelFormWrapper = findElement(labelSelector.LABEL_FORM_WRAPPER);
+
+    // Dynamic Import
+    if (!labelFormWrapper.firstChild) {
+      await (async () => {
+        const { default: LabelForm } = await import(
+          '../components/label/labelForm'
+        );
+        const labelForm = new LabelForm();
+        labelForm.attatchTo(labelFormWrapper, 'beforeend');
+      })();
+
+      // 이벤트 등록
+      const labelNameInput = findElement(labelSelector.LABEL_NAME_INPUT);
+      labelNameInput.addEventListener('input', this.onLabelNameInputChange);
+
+      const labelDescriptionInput = findElement(
+        labelSelector.LABEL_DESCRIPTION_INPUT
+      );
+      labelDescriptionInput.addEventListener(
+        'input',
+        this.onLabelDescriptionInputChange
+      );
+
+      const newLabelColorButton = findElement(labelSelector.NEW_LABEL_COLOR);
+      newLabelColorButton.addEventListener(
+        'click',
+        this.onNewLabelColorButtonClick
+      );
+
+      const labelCancelButton = findElement(labelSelector.LABEL_CANCEL_BUTTON);
+      labelCancelButton.addEventListener(
+        'click',
+        this.onLabelCancelButtonClick
+      );
+
+      const labelSubmitButton = findElement(labelSelector.LABEL_INPUT_FORM);
+      labelSubmitButton.addEventListener('submit', this.onSubmit);
+    }
+
+    labelFormWrapper.classList.remove('hidden');
   };
 
   onLabelNameInputChange = (e) => {
@@ -152,8 +169,8 @@ export default class LabelPage extends BaseComponent {
   };
 
   onLabelCancelButtonClick = () => {
-    const labelInputForm = findElement(labelSelector.LABEL_INPUT_FORM);
-    labelInputForm.classList.add('hidden');
+    const labelFormWrapper = findElement(labelSelector.LABEL_FORM_WRAPPER);
+    labelFormWrapper.classList.add('hidden');
   };
 
   onSubmit = (e) => {

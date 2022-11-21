@@ -25,7 +25,9 @@ class App {
 
 window.onload = () => {
   // Running Mock Server
-  worker.start();
+  worker.start({
+    onUnhandledRequest: 'bypass',
+  });
 
   // Running Front App
   const rootContainer = findElement(mainSelector.ROOT);
