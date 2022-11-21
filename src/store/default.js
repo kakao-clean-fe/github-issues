@@ -1,22 +1,27 @@
 import {pipe} from '../util/operator';
+import { ObserverArray } from './observable';
 
 /** STORE */
 export const store = (initialValue) => {
   let currentValue = initialValue;
-  let watchers = [];
+  let watchers = new ObserverArray();
 
   const getValue = () => currentValue;
   const setValue = (newValue) => {
     if (currentValue !== newValue) {
       currentValue = newValue;
-      watchers.forEach(watcher => watcher(newValue));
+      watchers.run(newValue);
     }
   };
   const addWatchers = (newWatchers) => {
-    newWatchers.forEach(watcher => watchers.push(watcher));
+    watchers.add(newWatchers);
   }
 
-  return { getValue, setValue, addWatchers };
+  const removeWatchers = (targetWatchers=[]) => {
+    watchers.remove(targetWatchers);
+  }
+
+  return { getValue, setValue, addWatchers, removeWatchers };
 };
 
 const updateDerivedValue = (upstreams) => (fn) => fn(...upstreams.map(upstream => upstream.getValue()));
@@ -40,6 +45,9 @@ export const createDerivedStore = (fn, ...upstreams) => {
     },
     addWatchers(newWatchers) {
       derived.addWatchers(newWatchers);
+    },
+    removeWatchers(targetWatchers) {
+      derived.removeWatchers(targetWatchers);
     }
   }
 }
