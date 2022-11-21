@@ -16,6 +16,8 @@ let labelPage;
 const initMain = () => {
     initNavBar();
     renderByNavBtnStatus(getNavBtnStatus());
+    import("./labelForm.js")
+        .then(() => console.log("labelForm.js load complete!"));
 }
 
 const initNavBar = () => {

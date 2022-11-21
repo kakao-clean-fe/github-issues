@@ -10,12 +10,10 @@ const setIsLabelLayoutListener = useSetAtomListener(isLabelLayoutInit);
 let labelForm;
 
 export const onIsLabelLayoutTrue = () => {
-    if (getIsLabelLayoutInit())
-        import("./components/label/labelForm.js")
-            .then(() => {
-                if (!labelForm) labelForm = new LabelForm(COMPONENT_KEY.LABEL_FORM, {}, SELECTOR.LABEL_WRAPPER)
-                labelForm.render();
-            });
+    if (getIsLabelLayoutInit()) {
+        if (!labelForm) labelForm = new LabelForm(COMPONENT_KEY.LABEL_FORM, {}, SELECTOR.LABEL_WRAPPER);
+        labelForm.render();
+    }
 }
 
 setIsLabelLayoutListener(onIsLabelLayoutTrue)
