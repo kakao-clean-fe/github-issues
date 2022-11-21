@@ -1,8 +1,8 @@
-import { EVENT_KEY, LABEL_CLASS_NAME } from "../constants";
+import { EVENT_KEY, CLASS_NAME } from "../constants";
 import { getLabelItemTpl, getLabelTpl } from "../tpl";
 import { findByClass, renderLayout, updateUI } from "../utils/helper";
 
-const { ITEM_CNT, ITEM_LIST, SHOW_CREATE } = LABEL_CLASS_NAME;
+const { ITEM_CNT, ITEM_LIST, SHOW_CREATE } = CLASS_NAME["label"];
 
 const renderLabelLayout = renderLayout(getLabelTpl);
 

@@ -4,10 +4,10 @@ import { createColor } from "../utils/helper";
 
 import { LABEL_CREATOR_EVENT } from "../events";
 
-import { EVENT_KEY, HIDDEN, LABEL_CLASS_NAME } from "../constants";
+import { EVENT_KEY, HIDDEN, CLASS_NAME } from "../constants";
 
 const { NAME, COLOR, DESCRIPTION, COLOR_BUTTON, CANCEL_BUTTON, CREATE_BUTTON } =
-  LABEL_CLASS_NAME;
+  CLASS_NAME["label"];
 
 const { KEYUP, CLICK } = EVENT_KEY;
 
