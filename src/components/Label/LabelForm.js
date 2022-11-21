@@ -1,4 +1,5 @@
 import {Button, Component} from "..";
+import { postDataToMSW } from "../../api";
 import { LABEL_COLOR, LABEL_NAME_TO_KEY } from "../../constants";
 import { labelCreateActionDivStr, labelCreateCancelButtonStr, labelCreateSubmitButtonStr, labelInputDivStr } from "../../constants/template-label";
 import { querySelector, querySelectorAll } from "../../utils/dom-selector";
@@ -78,8 +79,6 @@ class LabelInputDiv extends Component{
     return label.name && label.description && label.color ? true : false;
   }
 }
-
-
 class LabelCreateActionDiv extends Component{
   constructor(templateStr, targetQuery, store) {
     super(templateStr, targetQuery);
@@ -101,9 +100,12 @@ class SubmitButton extends Button{
   constructor(templateStr, targetQuery, store) {
     super(templateStr, targetQuery);
     this.state = false;
-    this.setOnClickListener(this.template, (e)=>{
+    this.setOnClickListener(this.template, async (e)=>{
       e.preventDefault();
-      store.addLabelList(store.label);
+      const data = await postDataToMSW('/labels', store.label);
+      if(data){
+        store.labelList = data;
+      }
     });
   }
   setSubmitState(state){
