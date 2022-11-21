@@ -7,12 +7,14 @@ import { LABEL_COLOR } from "../constants/labelColor";
 import { generateColor } from '../utils/label';
 import { addLabelData } from '../common/api';
 import { setLabelData } from "../store/dataStore";
+import { localStorageUtil, resetLocalStorage } from '../utils/localStorage';
+import { LOCAL_STORAGE_KEY } from "../constants/localStorage";
 
 export const LabelCreator = class {
 
-  name = '';
-  description = '';
-  color = '';
+  name = localStorageUtil.getItem(LOCAL_STORAGE_KEY.NAME) || '';
+  description = localStorageUtil.getItem(LOCAL_STORAGE_KEY.DESCRIPTION) || '';
+  color = localStorageUtil.getItem(LOCAL_STORAGE_KEY.COLOR) || '';
   colorIndex = 0;
 
   constructor () {
@@ -23,7 +25,7 @@ export const LabelCreator = class {
   }
 
   get template () {
-    return getLabelCreatorTpl();
+    return getLabelCreatorTpl(this.name, this.description, this.color);
   }
 
 
@@ -55,23 +57,25 @@ export const LabelCreator = class {
     addLabelData({name, description, color});
   }
 
-  onInputLabelName ({target}) {
-    this.name = target.value;
+  onInputLabelName ({target: {value}}) {
+    this.name = value;
+    localStorageUtil.setItem(LOCAL_STORAGE_KEY.NAME, value);
   }
 
-  onInputLabelDesc ({target}) {
-    this.description = target.value;
+  onInputLabelDesc ({target: {value}}) {
+    this.description = value;
+    localStorageUtil.setItem(LOCAL_STORAGE_KEY.DESCRIPTION, value);
   }
 
   onClickColorButton () {
     const {colorIndex, color} = generateColor(LABEL_COLOR, this.colorIndex);
-    /** 색상확인 편의를 위해 미리 #을 붙여서 color에 넣어줄 땐 제거 */
-    const refinedColorString = color.slice(1);
     const labelColorInput = selectElement(SELECTOR.LABEL_COLOR_INPUT);
 
     labelColorInput.value = color;
     this.colorIndex = colorIndex;
-    this.color = refinedColorString;
+    this.color = color;
+
+    localStorageUtil.setItem(LOCAL_STORAGE_KEY.COLOR, color);
   }
 
   onInputLabelColor () {
@@ -83,7 +87,9 @@ export const LabelCreator = class {
 
     const canCreateLabel = this.name && this.description && this.color;
     if (!canCreateLabel) { return; }
-
+    if (this.color.startsWith('#')) {
+      this.color = this.color.slice(1);
+    }
 
     this.createLabel({
       name: this.name,
@@ -92,6 +98,7 @@ export const LabelCreator = class {
     });
 
     this.toggleLabelCreator();
+    resetLocalStorage();
   }
 
   onClickCancelButton () {
