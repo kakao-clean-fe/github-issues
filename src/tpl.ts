@@ -92,6 +92,7 @@ export function getIssueItemTpl (item: Issue): string {
         </li>`;
 }
 
+export const DISABLED_CREATE_BUTTON_CLASS = 'opacity-50';
 export function getLabelTpl (): string {
   return /* html */`
   <div id="label-wrapper" class="w-9/12 m-auto min-w-min">
@@ -193,7 +194,7 @@ export function getLabelTpl (): string {
         class="form-group my-2 flex mt-10">
         <button type="button" class="base-outer p-2 mr-4"> Cancel
         </button>
-        <button id="label-create-button" type="submit" class="base-outer p-2 mr-4 bg-green-700 opacity-50 text-white" disabled=""> Create label
+        <button id="label-create-button" type="submit" class="base-outer p-2 mr-4 bg-green-700 ${DISABLED_CREATE_BUTTON_CLASS} text-white" disabled=""> Create label
         </button>
       </div>
       <!--END new label actions-->
