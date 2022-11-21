@@ -1,20 +1,8 @@
 import { getLabelTpl, getLabelItemTpl } from '/src/tpl';
 import { Q, on, toggleClass, fetchData } from '/src/util/common';
+import { $ } from '/src/util/constant';
 import LabelStore from '/src/store/LabelStore';
 import LabelFormStore from '/src/store/LabelFormStore';
-
-const $ = {
-  LABEL_LIST: 'ul.label-list',
-  LABEL_SHOW_BTN: '.new-label-button',
-  LABEL_HIDE_BTN: '#label-cancel-button',
-  LABEL_FORM: '#new-label-form',
-  INPUT_LABEL_NAME: '#label-name-input',
-  INPUT_LABEL_DESCRIPTION: '#label-description-input',
-  INPUT_LABEL_COLOR: '#label-color-value',
-  LABEL_CREATE_BTN: '#label-create-button',
-  LABEL_COLOR_BTN: '#new-label-color',
-  LABEL_PREVIEW: '#label-preview',
-}
 
 export default class LabelPage {
   constructor(app) {
@@ -22,6 +10,7 @@ export default class LabelPage {
     this.html = getLabelTpl();
     this.labelStore = null;
     this.labelFormStore = null;
+    this.isLabelCreateLazyLoaded = false;
   }
   async init() {
     this.$app.innerHTML = this.html;
@@ -33,9 +22,6 @@ export default class LabelPage {
     this.labelStore = new LabelStore(await fetchData('labels'));
     this.labelStore.subscribe(this.render.bind(this));
     this.render();
-
-    // 새 라벨 추가
-    this.initLabelCreate();
   }
   async render() {
     const data = this.labelStore.labels;
@@ -43,7 +29,16 @@ export default class LabelPage {
   }
   initLabelForm() {
     // 입력 Form 보이기/숨기기
-    on($.LABEL_SHOW_BTN, 'click', () => toggleClass($.LABEL_FORM, 'hidden', false));
+    on($.LABEL_SHOW_BTN, 'click', () => {
+      // 새 라벨 추가 Lazy Load
+      if (!this.isLabelCreateLazyLoaded) {
+        import('/src/lazy/labelCreate').then(({ initLabelCreate }) => {
+          initLabelCreate(this.labelFormStore, this.labelStore);
+          this.isLabelCreateLazyLoaded = true;
+        });
+      }
+      toggleClass($.LABEL_FORM, 'hidden', false);
+    });
     on($.LABEL_HIDE_BTN, 'click', () => toggleClass($.LABEL_FORM, 'hidden', true));
 
     // 입력 이벤트를 Store에 바인딩
@@ -65,16 +60,7 @@ export default class LabelPage {
       this.setColor(color);
     })
   }
-  initLabelCreate() {
-    on($.LABEL_CREATE_BTN, 'click', () => {
-      const newLabel = {
-        name: this.labelFormStore.name,
-        description: this.labelFormStore.description,
-        color: this.labelFormStore.color,
-      }
-      this.labelStore.addLabel(newLabel); // Observer로 render 메소드 호출
-    });
-  }
+  
   setColor(color) {
     Q($.LABEL_COLOR_BTN).style.background = `#${color}`;
     Q($.LABEL_PREVIEW).style.background = `#${color}`;
