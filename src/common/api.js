@@ -1,25 +1,26 @@
 import { ISSUES_URL, LABELS_URL, LABELS_DELAY_URL } from '../constants/api';
+import { setLabelData } from '../store/dataStore';
 
-export const fetchData = async (url = '', init = {}) => {
-  const response = await fetch(url, init);
-
-  return response.json();
-};
+export const fetchData = (url = '', init = {}) => fetch(url, init)
+  .then(response => {
+    if(response.ok) {
+      return response.json();
+    }
+    return response.json().then(error => Promise.reject(error));
+});
 
 export const getIssuesData = () => fetchData(ISSUES_URL);
 
 export const getLabelData = () => fetchData(LABELS_URL, {method: 'GET'});
 
-export const addLabelData = (data) => {
-  return fetchData(LABELS_URL, {
+export const addLabelData = (data) => fetchData(LABELS_URL, {
     method: 'POST',
     body: JSON.stringify(data),
   })
-  .catch(error => {
-    console.log(error);
-    alert('잠시 뒤 다시 시도해주세요.')
-  });
-};
+  .then(newLabelData => {
+    setLabelData(newLabelData)
+  })
+  .catch(({error}) => console.log('error', error));
 
 let controller;
 export const updateLabelData = () => {
@@ -35,5 +36,6 @@ export const updateLabelData = () => {
     method: 'GET',
     signal,
   })
+    .then(updateLabelData => setLabelData(updateLabelData))
     .catch(() => {});
 }

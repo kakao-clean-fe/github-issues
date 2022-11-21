@@ -50,9 +50,9 @@ export const LabelPage = class {
   onClickUpdateLabels () {
     selectElement(SELECTOR.UPDATE_LABEL_BUTTON).addEventListener(EVENT.CLICK, async () => {
       const updatedLabelData = await updateLabelData()
-      if (updatedLabelData) {
-        setLabelData(updateLabelData);
-      }
+      // if (updatedLabelData) {
+      //   setLabelData(updatedLabelData);
+      // }
     });
   }
 }

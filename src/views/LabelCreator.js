@@ -6,6 +6,7 @@ import { HIDDEN } from '../constants/status';
 import { LABEL_COLOR } from "../constants/labelColor";
 import { generateColor } from '../utils/label';
 import { addLabelData } from '../common/api';
+import { setLabelData } from "../store/dataStore";
 
 export const LabelCreator = class {
 
@@ -50,9 +51,8 @@ export const LabelCreator = class {
     addClickEventListener(SELECTOR.CANCEL_LABEL_BUTTON, this.onClickCancelButton.bind(this));
   }
 
-  async createLabel ({name, description, color}) {
-    const newLabel = await addLabelData({name, description, color});
-    console.log(newLabel);
+  createLabel ({name, description, color}) {
+    addLabelData({name, description, color});
   }
 
   onInputLabelName ({target}) {
