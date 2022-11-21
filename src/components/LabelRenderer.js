@@ -17,7 +17,8 @@ class LabelRenderer {
   render() {
     this.labelStore.subscribe((label) => {
       const labelWrapper = $(LABEL.WRAPPER);
-      renderUtils.setItems(labelWrapper, label, MENU.LABEL);
+      const item = { target: labelWrapper, data: label, type: MENU.LABEL };
+      renderUtils.setItems(item);
     });
   }
 }

@@ -1,7 +1,9 @@
 import { classUtils, labelUtils } from "../utils";
 import { $, $$, COMMON, LABEL, LABEL_CLASS } from "../constants";
 import Label from "../components/Label";
+import Labels from "../store/labels";
 
+const app = $("#app");
 let controller = null;
 
 window.onbeforeunload = (e) => {
@@ -10,39 +12,51 @@ window.onbeforeunload = (e) => {
   // return "Leaving the page";
 };
 
-export const inputEvent = () =>
-  $("#app").addEventListener("input", (e) => {
-    const target = e.target;
-    const targetInput = LABEL_CLASS.INPUT.every((className) =>
-      target.closest("dl").classList.contains(className)
-    );
-    if (targetInput && labelUtils.checkInput()) {
-      labelUtils.uselabelBtn();
-    }
-  });
+export const inputEvent = () => {
+  if (!window.labelInputListener) {
+    app.addEventListener("input", labelInputListener);
+    window.labelInputListener = true;
+  }
+};
 
-export const clickEvent = (labelStore) =>
-  $("#app").addEventListener("click", (e) => {
-    const target = e.target;
-    if (
-      target.classList.contains(LABEL.NEW_BTN) ||
-      target.parentNode.classList.contains(LABEL.NEW_BTN)
-    ) {
-      loadStorageData();
-      showLabel();
-    } else if (target.id === LABEL.NEW_COLOR) {
-      renderColor(target);
-    } else if (target.id === LABEL.CREATE_BTN) {
-      createLabel(labelStore);
-    } else if (target.id === LABEL.CANCEL_BTN) {
-      clear();
-    } else if (target.classList.contains(LABEL.REFRESH_BTN)) {
-      if (controller) {
-        controller.abort();
-      }
-      updateLabels(labelStore);
+export const clickEvent = (labelStore) => {
+  if (!window.labelClickListener) {
+    app.addEventListener("click", (e) => labelClickListener(e, labelStore));
+    window.labelClickListener = true;
+  }
+};
+
+const labelInputListener = (e) => {
+  const target = e.target;
+  const targetInput = LABEL_CLASS.INPUT.every((className) =>
+    target.closest("dl").classList.contains(className)
+  );
+  if (targetInput && labelUtils.checkInput()) {
+    labelUtils.uselabelBtn();
+  }
+};
+
+const labelClickListener = (e, labelStore) => {
+  const target = e.target;
+  if (
+    target.classList.contains(LABEL.NEW_BTN) ||
+    target.parentNode.classList.contains(LABEL.NEW_BTN)
+  ) {
+    loadStorageData();
+    showLabel();
+  } else if (target.id === LABEL.NEW_COLOR) {
+    renderColor(target);
+  } else if (target.id === LABEL.CREATE_BTN) {
+    createLabel(labelStore);
+  } else if (target.id === LABEL.CANCEL_BTN) {
+    clear();
+  } else if (target.classList.contains(LABEL.REFRESH_BTN)) {
+    if (controller) {
+      controller.abort();
     }
-  });
+    updateLabels(labelStore);
+  }
+};
 
 const loadStorageData = () => {
   const storedData = localStorage.getItem(LABEL.KEY)

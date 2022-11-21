@@ -23,9 +23,19 @@ export const renderIssue = async () => {
       target.classList.contains(ISSUE_CLASS.CLOSE_COUNT)
     ) {
       target.classList.add(COMMON.FONT_BOLD);
-      renderUtils.setItems(ulTarget, isOpen ? opens : closed, MENU.ISSUE);
+      const item = {
+        target: ulTarget,
+        data: isOpen ? opens : closed,
+        type: MENU.ISSUE,
+      };
+      renderUtils.setItems(item);
     }
   });
 
-  renderUtils.setItems(ulTarget, opens, MENU.ISSUE);
+  const item = {
+    target: ulTarget,
+    data: opens,
+    type: MENU.ISSUE,
+  };
+  renderUtils.setItems(item);
 };
