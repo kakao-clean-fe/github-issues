@@ -28,7 +28,7 @@ class LabelModel extends Observer {
   }
 
   async initState() {
-    const labels = await fetchBody("/data-sources/labels.json");
+    const labels = await fetchBody("/labels");
     this.labels = labels;
   }
 }
