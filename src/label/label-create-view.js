@@ -6,9 +6,13 @@ export class LabelCreateView {
   labelFormSubmit$ = new Observable();
   labelFormChange$ = new Observable();
   constructor() {
+    if ($("new-label-form").classList.contains("hidden")) {
+      $("new-label-form").classList.remove("hidden");
+    }
+
     $("new-label-button").addEventListener(
       "click",
-      this._onClickToggleCreateButton.bind(this)
+      this.onClickToggleCreateButton.bind(this)
     );
     $("new-label-color").addEventListener(
       "click",
@@ -54,7 +58,7 @@ export class LabelCreateView {
       $("new-label-form").classList.add("hidden");
     }
   }
-  _onClickToggleCreateButton() {
+  onClickToggleCreateButton() {
     this._toggleCreateView();
   }
   _onClickRefreshColorButton() {
