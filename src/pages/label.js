@@ -43,4 +43,8 @@ export const LabelPage = class {
     const newLabelButton = selectElement(SELECTOR.NEW_LABEL_BUTTON);
     newLabelButton.addEventListener(EVENT.CLICK, this.toggleLabelCreator)
   }
+
+  onClickUpdateLabels () {
+
+  }
 }

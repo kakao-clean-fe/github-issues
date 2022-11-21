@@ -134,7 +134,7 @@ export function getLabelTpl() {
 
     </ul>
   </div>
-    <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
+    <button class="refresh-labels base-outer p-2 mt-2 float-right _update_label_button">update labels</button>
 </div>
   `
 }
