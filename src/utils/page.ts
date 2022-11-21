@@ -1,7 +1,5 @@
 import { reduceArray } from './array';
-import { removeClass } from '~/utils/dom';
-import { pipe } from '~/utils/functional-util';
-import { getElement } from '~/store/element-store';
+import { removeClass, addClass } from '~/utils/dom';
 
 export const makeTemplate = <Item>({ arr, templateFunc }: { arr: Item[], templateFunc: (item: Item) => string }): string => {
   return reduceArray({
@@ -12,5 +10,5 @@ export const makeTemplate = <Item>({ arr, templateFunc }: { arr: Item[], templat
 };
 
 const DISPLAY_NONE_CLASS_NAME = 'hidden';
-const setDisplayBlock = (element: Element | null): void => removeClass(element, DISPLAY_NONE_CLASS_NAME);
-export const displayBlockBySelector = pipe(getElement, setDisplayBlock);
+export const addElementToDOM = (element: Element | null): void => removeClass(element, DISPLAY_NONE_CLASS_NAME);
+export const removeElementFromDOM = (element: Element | null): void => addClass(element, DISPLAY_NONE_CLASS_NAME);
