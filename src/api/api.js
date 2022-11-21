@@ -10,9 +10,8 @@ const handleError = (err) => {
 
 const getData = async (fileName) => {
   const res = await fetch(`/${fileName}`).catch(handleError);
-  console.log("res", res);
   if (res.ok) {
-    return res.json();
+    return await res.json();
   } else {
     alert("잠시 뒤 다시 시도해주세요");
   }
