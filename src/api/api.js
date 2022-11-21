@@ -1,5 +1,5 @@
 const getData = async (fileName) => {
-  const jsonData = await fetch(`../data-sources/${fileName}.json`);
+  const jsonData = await fetch(`/${fileName}`);
   return await jsonData.json();
 };
 
