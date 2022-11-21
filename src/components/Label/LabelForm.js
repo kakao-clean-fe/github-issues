@@ -39,7 +39,7 @@ class LabelInputDiv extends Component{
   }
   initInput(inputElement){
     const key = LABEL_NAME_TO_KEY[inputElement.name];
-    inputElement.value = this.store.label[key] || '';
+    inputElement.value = this.store.label && this.store.label[key] || '';
     this.addInputEvent(inputElement);
   }
   addInputEvent(inputElement){
