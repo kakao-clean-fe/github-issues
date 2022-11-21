@@ -19,7 +19,6 @@ export const getDataFromMSW = async (path) => {
     console.log(e);
     return [];
   }
-  return;
 }
 
 export const postDataToMSW = async (path, data) => {

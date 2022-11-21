@@ -129,6 +129,9 @@ const labelListBodyStr = `
   <ul class="label-list ml-auto text-sm bg-white">
   </ul>
 `;
+const updateLabelButtonStr = `
+  <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
+`;
 export {
   labelPageStr,
   labelHeaderStr,
@@ -141,4 +144,5 @@ export {
   labelListStr,
   labelListHeaderStr,
   labelListBodyStr,
+  updateLabelButtonStr,
 }
