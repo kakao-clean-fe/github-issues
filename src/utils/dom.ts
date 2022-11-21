@@ -16,6 +16,13 @@ export const setEventListenerToElement = ({ element, event, eventHandler }: SetE
   }
 };
 
+export const clearEventListenerToElement = ({ element, event, eventHandler }: SetEventListenerToElementArgs): void => {
+  if (element === null) {
+    return;
+  }
+  element.removeEventListener(event, eventHandler);
+};
+
 const setEventToEventListener = (event: string) => (args: Omit<SetEventListenerToElementArgs, 'event'>) => setEventListenerToElement({ event, ...args });
 
 export const addClickEventListener = setEventToEventListener('click');
