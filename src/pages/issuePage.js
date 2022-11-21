@@ -43,7 +43,7 @@ export default class IssuePage extends BaseComponent {
     this.attatchTo(this.$container);
 
     // subscribe 등록
-    IssueStore.subscribe(SET_ISSUE_LIST, this.loadIssuePage);
+    IssueStore.subscribe(SET_ISSUE_LIST, this.renderIssues);
     IssueStore.subscribe(SET_OPEN_COUNT, this.renderOpenCount);
     IssueStore.subscribe(SET_CLOSE_COUNT, this.renderCloseCount);
     IssueStore.subscribe(SET_CURRENT_TAB, this.renderIssues);
@@ -74,15 +74,6 @@ export default class IssuePage extends BaseComponent {
         this.changeTab(tabType);
       });
     });
-  };
-
-  loadIssuePage = () => {
-    this.removeFrom(this.$container);
-    this.setElement(getIssueTpl());
-    this.attatchTo(this.$container);
-
-    // 이슈 리스트 렌더링
-    this.renderIssues();
   };
 
   filterIssues = (status) => {

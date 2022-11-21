@@ -37,9 +37,9 @@ export default class LabelPage extends BaseComponent {
     this.attatchTo(this.$container);
 
     // subscribe 등록
-    LabelStore.subscribe(SET_LABEL_LIST, this.loadLabelPage);
+    LabelStore.subscribe(SET_LABEL_LIST, this.renderLabels);
     LabelStore.subscribe(SET_LABEL_ITEM, this.validateForm);
-    LabelStore.subscribe(ADD_LABEL, this.renderLabels);
+    LabelStore.subscribe(ADD_LABEL, this.addLabel);
     LabelStore.subscribe(ADD_LABEL, this.renderLabelCount);
 
     // action 호출
@@ -76,15 +76,6 @@ export default class LabelPage extends BaseComponent {
     labelSubmitButton.addEventListener('submit', this.onSubmit);
   };
 
-  loadLabelPage = () => {
-    this.removeFrom(this.$container);
-    this.setElement(getLabelTpl());
-    this.attatchTo(this.$container);
-
-    // 라벨 리스트 렌더링
-    this.renderLabels();
-  };
-
   renderLabelCount = () => {
     const labelCountArea = findElement(labelSelector.LABEL_COUNT);
     labelCountArea.innerText = `${
@@ -109,6 +100,12 @@ export default class LabelPage extends BaseComponent {
       const labelItem = new LabelItem(label);
       labelItem.attatchTo(findElement(labelSelector.LABEL_LIST), 'beforeend');
     });
+  };
+
+  addLabel = () => {
+    const newLabel = LabelStore.getState().labelItem;
+    const labelItem = new LabelItem(newLabel);
+    labelItem.attatchTo(findElement(labelSelector.LABEL_LIST), 'beforeend');
   };
 
   onNewLabelButtonClick = () => {

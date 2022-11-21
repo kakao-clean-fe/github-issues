@@ -9,10 +9,6 @@ export class BaseComponent {
 
   mounted = () => {};
 
-  removeFrom = (parent) => {
-    parent.removeChild(this._element);
-  };
-
   setElement = (htmlString) => {
     const template = document.createElement('template');
     template.innerHTML = htmlString;
