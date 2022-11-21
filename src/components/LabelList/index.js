@@ -14,6 +14,18 @@ export class LabelList extends Component {
     }
   }
 
+  onclickRefreshLabelsButton () {
+    this.fetchDelayLabel();
+  }
+
+  get events () {
+    return [{
+      selector: '.refresh-labels',
+      event: 'click',
+      callback: () => this.onclickRefreshLabelsButton(),
+    }]
+  }
+
   get template () {
     return `
     <div id="labels-wrapper" class="m-auto base-outer mt-6 bg-slate-100">
@@ -44,6 +56,7 @@ export class LabelList extends Component {
           </li>`}).join('')
         }
     </ul>
+    <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
   </div>`
   }
 }
