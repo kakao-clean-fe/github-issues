@@ -1,17 +1,18 @@
-import Model from '../models/labels';
 import {Label} from "../types";
 import LabelView from "../view/label";
+import labelModel, { LabelModelType } from "../models/labels";
+import {Observer} from "../observer";
 
 export type LabelPresenterType = Omit<LabelPresenter, 'notifyLoaded'>;
-export type LabelContactType = Pick<LabelPresenter, 'notify'>;
 
-export default class LabelPresenter {
+export default class LabelPresenter implements Observer {
     private view: LabelView;
-    private model;
+    private model: LabelModelType;
 
     public constructor(view: LabelView) {
         this.view = view;
-        this.model = Model(this);
+        this.model = labelModel;
+        this.model.register(this);
         this.loadLabelList = this.loadLabelList.bind(this);
         this.getLabelList = this.getLabelList.bind(this);
     }
@@ -21,12 +22,12 @@ export default class LabelPresenter {
     }
 
     public getLabelList() {
-        const issues: Array<Label> = this.model.getResource();
+        const issues: Array<Label> = this.model.getResource;
         return issues;
     }
 
     public appendLabelList(label: Label) {
-        this.model.setResource([...this.model.getResource(), label]);
+        this.model.setResource = [...this.model.getResource, label];
     }
 
     public notify(labels: Array<Label>) {
