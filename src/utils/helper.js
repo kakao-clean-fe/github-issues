@@ -14,6 +14,7 @@ const toHtml = (text) =>
 export const toFetch = (path, options) =>
   fetch(path, options).then((res) => {
     if (res.status < 200 || res.status >= 300) {
+      console.error(res);
       throw res;
     }
     return res.json();

@@ -1,6 +1,5 @@
 import Store from "../lib/Store";
 import LabelList from "../core/LabelList";
-import LabelCreateUI from "../core/LabelCreator";
 
 import { CLASS_NAME } from "../constants";
 import { toFetch } from "../utils/helper";
@@ -12,8 +11,16 @@ const initializeLabel = async (target) => {
   const label = new Store(items);
 
   const listUI = new LabelList(label, target, () => {
-    const itemUI = new LabelCreateUI(CLASS_NAME["label"].ADD_FORM, label);
-    listUI.addEvent(() => itemUI.toggle());
+    import("../core/LabelCreator")
+      .then((module) => module.default)
+      .then((LabelCreateUI) => {
+        const itemUI = new LabelCreateUI(CLASS_NAME["label"].ADD_FORM, label);
+        listUI.addEvent(() => itemUI.toggle());
+        itemUI.toggle();
+      })
+      .catch((err) => {
+        alert(err);
+      });
   });
 
   listUI.updateItems();

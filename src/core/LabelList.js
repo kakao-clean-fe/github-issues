@@ -21,7 +21,10 @@ LabelList.prototype.render = function () {
   const openEl = find(ITEM_CNT);
 
   this._renderItems = updateUI(getLabelItemTpl, listEl, [openEl], ["Labels"]);
-  this._done();
+  const removeEvent = this.addEvent(() => {
+    this._done();
+    removeEvent();
+  });
 };
 
 LabelList.prototype.updateItems = function () {
@@ -35,10 +38,13 @@ LabelList.prototype.addEvent = function (callback) {
   const find = findByClass(this._target);
   const newLabelBtn = find(SHOW_CREATE);
 
-  newLabelBtn.addEventListener(EVENT_KEY.CLICK, (e) => {
+  const handleClick = (e) => {
     e.preventDefault();
     callback();
-  });
+  };
+
+  newLabelBtn.addEventListener(EVENT_KEY.CLICK, handleClick);
+  return () => newLabelBtn.removeEventListener(EVENT_KEY.CLICK, handleClick);
 };
 
 export default LabelList;
