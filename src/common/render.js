@@ -1,36 +1,43 @@
 import { FONT_BOLD, STATUS, HIDDEN, COLOR_POOL} from './const';
 import { getLabelTpl, getIssueTpl, getIssueItemTpl, getLabelItemTpl } from '../tpl';
 import { filterData } from '../init';
+import { store } from '../store/store';
+import { labelObj } from '../init';
 
 export const getAppDiv = () => document.getElementById('app');
+export const getElement = (selector) => document.querySelector(selector);
+export const getElementAll = (selector) => document.querySelectorAll(selector);
 
-const getListUl = () => document.querySelector('.issue-list ul');
-const getOpenCountDiv = () => document.querySelector(".open-count");
-const getCloseCountDiv = () =>  document.querySelector(".close-count");
-const getLabelFormTpl = () => document.querySelector("#new-label-form");
-const getNewLabelButton = () => document.querySelector(".new-label-button");
-const getLabelCountDiv = () => document.querySelector("#label-count");
-const getLabelPreviewDiv = () => document.querySelector("#label-preview");
-const getColorChangeButton = () => document.querySelector("#new-label-color");
-const getLabelListTpl = () => document.querySelector("#labels-wrapper .label-list");
 
 const clickEventCallback = (listData, status) => {
-    getOpenCountDiv().classList.add(FONT_BOLD);
-    getCloseCountDiv().classList.remove(FONT_BOLD);
+    getElement('.open-count').classList.add(FONT_BOLD);
+    geElement('.close-count').classList.remove(FONT_BOLD);
 
     filterData(listData, status);
 }
 
-const backgroundRandomChange = () => {
+export const initLabelEvents = () => {
+    renderLabelTpl();
+    setLabelFormToggleEvent();
+    setRandomColorChangeEvent();
+    setCreateLableClickEvent();
+    setFormChangeEvent();
+    setCancelLabelClickEvent();
+    backgroundRandomChange();
+}
+
+export const backgroundRandomChange = () => {
     const color = COLOR_POOL.sort(() => Math.random() - 0.5)[0];
 
-    getLabelPreviewDiv().style.backgroundColor = color;
-    getColorChangeButton().style.backgroundColor = color;
+    getElement('#label-preview').style.backgroundColor = color;
+    getElement('#new-label-color').style.backgroundColor = color;
+    getElement('#labelColorValue').value = color;
+    store.setLabelFormValue('labelColorValue', color);
 }
 
 
 export const renderItem = (item) => {
-    getListUl().innerHTML += item;
+    getElement('.issue-list ul').innerHTML += item;
 };
 
 export const renderItems = (items) => {
@@ -44,16 +51,16 @@ export const renderItems = (items) => {
 }
 
 export const renderCount = (openCount, closeCount) => {
-    getOpenCountDiv().innerHTML = `${openCount} Opened`;
-    getCloseCountDiv().innerHTML = `${closeCount} Closed`;
+    getElement('.open-count').innerHTML = `${openCount} Opened`;
+    geElement('.close-count').innerHTML = `${closeCount} Closed`;
 }
 
 export const setEventListener = (listData) => {
-    getOpenCountDiv().addEventListener('click', () => {
+    getElement('.open-count').addEventListener('click', () => {
         clickEventCallback(listData, STATUS.OPEN);
     });
 
-    getCloseCountDiv().addEventListener('click', () => {
+    geElement('.close-count').addEventListener('click', () => {
         clickEventCallback(listData, STATUS.CLOSE);
     })
 
@@ -61,17 +68,17 @@ export const setEventListener = (listData) => {
 }
 
 export const setLabelFormToggleEvent = () => {
-    getNewLabelButton().addEventListener('click', () => {
-        getLabelFormTpl().classList.toggle(HIDDEN);
+    getElement('.new-label-button').addEventListener('click', () => {
+        getElement('#new-label-form').classList.toggle(HIDDEN);
     })
 }
 
 export const renderLabelCount = (count) => {
-    getLabelCountDiv().innerHTML = `${count} Labels`;
+    getElement('#label-count').innerHTML = `${count} Labels`;
 }
 
 export const setRandomColorChangeEvent = () => {
-    getColorChangeButton().addEventListener('click', () => {
+    getElement('#new-label-color').addEventListener('click', () => {
         backgroundRandomChange();
     })
 }
@@ -83,10 +90,59 @@ export const renderLabelList = (labels) => {
         labelsTpl += getLabelItemTpl({ name, color, description })
     });
 
-    getLabelListTpl().innerHTML = labelsTpl;
+    getElement('#labels-wrapper .label-list').innerHTML = labelsTpl;
 }
 
 export const renderLabelTpl = () => {
     getAppDiv().innerHTML = getLabelTpl();
+}
+
+export const setCreateLableClickEvent = () => {
+    getElement('#label-create-button').addEventListener('click', (e) => {
+        e.preventDefault();
+
+        labelObj.addLabel();
+    })
+}
+
+export const setCancelLabelClickEvent = () => {
+    getElement('#label-cancel-button').addEventListener('click', () => {
+        
+        const formInputs = getElementAll('#label-input-wrapper input');
+
+        formInputs.forEach((el) => {
+        el.value = '';
+        })
+        
+        store.clearForm();
+        getElement('#new-label-form').classList.toggle(HIDDEN);
+    })
+}
+
+export const setCreateButtonEnable = (isShow) => {
+    const createLabelBtn = getElement('#label-create-button');
+
+    if (isShow) {
+        createLabelBtn.classList.remove('opacity-50');
+        createLabelBtn.classList.add('opacity-100');
+        createLabelBtn.style.cursor = 'pointer';
+        createLabelBtn.disabled = false;
+
+    } else {
+        createLabelBtn.classList.add('opacity-50');
+        createLabelBtn.classList.remove('opacity-100');
+        createLabelBtn.style.cursor = 'not-allowed';
+        createLabelBtn.disabled = true;
+    }
+}
+
+export const setFormChangeEvent = () => {
+    const formInputs = getElementAll('#label-input-wrapper input');
+
+    formInputs.forEach((el) => {
+        el.addEventListener('input', ({target}) => {
+            store.setLabelFormValue(target.id, target.value);
+        })
+    })
 }
 
