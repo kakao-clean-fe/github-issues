@@ -4,7 +4,6 @@ import { LabelList } from '../views/LabelList';
 import { selectElement, toggleClass } from '../utils/dom';
 import { SELECTOR } from '../constants/selector';
 import { EVENT } from '../constants/event';
-import { LabelCreator } from '../views/LabelCreator';
 import { HIDDEN } from '../constants/status';
 import { updateLabelData } from '../common/api';
 import { setLabelData } from '../store/dataStore';
@@ -28,9 +27,13 @@ export const LabelPage = class {
 
   initLabelChildrenView () {
     const labelList = new LabelList(this.labelData);
-    const labelCreator = new LabelCreator();
 
     this.initEvent();
+  }
+
+  async initLabelCreatorView () {
+    const { LabelCreator } = await import('../views/LabelCreator');
+    const labelCreator = new LabelCreator();
   }
 
   initEvent () {
@@ -44,15 +47,14 @@ export const LabelPage = class {
 
   onClickNewLabel () {
     const newLabelButton = selectElement(SELECTOR.NEW_LABEL_BUTTON);
-    newLabelButton.addEventListener(EVENT.CLICK, this.toggleLabelCreator)
+    newLabelButton.addEventListener(EVENT.CLICK, async () => {
+      await this.initLabelCreatorView();
+    });
   }
 
   onClickUpdateLabels () {
     selectElement(SELECTOR.UPDATE_LABEL_BUTTON).addEventListener(EVENT.CLICK, async () => {
-      const updatedLabelData = await updateLabelData()
-      // if (updatedLabelData) {
-      //   setLabelData(updatedLabelData);
-      // }
+      await updateLabelData();
     });
   }
 }
