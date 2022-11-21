@@ -191,7 +191,7 @@ export function getLabelTpl() {
       <!--new label actions-->
       <div
         class="form-group my-2 flex mt-10">
-        <button type="button" class="base-outer p-2 mr-4"> Cancel
+        <button id="label-cancel-button" type="button" class="base-outer p-2 mr-4"> Cancel
         </button>
         <button id="label-create-button" type="submit" class="base-outer p-2 mr-4 bg-green-700 opacity-50 text-white" disabled=""> Create label
         </button>
@@ -230,7 +230,10 @@ export function getLabelItemTpl({ name, color, description }) {
   return `
             <li class="label-item flex items-center ml-4 py-3 justify-between border-b ">
                 <div class="issue-title flex"> 
-                    <span class="rounded-lg border p-1 px-2" style="background-color:#${color}">${name}</span> 
+                    <span class="rounded-lg border p-1 px-2" style="background-color:#${color.replace(
+                      "#",
+                      ""
+                    )}">${name}</span> 
                 </div>
                 <div class="issue-description ">${description}</div>
                 <div class="issue-description ">3 issues </div>
