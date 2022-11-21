@@ -22,19 +22,19 @@ export default class Store extends Observer {
     this._status = "success";
   }
 
-  get isError() {
+  isError() {
     return this._status === "error";
   }
 
-  get isIdle() {
+  isIdle() {
     return this._status === "idle";
   }
 
-  get isLoading() {
+  isLoading() {
     return this._status === "loading";
   }
 
-  get isSuccess() {
+  isSuccess() {
     return this._status === "success";
   }
 
@@ -43,7 +43,7 @@ export default class Store extends Observer {
       return;
     }
     this._items.push(item);
-    if (this.isSuccess) {
+    if (this.isSuccess()) {
       this.notify(this);
     }
   }
@@ -61,7 +61,7 @@ export default class Store extends Observer {
       return;
     }
     this._items = this.filter((item) => targetItem !== item);
-    if (this.isSuccess) {
+    if (this.isSuccess()) {
       this.notify(this);
     }
   }

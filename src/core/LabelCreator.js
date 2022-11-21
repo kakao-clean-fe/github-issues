@@ -28,7 +28,7 @@ export default class LabelCreator {
 
   _createColor() {
     const newColor = createColor();
-    if (!this._labelStore.isSuccess) {
+    if (!this._labelStore.isSuccess()) {
       return newColor;
     }
 
