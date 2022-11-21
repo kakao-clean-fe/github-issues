@@ -1,5 +1,5 @@
 import { ProxyStore } from './proxy';
-import { Observable } from './observable';
+import { Observable, ObserverArray } from './observable';
 import { fetchStoreData } from '../util/feature';
 
 export const colorList = [
@@ -14,7 +14,7 @@ export const colorList = [
 function createLabelStore(initialValue) {
   // Observable의 constructor 로직 실행
   Observable.call(this, initialValue);
-  this.addObserverList = [];
+  this.addObserverList = new ObserverArray(); // 라벨 추가에 대한 observer
   this.httpRequest = fetchStoreData(this);
 }
 /**
@@ -52,15 +52,17 @@ createLabelStore.prototype.add = async function(newLabel) {
 }
 
 createLabelStore.prototype.subscribeAdd = function(observers = []) {
-  observers.forEach(observer => this.addObserverList.push(observer));
+  this.addObserverList.add(observers);
 }
+
 createLabelStore.prototype.notifyAddObservers = function(newValue) {
-  this.addObserverList.forEach(observer => observer(newValue));
+  this.addObserverList.run(newValue);
 }
+
 /** override */
 createLabelStore.prototype.unsubscribe = function(observers = []) {
-  this.observerList = this.observerList.filter(_observer => !observers.includes(_observer));
-  this.addObserverList = this.addObserverList.filter(_observer => !observers.includes(_observer));
+  this.observerList.remove(observers);
+  this.addObserverList.remove(observers);
 }
 
 export const labelStore$ = new createLabelStore([]);

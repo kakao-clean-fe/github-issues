@@ -1,22 +1,10 @@
 import { showLabelFormFirst } from "../const";
 import { colorList } from "./label";
+import { ObserverArray } from "./observable";
 
 /**
  * new Label Form을 dynamic import하기 위해 store 함수 분리
  */
-
-function ObserverArray() {
-  this.observers = [];
-}
-
-ObserverArray.prototype.add = function(_observers = []) {
-  _observers.forEach(observer => this.observers.push(observer));
-}
-
-ObserverArray.prototype.run = function(value) {
-  value !== undefined && this.observers.forEach(observer => observer(value));
-}
-
 const initialFormData = {
   isCreating: showLabelFormFirst,
   name: '',
