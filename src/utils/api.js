@@ -22,6 +22,13 @@ const abortSignalController = () => {
   }
 }
 
+const FetchMethod = {
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
+  DELETE: 'DELETE'
+}
+
 export const commonAPI = (() => {
   const request = (url, option = {}) => asyncPipe(
     () => fetch(url, option),
@@ -61,10 +68,10 @@ export const commonAPI = (() => {
 
   return {
     get: (url, option) => {
-      return commonFetch({url, method: 'GET', option});
+      return commonFetch({url, method: FetchMethod.GET, option});
     },
     post: (url, body, option) => {
-      return commonFetch({url, method: 'POST', body: JSON.stringify(body), option})
+      return commonFetch({url, method: FetchMethod.POST, body: JSON.stringify(body), option})
     }
   }
 })()
