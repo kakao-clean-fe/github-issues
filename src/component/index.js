@@ -30,7 +30,7 @@ export default class Component {
   setState(newState) {
     this.state = {
       ...this.state,
-      ...newState,
+      ...newState
     };
     this._render();
   }
@@ -44,15 +44,22 @@ export default class Component {
   }
   
   _render() {
-    if (this.template) {
-      this.target.removeChild(this.template);
-    }
+    const prevTemplate = this.template;
     this.render();
-    if (!this.template) {
-      return;
-    }
-    this.target.appendChild(this.template);
+    this._replaceDOM(prevTemplate);
     this.setListeners();
+  }
+  
+  _replaceDOM(prevTemplate) {
+    if(prevTemplate && this.template) {
+      return this.target.replaceChild(this.template, prevTemplate);
+    } 
+
+    if(!prevTemplate) {
+      return this.target.appendChild(this.template);
+    }
+
+    return this.target.removeChild(prevTemplate);
   }
 
   setListeners() {
