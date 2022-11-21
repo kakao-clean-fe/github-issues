@@ -1,17 +1,17 @@
-import { worker } from './mocks/browser';
-import { getElement } from './utils/element';
-import Component from './core/component';
-import { LabelMaker } from './components/LabelMaker';
-import { LabelList } from './components/LabelList';
-import { labelStoreMixin } from './core/mixin/labelStore';
+import { worker } from '../mocks/browser';
+import { getElement } from '../utils/element';
+import Component from '../core/component';
+import { LabelMaker } from '../components/LabelMaker';
+import { LabelList } from '../components/LabelList';
+import { labelStoreMixin } from '../core/mixin/labelStore';
 
 worker.start();
 
-class Main extends Component {
+export default class LabelPage extends Component {
   static getInstance(...args) {
-    Object.assign(Main.prototype, labelStoreMixin);
+    Object.assign(LabelPage.prototype, labelStoreMixin);
 
-    return new Main(...args);
+    return new LabelPage(...args);
   }
 
   onClickNewLabelButton () {
@@ -63,4 +63,4 @@ class Main extends Component {
   }
 }
 
-Main.getInstance(getElement('#app')).render();
+LabelPage.getInstance(getElement('#app')).render();

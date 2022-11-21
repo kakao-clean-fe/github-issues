@@ -1,15 +1,15 @@
-import {issueTemplate} from './template/issue';
-import issueResponse from '../data-sources/issues.json';
-import IssueList from './components/issueList';
-import IssueHeader from './components/IssueHeader';
-import IssueInnerWrapper from './components/IssueInnerWrapper';
-import { getElement } from './utils/element';
-import { STATUS } from './type/issue';
-import Component from './core/component';
+import {issueTemplate} from '../template/issue';
+import issueResponse from '../../data-sources/issues.json';
+import IssueList from '../components/issueList';
+import IssueHeader from '../components/IssueHeader';
+import IssueInnerWrapper from '../components/IssueInnerWrapper';
+import { getElement } from '../utils/element';
+import { STATUS } from '../type/issue';
+import Component from '../core/component';
 
-class Main extends Component {
+export default class IssuePage extends Component {
   static getInstance(...args) {
-    return new Main(...args)
+    return new IssuePage(...args)
   }
 
   created () {    
@@ -50,4 +50,4 @@ class Main extends Component {
   }
 }
 
-Main.getInstance(getElement('#app')).render();
+IssuePage.getInstance(getElement('#app')).render();
