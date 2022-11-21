@@ -20,7 +20,10 @@ export const addLabelData = (data) => fetchData(LABELS_URL, {
   .then(newLabelData => {
     setLabelData(newLabelData)
   })
-  .catch(({error}) => console.log('error', error));
+  .catch(error => {
+    console.error('error', error);
+    alert('잠시 후 다시 시도해주세요.');
+  });
 
 let controller;
 export const updateLabelData = () => {
