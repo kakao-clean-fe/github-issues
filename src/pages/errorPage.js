@@ -2,7 +2,7 @@
 import { BaseComponent } from '../components/component';
 
 // Templates
-import { getErrorTpl } from '../tpl';
+import { getErrorTpl } from '../template/error';
 
 export default class ErrorPage extends BaseComponent {
   constructor($container) {

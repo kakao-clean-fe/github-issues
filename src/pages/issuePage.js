@@ -3,7 +3,7 @@ import { BaseComponent } from '../components/component';
 import { IssueItem } from '../components/issue/issueItem';
 
 // Templates
-import { getIssueTpl } from '../tpl';
+import { getIssueTpl } from '../template/issue';
 
 // Constants
 import { issueSelector } from '../constants/selector';

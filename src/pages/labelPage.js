@@ -1,9 +1,9 @@
 // Components
 import { BaseComponent } from '../components/component';
-import { LabelItem } from '../components/label/labelItem';
+import LabelItem from '../components/label/labelItem';
 
 // Templates
-import { getLabelTpl } from '../tpl';
+import { getLabelTpl } from '../template/label';
 
 // Constants
 import { labelSelector } from '../constants/selector';
