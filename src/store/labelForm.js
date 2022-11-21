@@ -1,5 +1,4 @@
 import { showLabelFormFirst } from "../const";
-import { colorList } from "../const";
 import { newLabelColorStore$ } from "./color";
 import { ObserverArray } from "./observable";
 

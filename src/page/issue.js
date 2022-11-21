@@ -4,7 +4,7 @@ import {activateTabClass, openCountSelector, closeCountSelector, openIssueTabSel
 import {issueStore$,statusStore$, activatedIssuesStore$ } from '../store/issue.js'
 import {$, clearElement, renderPageInApp, setRenderTarget, toggleClass} from '../util/dom';
 import {OPEN, CLOSE} from '../const';
-import { fetchIssues } from './effects';
+import { fetchIssues } from '../store/effects';
 
 const clickTabHandler = (status) => () => statusStore$.setValue(status);
 
