@@ -31,16 +31,12 @@ const LabelObservable = () => {
     API.POST<Label[]>({
       url: './labels',
       body: { color, name, description },
-    })
-      .then((data) => {
-        observer.setData({
-          ...observer.getData(),
-          labelList: data,
-        });
-      })
-      .catch((e) => {
-        debugger;
+    }).then((data) => {
+      observer.setData({
+        ...observer.getData(),
+        labelList: data,
       });
+    });
   };
   const updateLabels = () => {
     API.GET<Item[]>({

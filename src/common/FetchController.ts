@@ -52,8 +52,6 @@ class FetchController {
       .catch((error) => {
         if (FetchController.errorHandler !== null) {
           FetchController.errorHandler(error);
-        } else {
-          throw error;
         }
       })
       .finally(() => {

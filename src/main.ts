@@ -1,7 +1,6 @@
 import { clickEventListener } from './common/util';
 import Issue from './components/issue/Issue';
 import { worker } from '../mocks/browser';
-const Label = import('./components/label/Label.js');
 const appDiv = document.querySelector('#app');
 const issueBtn = document.querySelector('nav button:nth-child(1)');
 const labelBtn = document.querySelector('nav button:nth-child(2)');

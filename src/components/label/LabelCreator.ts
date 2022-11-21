@@ -18,7 +18,11 @@ const LabelCreator = () => {
   const { subscribe, setCreateHidden, getCreateHidden, addLabel } =
     labelObserver;
   subscribe(app);
-  let newLabel: ILabelCls = new LabelCls.builder().build();
+  let newLabel: ILabelCls = new LabelCls.builder()
+    .setData('name', localStorage.getItem('name'))
+    .setData('color', localStorage.getItem('color'))
+    .setData('description', localStorage.getItem('description'))
+    .build();
   const setCreateLabelBtnEnabled =
     (createLabelBtn: HTMLButtonElement) => (hidden: boolean) => {
       if (hidden) {
@@ -75,8 +79,6 @@ const LabelCreator = () => {
       newLabel = new LabelCls.builder(newLabel)
         .setData('color', replacedColor)
         .build();
-      console.log(newLabel);
-      // newLabel = new LabelBuilder(newLabel).setColor(replacedColor).build();
       createLabelBtnEnabled(!newLabel.isFull());
       if (remainSec === 0) {
         clearInterval(interval);
@@ -88,7 +90,18 @@ const LabelCreator = () => {
     e.preventDefault();
     addLabel(newLabel);
     newLabel = new LabelCls.builder().build();
+    localStorage.clear();
   });
+
+  addAfterRender(() => {
+    (getElement('#label-name-input') as HTMLInputElement).value = newLabel.name;
+    (getElement('#label-description-input') as HTMLInputElement).value =
+      newLabel.description;
+    (
+      getElement('#label-color-value') as HTMLInputElement
+    ).value = `#${newLabel.color}`;
+  });
+
   return setComponent(
     () => getLabelCreateTpl(getCreateHidden()),
     document.createElement('div')
