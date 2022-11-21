@@ -1,11 +1,7 @@
 import { ProxyStore } from './proxy';
 import { Observable, ObserverArray } from './observable';
-import { fetchStoreData } from '../util/feature';
-
-export const colorList = [
-  '#DC3535', '#f97516', '#fcd34d', '#22c55e', '#EE6983',
-  '#38bef8', '#4649FF', '#fde047', '#eef1ff', '#b1b2ff',
-];
+import { fetchStoreData, getFormStorage } from '../util/feature';
+import { colorList } from '../const';
 
 /**
  * week2 객체 지향 프로그래밍
@@ -16,6 +12,7 @@ function createLabelStore(initialValue) {
   Observable.call(this, initialValue);
   this.addObserverList = new ObserverArray(); // 라벨 추가에 대한 observer
   this.httpRequest = fetchStoreData(this);
+  this.formStorage = getFormStorage();
 }
 /**
  * Object.create(object) creates an object with a prototype of the
@@ -47,8 +44,10 @@ createLabelStore.prototype.add = async function(newLabel) {
    * 전체 라벨을 그린다면 fetchStoreData 함수 > POST일 때 setValue 추가
    */
   const newLabelRes = data[data.length-1];
+
   this.value.push(newLabelRes);
   this.notifyAddObservers(newLabelRes);
+  this.formStorage.remove();
 }
 
 createLabelStore.prototype.subscribeAdd = function(observers = []) {

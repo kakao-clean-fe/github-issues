@@ -1,16 +1,45 @@
 import { labelFormSelector, createLabelButtonSelector, formColorValueSelector, formNameSelector, formHiddenClass, labelPreviewTextContentSelector, formDescriptionSelector } from "../template/selector"
 import { $, activateButton, deactivateButton, toggleClass } from "../util/dom"
 import {labelStore$, newLabelColorStore$} from '../store/label';
-import { isValid } from "../util/feature";
+import { getFormStorage, isValid } from "../util/feature";
 import {formData$, formHandlers} from "../store/labelForm";
+import { TEMP_LABEL_FORM_DATA_KEY } from "../const";
 
 /**
  * dom 관련, add event listener
  */
 export class LabelFormComponent {
+  /**
+   * observer 등록, 이벤트 핸들러 등록
+   */
   constructor() {
+    this.formStorage = getFormStorage();
+
     this.addObservers();
     this.addFormEventListener();
+    this.checkLocalStorageFormData();
+  }
+
+  /**
+   * 로컬스토리지에 캐시된 폼 데이터가 있다면 화면에 렌더
+   */
+  checkLocalStorageFormData() {
+    const _value = this.formStorage.get();
+
+    if (!_value) {
+      return;
+    }
+    
+    const value = JSON.parse(_value);
+    
+    let needToActivateCreateButton = false;
+
+    Object.entries(value).forEach(([key, value]) => {
+      formData$[key] = value;
+      value && (needToActivateCreateButton = true);
+    })
+
+    needToActivateCreateButton ? this.activateCreateButton(true) : this.activateCreateButton(false);
   }
 
   initLabelForm() {

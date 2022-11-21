@@ -1,5 +1,6 @@
-import { showLabelFormFirst } from "../const";
-import { colorList } from "./label";
+import { showLabelFormFirst, TEMP_LABEL_FORM_DATA_KEY } from "../const";
+import { colorList } from "../const";
+import { getFormStorage } from "../util/feature";
 import { ObserverArray } from "./observable";
 
 /**
@@ -23,6 +24,22 @@ export const formHandlers = {
   }
 }
 
+const _formStorage = getFormStorage();
+const formStorage = {
+  set(prop, value) {
+    if (prop === 'isCreating') {
+      return;
+    }
+
+    const oldVal = _formStorage.get() ?? JSON.stringify({});
+
+    const newValue = JSON.parse(oldVal);
+    newValue[prop] = value ?? '';
+
+    _formStorage.set(JSON.stringify(newValue));
+  }
+}
+
 export const formData$ = new Proxy(initialFormData, {
   set(obj, prop, value, receiver) {
     if (obj[prop] === value) {
@@ -32,6 +49,7 @@ export const formData$ = new Proxy(initialFormData, {
     prop === 'name' && formHandlers.setNameObservers.run(value);
     prop === 'isCreating' && formHandlers.setIsCreatingObservers.run(value);
 
+    formStorage.set(prop, value)
     Reflect.set(obj, prop, value, receiver);
     return true;
   }

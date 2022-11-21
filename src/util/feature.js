@@ -1,4 +1,4 @@
-import { ABORT_ERROR, GET, POST } from "../const";
+import { ABORT_ERROR, GET, POST, TEMP_LABEL_FORM_DATA_KEY } from "../const";
 import { multipleArgsPipe, pipe } from "./operator";
 
 export const getRandom = (arr) => {
@@ -10,6 +10,25 @@ export const isHexColor = (value) => {
 }
 
 export const isValid = (target) => target.validity.valid;
+
+/**
+ * local storage 관련
+ */
+export const getTargetStorageItem = (key) => {
+  return {
+    get() {
+      return localStorage.getItem(key);
+    },
+    set(value) {
+      localStorage.setItem(key, value);
+    },
+    remove() {
+      localStorage.removeItem(key);
+    }
+  }
+}
+
+export const getFormStorage = () => getTargetStorageItem(TEMP_LABEL_FORM_DATA_KEY);
 
 /**
  * http service 관련
