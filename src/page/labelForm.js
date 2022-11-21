@@ -1,5 +1,5 @@
-import { labelFormSelector, createLabelButtonSelector, formColorValueSelector, formNameSelector, formHiddenClass, labelPreviewTextContentSelector, formDescriptionSelector } from "../template/selector"
-import { $, activateButton, deactivateButton, toggleClass } from "../util/dom"
+import { labelFormSelector, createLabelButtonSelector, formColorValueSelector, formNameSelector, formHiddenClass, labelPreviewTextContentSelector, formDescriptionSelector, labelCreateCancelButtonSelector, newLabelColorSelector } from "../template/selector"
+import { $, activateButton, addClickEventListener, deactivateButton, toggleClass } from "../util/dom"
 import {labelStore$, newLabelColorStore$} from '../store/label';
 import { getFormStorage, isValid } from "../util/feature";
 import {formData$, formHandlers} from "../store/labelForm";
@@ -56,6 +56,7 @@ export class LabelFormComponent {
     formData$.description = '';
   
     this.activateCreateButton(false);
+    this.formStorage.remove();
   }
 
   renderFormName(value) {
@@ -121,6 +122,16 @@ export class LabelFormComponent {
     labelStore$.add({name, color, description});
   }
 
+  updateLabelColor() {
+    formData$.color = newLabelColorStore$.store.next;
+  }
+
+  cancelForm() {
+    formData$.isCreating = !formData$.isCreating;
+
+    this.initForm();
+  }
+
   addFormEventListener() {
     // name
     $(formNameSelector).addEventListener('input', this.addNameInputListener.bind(this));
@@ -130,6 +141,11 @@ export class LabelFormComponent {
     $(formDescriptionSelector).addEventListener('input', this.addDescriptionInputListener);
     // submit
     $(labelFormSelector).addEventListener('submit', this.addLabel);
+
+    // color selector
+    addClickEventListener(newLabelColorSelector, () => this.updateLabelColor());
+    // cancel 버튼
+    addClickEventListener(labelCreateCancelButtonSelector, this.cancelForm.bind(this))
   }
 };
 

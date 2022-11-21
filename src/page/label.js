@@ -1,6 +1,6 @@
 import { getLabelItemTpl, getLabelTpl } from '../template/tpl';
 import { labelPreviewSelector, newLabelColorSelector, newLabelBtnSelector, labelListContainerSelector, labelCountSelector, labelCreateCancelButtonSelector, formColorValueSelector, updateLabelSelector} from '../template/selector';
-import { $ ,addClickEventListener,addTargetsListener,clearElement, renderPageInApp, setRenderTarget } from '../util/dom';
+import { $ ,addClickEventListener, clearElement, renderPageInApp, setRenderTarget } from '../util/dom';
 import { labelStore$, newLabelColorStore$ } from '../store/label';
 import { compose, pipe } from '../util/operator';
 import { formData$ } from '../store/labelForm';
@@ -35,8 +35,9 @@ export class LabelPage {
     this.#unsubscribeList = [_renderLabels, _renderLabelItem, this.renderLabelCount];
   }
 
-  addUpdateLabelsEventListener() {
-    addClickEventListener(updateLabelSelector, (e) => labelStore$.updateLabels());
+  addLabelPageEventListener() {
+    addClickEventListener(newLabelBtnSelector, () => this.toggleLabelForm()),
+    addClickEventListener(updateLabelSelector, () => labelStore$.updateLabels());
   }
 
   /**
@@ -49,15 +50,11 @@ export class LabelPage {
     // 한 번 쓰는 함수는 지역 함수로 정의
     const renderWrapper = () => renderPageInApp(getLabelTpl());
     const renderInitialLabelColor = () => this.renderLabelColor(newLabelColorStore$.store.cur);
-    const addEventListeners = pipe(
-      this.addNewLabelFormListener.bind(this), // form 관련 이벤트 리스너
-      this.addUpdateLabelsEventListener.bind(this) // 하단 update labels
-    );
 
     pipe(
       renderWrapper,
       renderInitialLabelColor,
-      addEventListeners,
+      this.addLabelPageEventListener.bind(this),
       // test용 임시, new form 보이기
       // () => this.toggleLabelForm(),
     )();
@@ -87,20 +84,6 @@ export class LabelPage {
     if (this.checkLabelFormExist()) {
       formData$.isCreating = !formData$.isCreating;
     }
-  }
-
-  updateLabelColor() {
-    formData$.color = newLabelColorStore$.store.next;
-  }
-
-  /**
-   * add Event Listener
-   */
-  addNewLabelFormListener() {
-    // color 새로고침
-    $(newLabelColorSelector).addEventListener('click', this.updateLabelColor);
-  
-    addTargetsListener([$(newLabelBtnSelector),$(labelCreateCancelButtonSelector)], this.toggleLabelForm.bind(this));
   }
 
   // store에 watcher로 > 버튼, 라벨 프리뷰에 색 입히기

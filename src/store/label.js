@@ -1,6 +1,6 @@
 import { ProxyStore } from './proxy';
 import { Observable, ObserverArray } from './observable';
-import { fetchStoreData, getFormStorage } from '../util/feature';
+import { fetchStoreData } from '../util/feature';
 import { colorList } from '../const';
 
 /**
@@ -12,7 +12,6 @@ function createLabelStore(initialValue) {
   Observable.call(this, initialValue);
   this.addObserverList = new ObserverArray(); // 라벨 추가에 대한 observer
   this.httpRequest = fetchStoreData(this);
-  this.formStorage = getFormStorage();
 }
 /**
  * Object.create(object) creates an object with a prototype of the
@@ -47,7 +46,6 @@ createLabelStore.prototype.add = async function(newLabel) {
 
   this.value.push(newLabelRes);
   this.notifyAddObservers(newLabelRes);
-  this.formStorage.remove();
 }
 
 createLabelStore.prototype.subscribeAdd = function(observers = []) {
