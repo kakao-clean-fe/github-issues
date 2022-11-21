@@ -68,7 +68,6 @@ export default class LabelCreator {
     if (target) {
       target.classList.toggle(HIDDEN);
     }
-    return this;
   }
 
   clear() {

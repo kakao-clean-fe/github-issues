@@ -40,13 +40,12 @@ export default class Store extends Observer {
 
   add(item) {
     if (this.hasItem(item)) {
-      return this;
+      return;
     }
     this._items.push(item);
     if (this.isSuccess) {
       this.notify(this);
     }
-    return this;
   }
 
   get items() {
@@ -58,13 +57,13 @@ export default class Store extends Observer {
   }
 
   remove(targetItem) {
-    if (this.hasItem(item)) {
-      this._items = this.filter((item) => targetItem !== item);
-      if (this.isSuccess) {
-        this.notify(this);
-      }
+    if (!this.hasItem(item)) {
+      return;
     }
-    return this;
+    this._items = this.filter((item) => targetItem !== item);
+    if (this.isSuccess) {
+      this.notify(this);
+    }
   }
 
   map(callbackfn) {
@@ -77,7 +76,6 @@ export default class Store extends Observer {
 
   forEach(callbackfn) {
     this._items.forEach(callbackfn);
-    return this;
   }
   every(predicate) {
     return this._items.every(predicate);
