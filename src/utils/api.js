@@ -23,16 +23,24 @@ const abortSignalController = () => {
 }
 
 export const commonAPI = (() => {
-  const request = (url, option = {}) => asyncPipe(() => fetch(url, option), response => response.ok ? response.json() : Promise.reject(response.json()))(url, option);
+  const request = (url, option = {}) => asyncPipe(
+    () => fetch(url, option),
+    response => {
+      if(response.ok) {
+        return response.json();
+      }
+      return response.json().then(error => Promise.reject(error))
+    }
+  )(url, option);
 
   const handleResponse = (response) => {
-    return response;
+    return Promise.resolve(response);
   }
 
-  const handleError = (response) => {
-    console.error(response);
+  const handleError = (error) => {
+    console.error(error);
 
-    Promise.reject(response.json());
+    return Promise.reject(error);
   }
 
   const {hasSignal, getSignal, handleAbortSignal} = abortSignalController();

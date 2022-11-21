@@ -29,7 +29,7 @@ export const labelStoreMixin = {
   fetchLabels () {
     const LABEL_API = '/labels';
 
-    commonAPI.get(LABEL_API)
+    return commonAPI.get(LABEL_API)
       .then(data => {
         this.setLabelList(data);
       })
@@ -38,7 +38,7 @@ export const labelStoreMixin = {
     const SIGNAL_KEY = 'fetchDelayLabel';
     const LABEL_DELAY_API = '/labels-delay';
   
-    commonAPI.get(LABEL_DELAY_API, {signalKey: SIGNAL_KEY})
+    return commonAPI.get(LABEL_DELAY_API, {signalKey: SIGNAL_KEY})
       .then(data => {
         this.setLabelList(data);
       })
@@ -46,7 +46,7 @@ export const labelStoreMixin = {
   fetchAddLabel (label) {
     const LABEL_API = '/labels';
 
-    commonAPI.post(LABEL_API, label)
+    return commonAPI.post(LABEL_API, label)
     .then(data => {
       this.setLabelList(data);
     })

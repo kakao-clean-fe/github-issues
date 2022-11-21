@@ -30,6 +30,9 @@ class Main extends Component {
     };
 
     this.fetchAddLabel(label)
+      .catch(({error: errorMessage}) => {
+        alert(errorMessage);
+      })
   }
 
   initState () {
