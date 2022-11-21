@@ -1,5 +1,6 @@
 import Component from "../../core/component"
 import { labelStoreMixin } from "../../core/mixin/labelStore";
+import { storage, STORAGE_KEY } from "../../utils/storage";
 
 export class LabelMaker extends Component {
   static getInstance (...args) {
@@ -10,20 +11,37 @@ export class LabelMaker extends Component {
 
   onChangeLabelName ({target: {value}}) {
     this.setLabelName(value);
+
+    storage.setItem(STORAGE_KEY.LABEL_NAME, value);
   }
 
   onChangeDescription ({target: {value}}) {
     this.setDescription(value);
+  
+    storage.setItem(STORAGE_KEY.DESCRIPTION, value);
   }
 
   onChangeColor ({target: {value}}) {
     this.setColor(value);
+  
+    storage.setItem(STORAGE_KEY.COLOR, value);
   }
 
   onClickChangeColorButton () {
-    const randomHexColor = Math.floor(Math.random() * 16777215).toString(16);
+    const randomHexColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 
-    this.setColor(`#${randomHexColor}`)
+    this.setColor(randomHexColor)
+    storage.setItem(STORAGE_KEY.COLOR, randomHexColor);
+  }
+
+  created () {
+    const labelName = storage.getItem(STORAGE_KEY.LABEL_NAME) || '';
+    const description = storage.getItem(STORAGE_KEY.DESCRIPTION) || '';
+    const color = storage.getItem(STORAGE_KEY.COLOR) || '';
+
+    this.setLabelName(labelName);
+    this.setDescription(description);
+    this.setColor(color);
   }
 
   initState () {
