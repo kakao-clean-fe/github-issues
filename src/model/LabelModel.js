@@ -1,37 +1,49 @@
 import { fetchBody } from "../utils";
 import Observer from "./observer";
-
+const initialForm = {
+  name: "",
+  description: "",
+  color: "#BE185D",
+};
 class LabelModel extends Observer {
   constructor() {
     super();
     this._labels = [];
+    this.setState({
+      labels: [],
+      labelForm: initialForm,
+    });
     this.initState();
   }
 
-  get labels() {
-    return this._labels;
-  }
-  
-  set labels(newLabels) {
-    this._labels = newLabels;
-    this.notify(this._labels)
-  }
-
   addLabel(label) {
-    this.labels.push(label);
-    this.notify(this.labels);
+    this.setState({
+      ...this.state,
+      labels: this.state.labels.concat(label)
+    })
   }
 
   removeLabel(label) {
-    this.labels = this.labels.filter(l => l !== label);
-    this.notify(this.labels);
+    this.setState({
+      ...this.state,
+      labels: this.state.labels.filter((l) => l !== label)
+    })
   }
 
+  initLabelForm() {
+    this.setLabelForm(labelForm);
+  }
+
+  setLabelForm(labelFrom) {
+    this.setState({
+      ...this.state,
+      labelFrom,
+    });
+  }
   async initState() {
     const labels = await fetchBody("/labels");
-    this.labels = labels;
+    this.addLabel(labels);
   }
 }
-
 
 export default LabelModel;

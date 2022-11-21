@@ -36,7 +36,7 @@ export default class Labels extends Component {
       labelForm: initialForm,
     }),
       this._bindMethod();
-    this.model.subscribe(this.setLabel);
+    this.model.subscribe(({labels}) => this.setLabel(labels));
   }
 
   _bindMethod() {
