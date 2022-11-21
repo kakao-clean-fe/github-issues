@@ -14,13 +14,17 @@ export const labelStore = {
     watch(refObject.labels, effectFunction);
   },
 
+  setLabels (labels: Labels) {
+    this.state.labels = labels;
+  },
+
   async fetchLabels (): Promise<Labels> {
     return await getApi<Labels>({ url: '/data-sources/labels.json' });
   },
 
   fetchAndSetLabels () {
     this.fetchLabels()
-      .then((labels: Labels) => { this.state.labels = labels; })
+      .then((labels: Labels) => { this.setLabels(labels); })
       .catch((error: Error) => error);
   }
 
