@@ -1,22 +1,27 @@
 import {Issue} from "../types";
-import {IssueContactType} from "../presenter/issue";
 import {readIssues} from "../request";
+import {BaseModel} from "./base";
 
-let resource: Array<Issue> = [];
+export { type IssueModel as IssueModelType };
 
-const model = (issueContact: IssueContactType) => {
-    const getResource = () => resource;
-    const setResource = (payload: Array<Issue>) => resource = payload;
+class IssueModel extends BaseModel<Array<Issue>> {
+    public constructor() {
+        super([]);
+    }
 
-    const loadIssue = () => {
-        if (!resource.length) issueContact.notifyLoaded(resource);
-        readIssues().then(issues => {
-            resource = issues;
-            issueContact.notifyLoaded(resource);
-        });
-    };
+    get getResource(): Array<Issue> {
+        return this.resource;
+    }
 
-    return { getResource, setResource, loadIssue }
+    set setResource(payload: Array<Issue>) {
+        this.resource = payload;
+        this.notify(this.resource);
+    }
+
+    public loadIssue() {
+        if (!this.resource.length) this.notify(this.resource);
+        readIssues().then(issues => this.setResource = issues);
+    }
 }
 
-export default model;
+export default new IssueModel();
