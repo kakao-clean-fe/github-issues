@@ -18,3 +18,4 @@ export const LABEL_INPUT_WRAPPER = '#label-input-wrapper';
 export const LABEL_NAME_INPUT_SELECTOR = '#label-name-input';
 export const LABEL_DESCRIPTION_INPUT_SELECTOR = '#label-description-input';
 export const LABEL_COLOR_INPUT_SELECTOR = '#label-color-value';
+export const CANCEL_CREATE_LABEL_BUTTON = '#cancel-create-label';

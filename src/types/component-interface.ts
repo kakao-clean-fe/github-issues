@@ -1,7 +1,9 @@
 export interface Component {
   parent?: Element | null
+  isEventHandlerInitialized?: boolean
   init: (...args: unknown[]) => void
   render: (...args: unknown[]) => void
-  initEventHandler?: () => void
   unmount?: (...args: unknown[]) => void
+  initEventHandler?: () => void
+  clearEventHandler?: () => void
 }

@@ -192,7 +192,7 @@ export function getLabelTpl (): string {
       <!--new label actions-->
       <div
         class="form-group my-2 flex mt-10">
-        <button type="button" class="base-outer p-2 mr-4"> Cancel
+        <button id="cancel-create-label" type="button" class="base-outer p-2 mr-4"> Cancel
         </button>
         <button id="label-create-button" type="submit" class="base-outer p-2 mr-4 bg-green-700 ${DISABLED_CREATE_BUTTON_CLASS} text-white" disabled=""> Create label
         </button>

@@ -1,14 +1,14 @@
-import { LABEL_FORM_SELECTOR, CREATE_LABEL_BUTTON_SELECTOR, LABEL_NAME_INPUT_SELECTOR, LABEL_INPUT_WRAPPER, LABEL_DESCRIPTION_INPUT_SELECTOR, LABEL_COLOR_INPUT_SELECTOR } from '~/constants/selector';
+import { LABEL_FORM_SELECTOR, CREATE_LABEL_BUTTON_SELECTOR, LABEL_NAME_INPUT_SELECTOR, LABEL_INPUT_WRAPPER, LABEL_DESCRIPTION_INPUT_SELECTOR, LABEL_COLOR_INPUT_SELECTOR, CANCEL_CREATE_LABEL_BUTTON } from '~/constants/selector';
 import { addElementToDOM, removeElementFromDOM } from '~/utils/page';
 import type { Component } from '~/types/component-interface';
-import { addClass, disableButton, enableButton, removeClass, setEventListenerToElement } from '~/utils/dom';
+import { addClass, disableButton, enableButton, removeClass, setEventListenerToElement, clearEventListenerToElement } from '~/utils/dom';
 import { getElement } from '~/store/element-store';
 import { DISABLED_CREATE_BUTTON_CLASS } from '~/tpl';
 import { labelStore } from '~/store/label-store';
 import { Label } from '~/types/label';
 
 export class LabelForm implements Component {
-  readonly DISABLED_CREATE_BUTTON_CLASS = 'opacity-50';
+  isEventHandlerInitialized = false;
 
   get $labelInputWrapper (): Element | null {
     return getElement({
@@ -36,22 +36,81 @@ export class LabelForm implements Component {
     }) as HTMLInputElement;
   }
 
+  get $cancelButton (): HTMLButtonElement | null {
+    return getElement({
+      fromElement: this.$labelInputWrapper,
+      selector: CANCEL_CREATE_LABEL_BUTTON
+    }) as HTMLButtonElement;
+  }
+
   init (): void {
     this.render();
-    this.initEventHandler();
+    if (!this.isEventHandlerInitialized) {
+      this.initEventHandler();
+    }
   }
 
   render (): void {
     addElementToDOM(this.$labelForm);
   }
 
+  unmount (): void {
+    removeElementFromDOM(this.$labelForm);
+    this.clearEventHandler();
+  }
+
   initEventHandler (): void {
     this.addSubmitLabelFormHandler();
     this.addInputLabelNameHandler();
+    this.addClickCancelButtonHandler();
+    this.isEventHandlerInitialized = true;
   }
 
-  unmount (): void {
-    removeElementFromDOM(this.$labelForm);
+  clearEventHandler (): void {
+    clearEventListenerToElement({
+      element: this.$labelNameInput,
+      event: 'input',
+      eventHandler: this.labelNameInputHandler.bind(this)
+    });
+
+    clearEventListenerToElement({
+      element: this.$labelForm,
+      event: 'submit',
+      eventHandler: this.submitLabelFormHandler.bind(this)
+    });
+    this.isEventHandlerInitialized = true;
+  }
+
+  private addClickCancelButtonHandler (): void {
+    setEventListenerToElement({
+      element: this.$cancelButton,
+      event: 'click',
+      eventHandler: () => { this.unmount(); }
+    });
+  }
+
+  private addInputLabelNameHandler (): void {
+    setEventListenerToElement({
+      element: this.$labelNameInput,
+      event: 'input',
+      eventHandler: this.labelNameInputHandler.bind(this)
+    });
+  }
+
+  private labelNameInputHandler (event: Event) {
+    event.stopPropagation();
+    if (this.$labelNameInput === null) {
+      return;
+    }
+    if (this.isValidForm()) {
+      this.enableCreateLabelButton();
+    } else {
+      this.disableCreateLabelButton();
+    }
+  }
+
+  private isValidForm (): boolean {
+    return !!(this.$labelNameInput?.value.length);
   }
 
   private enableCreateLabelButton (): void {
@@ -70,29 +129,6 @@ export class LabelForm implements Component {
     disableButton(this.$createLabelButton);
   }
 
-  private isValidForm (): boolean {
-    return !!(this.$labelNameInput?.value.length);
-  }
-
-  private addInputLabelNameHandler (): void {
-    const inputNameHandler = (event: Event): void => {
-      event.stopPropagation();
-      if (this.$labelNameInput === null) {
-        return;
-      }
-      if (this.isValidForm()) {
-        this.enableCreateLabelButton();
-      } else {
-        this.disableCreateLabelButton();
-      }
-    };
-    setEventListenerToElement({
-      element: this.$labelNameInput,
-      event: 'input',
-      eventHandler: inputNameHandler
-    });
-  }
-
   private getLabelFormData (): Label {
     return {
       name: this.$labelNameInput?.value ?? '',
@@ -102,29 +138,31 @@ export class LabelForm implements Component {
   }
 
   private addSubmitLabelFormHandler (): void {
-    const submitLabelForm = (event: Event): void => {
-      event.stopPropagation();
-      event.preventDefault();
-      if (!this.isValidForm()) {
-        console.error('invalid form');
-        return;
-      }
-
-      const newLabels = [
-        ...labelStore.state.labels,
-        this.getLabelFormData()
-      ];
-
-      labelStore.setLabels(newLabels);
-    };
-
-    const submitLabelFormHandler = (event: Event): void => {
-      submitLabelForm(event);
-    };
     setEventListenerToElement({
       element: this.$labelForm,
       event: 'submit',
-      eventHandler: submitLabelFormHandler
+      eventHandler: this.submitLabelFormHandler.bind(this)
     });
+  }
+
+  private submitLabelForm (event: Event): void {
+    event.stopPropagation();
+    event.preventDefault();
+    if (!this.isValidForm()) {
+      console.error('invalid form');
+      return;
+    }
+
+    const newLabels = [
+      ...labelStore.state.labels,
+      this.getLabelFormData()
+    ];
+
+    labelStore.setLabels(newLabels);
+  }
+
+  private submitLabelFormHandler (event: Event): void {
+    this.submitLabelForm(event);
+    this.unmount();
   }
 }
