@@ -1,4 +1,5 @@
 import { ABORT_ERROR, GET, POST, TEMP_LABEL_FORM_DATA_KEY } from "../const";
+import { $ } from "./dom";
 import { multipleArgsPipe, pipe } from "./operator";
 
 export const getRandom = (arr) => {
@@ -11,6 +12,15 @@ export const isHexColor = (value) => {
 
 export const isValid = (target) => target.validity.valid;
 
+export const setInputValue = (selector, newValue) => {
+  const target = $(selector);
+
+  if (!target || target.value === newValue) {
+    return;
+  }
+
+  target.value = newValue;
+}
 /**
  * local storage 관련
  */
@@ -75,7 +85,7 @@ const httpService = async ({url, httpServiceCallback}) => {
       return {status: null, data: null, isAborted: true, isOtherError: false}
     }
 
-    return {status: null, data: null, isAborted: true, isOtherError: true};
+    return {status: null, data: null, isAborted: false, isOtherError: true};
   }
 }
 

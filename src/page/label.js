@@ -1,7 +1,7 @@
 import { getLabelItemTpl, getLabelTpl } from '../template/tpl';
-import { labelPreviewSelector, newLabelColorSelector, newLabelBtnSelector, labelListContainerSelector, labelCountSelector, labelCreateCancelButtonSelector, formColorValueSelector, updateLabelSelector} from '../template/selector';
+import { newLabelBtnSelector, labelListContainerSelector, labelCountSelector, updateLabelSelector} from '../template/selector';
 import { $ ,addClickEventListener, clearElement, renderPageInApp, setRenderTarget } from '../util/dom';
-import { labelStore$, newLabelColorStore$ } from '../store/label';
+import { labelStore$ } from '../store/label';
 import { compose, pipe } from '../util/operator';
 import { formData$ } from '../store/labelForm';
 
@@ -44,16 +44,11 @@ export class LabelPage {
    * render
    */
   render() {
-    newLabelColorStore$.addGetNextPropWatchers([this.renderLabelColor.bind(this)]);
-    newLabelColorStore$.addSetTempPropWatchers([this.renderLabelColor.bind(this)]);
-
     // 한 번 쓰는 함수는 지역 함수로 정의
     const renderWrapper = () => renderPageInApp(getLabelTpl());
-    const renderInitialLabelColor = () => this.renderLabelColor(newLabelColorStore$.store.cur);
 
     pipe(
       renderWrapper,
-      renderInitialLabelColor,
       this.addLabelPageEventListener.bind(this),
       // test용 임시, new form 보이기
       // () => this.toggleLabelForm(),
@@ -101,17 +96,5 @@ export class LabelPage {
   renderLabelItem(label) {
     const wrapper = setRenderTarget($(labelListContainerSelector));
     compose(wrapper, getLabelItemTpl)(label);
-  }
-
-  // proxy에서 side effect
-  renderLabelColor(newColor) {
-    const targetEls = [$(labelPreviewSelector), $(newLabelColorSelector)];
-
-    targetEls.forEach(el => (el.style.backgroundColor = newColor));
-    
-    // input으로 들어올 수도 있음
-    if (newColor !== $(formColorValueSelector).value) {
-      $(formColorValueSelector).value = newColor;
-    }
   }
 }

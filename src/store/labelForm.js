@@ -1,16 +1,16 @@
-import { showLabelFormFirst, TEMP_LABEL_FORM_DATA_KEY } from "../const";
+import { showLabelFormFirst } from "../const";
 import { colorList } from "../const";
-import { getFormStorage } from "../util/feature";
+import { newLabelColorStore$ } from "./color";
 import { ObserverArray } from "./observable";
 
 /**
- * new Label Form을 dynamic import하기 위해 store 함수 분리
+ * proxy로 만든 store는 따로 만든 handler에 observer 등록
  */
 const initialFormData = {
   isCreating: showLabelFormFirst,
   name: '',
   description: '',
-  color: colorList[0],
+  color: null,
 };
 
 export const formHandlers = {
@@ -21,23 +21,15 @@ export const formHandlers = {
   setIsCreatingObservers: new ObserverArray(),
   addSetIsCreatingObservers(observers=[]) {
     this.setIsCreatingObservers.add(observers);
-  }
-}
-
-const _formStorage = getFormStorage();
-const formStorage = {
-  set(prop, value) {
-    if (prop === 'isCreating') {
-      return;
-    }
-
-    const oldVal = _formStorage.get() ?? JSON.stringify({});
-
-    const newValue = JSON.parse(oldVal);
-    newValue[prop] = value ?? '';
-
-    _formStorage.set(JSON.stringify(newValue));
-  }
+  },
+  setColorObservers: new ObserverArray(),
+  addSetColorObservers(observers=[]) {
+    this.setColorObservers.add(observers);
+  },
+  setDescriptionObservers: new ObserverArray(),
+  addSetDescriptionObservers(observers=[]) {
+    this.setDescriptionObservers.add(observers);
+  },
 }
 
 export const formData$ = new Proxy(initialFormData, {
@@ -48,8 +40,16 @@ export const formData$ = new Proxy(initialFormData, {
 
     prop === 'name' && formHandlers.setNameObservers.run(value);
     prop === 'isCreating' && formHandlers.setIsCreatingObservers.run(value);
+    
+    /**
+     * input은 formData$.color만 변경
+     * SET formData$.color는 labelColorStore$ 변경
+     */
+    if (prop === 'color') {
+      newLabelColorStore$.cur = value;
+      formHandlers.setColorObservers.run(value);
+    }
 
-    formStorage.set(prop, value)
     Reflect.set(obj, prop, value, receiver);
     return true;
   }

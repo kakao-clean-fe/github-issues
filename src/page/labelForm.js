@@ -1,9 +1,11 @@
-import { labelFormSelector, createLabelButtonSelector, formColorValueSelector, formNameSelector, formHiddenClass, labelPreviewTextContentSelector, formDescriptionSelector, labelCreateCancelButtonSelector, newLabelColorSelector } from "../template/selector"
+import { labelFormSelector, createLabelButtonSelector, formColorValueSelector, formNameSelector, formHiddenClass, labelPreviewTextContentSelector, formDescriptionSelector, labelCreateCancelButtonSelector, newLabelColorSelector, labelPreviewSelector } from "../template/selector"
 import { $, activateButton, addClickEventListener, deactivateButton, toggleClass } from "../util/dom"
-import {labelStore$, newLabelColorStore$} from '../store/label';
-import { getFormStorage, isValid } from "../util/feature";
-import {formData$, formHandlers} from "../store/labelForm";
-import { TEMP_LABEL_FORM_DATA_KEY } from "../const";
+import { labelStore$ } from '../store/label';
+import { getFormStorage, isHexColor, isValid, setInputValue } from "../util/feature";
+import { formData$, formHandlers } from "../store/labelForm";
+import { omit, pipe } from "../util/operator";
+import { newLabelColorStore$ } from '../store/color';
+import { colorList } from "../const";
 
 /**
  * dom 관련, add event listener
@@ -14,58 +16,78 @@ export class LabelFormComponent {
    */
   constructor() {
     this.formStorage = getFormStorage();
-
+    
     this.addObservers();
-    this.addFormEventListener();
     this.checkLocalStorageFormData();
+    !isHexColor(formData$.color) && this.updateFormDataColor();
+    
+    const addEvents = pipe(this.addFormEventListener.bind(this), this.addWindowListener.bind(this));
+    addEvents();
   }
 
+  /**
+   * proxy로 만든 store는 따로 만든 handler에 observer 등록
+   * Observable 클래스로 만든 store는 해당 store에 observer 등록
+   */
   addObservers() {
     // formData 관련 observer
-    formHandlers.addSetNameObserver([this.renderFormName.bind(this)]);
+    formHandlers.addSetNameObserver([
+      this.setNameInputValue.bind(this),
+      this.toggleCreateButton.bind(this),
+    ]);
     formHandlers.addSetIsCreatingObservers([this.renderCreatingStatus.bind(this)]);
-  
-    // label 관련 observer
+    formHandlers.addSetColorObservers([
+      this.renderLabelColor.bind(this),
+      this.setColorInputValue.bind(this),
+    ]);
+    formHandlers.addSetDescriptionObservers([this.setDescriptionInputValue.bind(this)]);
+
+    // 새로운 라벨 추가시 observer
     labelStore$.subscribeAdd([this.initForm.bind(this)]);
   }
 
   /**
    * 로컬스토리지에 캐시된 폼 데이터가 있다면 화면에 렌더
+   * 로컬스토리지에 저장된 데이터 없으면 initial color 렌더
    */
   checkLocalStorageFormData() {
     const _value = this.formStorage.get();
-
+    
     if (!_value) {
       return;
     }
     
     const value = JSON.parse(_value);
-    
-    let needToActivateCreateButton = false;
-
+    /**
+     * label name은 필수값, description은 옵션으로 설정함
+     */
     Object.entries(value).forEach(([key, value]) => {
+      // 유효하지 않은 색상이 저장된 경우 No Set
+      if (key === 'color' && !isHexColor(value)) {
+        return;
+      }
+      
       formData$[key] = value;
-      value && (needToActivateCreateButton = true);
     })
-
-    needToActivateCreateButton ? this.activateCreateButton(true) : this.activateCreateButton(false);
+    
+    this.formStorage.remove();
   }
 
   initForm() {
     formData$.name = '';
     formData$.description = '';
-  
-    this.activateCreateButton(false);
-    this.formStorage.remove();
   }
 
-  renderFormName(value) {
-    $(formNameSelector).value = value;
-    $(labelPreviewTextContentSelector).textContent = value.trim() === '' ? 'Label preview' : value;
+  /**
+   * formData$ 변경시 동작하는 함수들 (observers)
+   */
+  setNameInputValue(newValue) {
+    setInputValue(formNameSelector, newValue);
+    $(labelPreviewTextContentSelector).textContent = newValue.trim() === '' ? 'Label preview' : newValue;
   }
 
-  renderCreatingStatus() {
-    toggleClass(formHiddenClass)($(labelFormSelector));
+  toggleCreateButton(nameInputValue) {
+    nameInputValue.trim() !== '' ? this.activateCreateButton(true) : this.activateCreateButton(false);
   }
 
   activateCreateButton(isActivate = false) {
@@ -73,8 +95,27 @@ export class LabelFormComponent {
     $(createLabelButtonSelector).disabled = !isActivate;
   }
 
-  toggleCreateButton(nameInputValue) {
-    nameInputValue.trim() !== '' ? this.activateCreateButton(true) : this.activateCreateButton(false);
+  setColorInputValue(newColor) {
+    if (!isHexColor(newColor)) {
+      return;
+    }
+
+    setInputValue(formColorValueSelector, newColor);
+  }
+
+  // formData$.color 변경시 동작
+  renderLabelColor(newColor) {
+    const targetEls = [$(labelPreviewSelector), $(newLabelColorSelector)];
+    
+    targetEls.forEach(el => (el.style.backgroundColor = newColor));
+  }
+
+  setDescriptionInputValue(newValue) {
+    setInputValue(formDescriptionSelector, newValue);
+  }
+
+  renderCreatingStatus() {
+    toggleClass(formHiddenClass)($(labelFormSelector));
   }
 
   /**
@@ -82,7 +123,6 @@ export class LabelFormComponent {
    */
   addNameInputListener({target:{value}}) {
     formData$.name = value;
-    this.toggleCreateButton(value);
   }
 
   addDescriptionInputListener({target:{value}}) {
@@ -93,7 +133,7 @@ export class LabelFormComponent {
     const {value} = target;
     
     if (!value.startsWith('#')) {
-      this.value = '#' + value;
+      target.value = '#' + value;
     }
 
     /**
@@ -101,8 +141,7 @@ export class LabelFormComponent {
      * formData$에 저장하는 것도
      */
     if (isValid(target)) {
-      newLabelColorStore$.store.temp = this.value;
-      formData$.color = this.value;
+      formData$.color = target.value;
     }
   }
 
@@ -118,17 +157,15 @@ export class LabelFormComponent {
     
     const {name, color, description} = formData$;
 
-    newLabelColorStore$.store.colors.add(color);
     labelStore$.add({name, color, description});
   }
 
-  updateLabelColor() {
-    formData$.color = newLabelColorStore$.store.next;
+  updateFormDataColor() {
+    formData$.color = newLabelColorStore$.next;
   }
 
   cancelForm() {
     formData$.isCreating = !formData$.isCreating;
-
     this.initForm();
   }
 
@@ -143,9 +180,21 @@ export class LabelFormComponent {
     $(labelFormSelector).addEventListener('submit', this.addLabel);
 
     // color selector
-    addClickEventListener(newLabelColorSelector, () => this.updateLabelColor());
+    addClickEventListener(newLabelColorSelector, () => this.updateFormDataColor());
     // cancel 버튼
     addClickEventListener(labelCreateCancelButtonSelector, this.cancelForm.bind(this))
+  }
+
+  addWindowListener() {
+    window.addEventListener('beforeunload', () => {
+      const {name, description, color} = formData$;
+
+      if (!name && !description && color === colorList[0] && !isHexColor(color)) {
+        return;
+      }
+
+      this.formStorage.set(JSON.stringify(omit(formData$, 'isCreating')));
+    })
   }
 };
 

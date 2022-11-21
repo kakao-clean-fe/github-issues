@@ -37,7 +37,7 @@ export const deactivateButton = target => {
 
 export const addClickEventListener = (selector, callback) => $(selector).addEventListener('click', callback);
 
-export const addTargetsListener = (_targetElements, callback = () => {}) => {
+export const addTargetsClickListener = (_targetElements, callback = () => {}) => {
   const targetElements = Array.isArray(_targetElements) ? _targetElements : [_targetElements];
   
   targetElements.forEach(el =>  el.addEventListener('click', callback));

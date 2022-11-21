@@ -157,6 +157,7 @@ export function getLabelTpl() {
           <input type="text" id="label-description-input" name="label[description]"
             class="w-full p-2 base-outer focus:outline-none"
             placeholder="Description" value="" 
+            autocomplete="off" 
             maxlength="100">
         </dd>
         <dd class="" hidden="" id="label--description-error"></dd>

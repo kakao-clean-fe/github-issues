@@ -1,7 +1,6 @@
-import { ProxyStore } from './proxy';
+import { newLabelColorStore$, ProxyStore } from './color';
 import { Observable, ObserverArray } from './observable';
 import { fetchStoreData } from '../util/feature';
-import { colorList } from '../const';
 
 /**
  * week2 객체 지향 프로그래밍
@@ -46,6 +45,12 @@ createLabelStore.prototype.add = async function(newLabel) {
 
   this.value.push(newLabelRes);
   this.notifyAddObservers(newLabelRes);
+
+  /**
+   * labelStore에 새로운 color 추가 (set이라 일단 add)
+   */
+  const color = newLabelRes.color;
+  color && newLabelColorStore$.colors.add(color);
 }
 
 createLabelStore.prototype.subscribeAdd = function(observers = []) {
@@ -63,16 +68,3 @@ createLabelStore.prototype.unsubscribe = function(observers = []) {
 }
 
 export const labelStore$ = new createLabelStore([]);
-
-/**
- * color store
- */
-const initialColorValue = {
-  colors: new Set(colorList),
-  cur: colorList[0],
-  next: null,
-  temp: null,
-};
-// to do
-export const newLabelColorStore$ = new ProxyStore(initialColorValue, colorList[0]);
-
