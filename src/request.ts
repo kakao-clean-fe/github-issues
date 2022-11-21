@@ -1,13 +1,10 @@
 import axios from 'axios';
 import { Issue, Label } from './types';
 
-
-export const readIssues = async () => {
-    const { data } = await axios.get<Array<Issue>>('/data-sources/issues.json', { responseType: 'json'});
+const request = <T> (url: string) => async () => {
+    const { data } = await axios.get<T>(url, { responseType: 'json' });
     return data;
 }
 
-export const readLabels = async () => {
-    const { data } = await axios.get<Array<Label>>('/data-sources/labels.json', { responseType: 'json'});
-    return data;
-}
+export const readIssues = request<Array<Issue>>('/data-sources/issues.json');
+export const readLabels = request<Array<Label>>('/data-sources/labels.json');
