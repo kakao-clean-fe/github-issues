@@ -3,6 +3,7 @@ import { $, $$, COMMON, LABEL, LABEL_CLASS } from "../constants";
 import Label from "../components/Label";
 
 const app = $("#app");
+let controller = null;
 
 export const inputEvent = () =>
   app.addEventListener("input", (e) => {
@@ -27,6 +28,11 @@ export const clickEvent = (labelStore) =>
       renderColor(target);
     } else if (target.id === LABEL.CREATE_BTN) {
       createLabel(labelStore);
+    } else if (target.classList.contains(LABEL.REFRESH_BTN)) {
+      if (controller) {
+        controller.abort();
+      }
+      updateLabels();
     }
   });
 
@@ -51,4 +57,18 @@ const getNewLabelData = () => {
     newLabel[target.id.split("-")[1]] = target.value;
   });
   return newLabel;
+};
+
+const updateLabels = () => {
+  controller = new AbortController();
+  fetch("/labels-delay", { signal: controller.signal })
+    .then((res) => res.json())
+    .then((data) => console.log(data))
+    .catch((err) => {
+      if (err.name === "AbortError") {
+        console.error("AbortError");
+        return;
+      }
+      throw err;
+    });
 };

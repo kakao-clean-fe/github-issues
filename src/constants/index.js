@@ -20,6 +20,7 @@ const LABEL = {
   NEW_FORM: "#new-label-form",
   WRAPPER: "#labels-wrapper ul",
   NEW_INPUT: "dl.form-group.my-2 input",
+  REFRESH_BTN: "refresh-labels",
 };
 
 const LABEL_CLASS = {
