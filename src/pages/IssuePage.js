@@ -1,6 +1,6 @@
 import { getIssueTpl, getIssueItemTpl } from '/src/tpl';
 import { curry, go, filter, map } from '/src/util/fp';
-
+import { fetchData } from '/src/util/common';
 export default class IssuePage {
   constructor(app) {
     this.$app = app;
@@ -31,7 +31,7 @@ export default class IssuePage {
 
   async initIssueList() {
     // Data Fetch
-    [this.issueData] = await this.fetchData('issues');
+    this.issueData = await fetchData('issues');
 
     const openIssueCount = this.filterIssue('open').length;
     const closeIssueCount = this.filterIssue('close').length;
@@ -50,15 +50,6 @@ export default class IssuePage {
     this.$closeCount = document.querySelector('.statusTab .close-count');
   }
 
-  async fetchData(...nameList) {
-    const arr = await Promise.all(
-      nameList
-        .map(async (name) => {
-          return await (await fetch(`/data-sources/${name}.json`)).json();
-        })
-    );
-    return arr;
-  }
   renderIssue(issues) {
     const setHTML = curry((dom, html) => {
       dom.innerHTML = html;

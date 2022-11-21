@@ -22,8 +22,8 @@ export const toggleAttr = ( selector, attrName, type) => {
   }
 }
 
-export const fetchData = async (filename) => {
-  const res = await fetch(`/data-sources/${filename}.json`);
+export const fetchData = async (path) => {
+  const res = await fetch(`/${path}`);
   const data = await res.json();
   return data;
 }
