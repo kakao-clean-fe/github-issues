@@ -37,14 +37,14 @@ const evtCancelClick = () => {
   createModel.setIsOpen(!createModel.getIsOpen());
 };
 
-const evtCreateLabelClick = (event) => {
+const evtCreateLabelClick = async (event) => {
   event.preventDefault();
   const labelNameValue = document.querySelector(ID_NEW_LABEL_NAME_INPUT).value;
   const labelColorValue = document.querySelector(
     ID_NEW_LABEL_COLOR_INPUT
   ).value;
   const labelDescValue = document.querySelector(ID_NEW_LABEL_DESC_INPUT).value;
-  labelsModel.addLabel({
+  await labelsModel.addLabelData({
     name: labelNameValue,
     color: labelColorValue.replace("#", ""),
     description: labelDescValue,

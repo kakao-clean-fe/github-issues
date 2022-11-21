@@ -15,6 +15,7 @@ export default class ListLabelView {
 
     if (!this.$target && count === 0) return;
 
+    console.log('labels:', labels);
     this.$target.innerHTML = "";
     document.querySelector(CLASS_OPEN_BTN).innerHTML = `${count} Labels`;
     labels.map((label) => {

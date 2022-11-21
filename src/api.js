@@ -56,21 +56,25 @@ export const getLabelsDataDelay = async (signal, controller) => {
   }
 };
 
-export const postLabelsData = async (options) => {
+export const postLabelsData = async (data) => {
   try {
     const response = await fetch("/labels", {
       method: "POST",
-      ...options,
+      body: JSON.stringify(data)
     });
 
-    if (response) {
-      const data = await response.json();
-      if (data) {
-        return data;
-      }
+    if (!response) throw new Error('[Client] 서버 응답 없음')
+    const resData = await response.json();
+    
+    if (!resData) throw new Error('[Client] 서버에서 데이터를 받아올 수 없음')
+    if (response.status > 400) {
+      alert(`서버 에러 : ${JSON.stringify(resData)}`);
+      return null;
     }
+    
+    return resData;
   } catch (err) {
     console.error("[getLabelsData]", err);
-    return [];
+    return null;
   }
 };
