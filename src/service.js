@@ -1,3 +1,5 @@
+import { withAbortController } from './util';
+
 export async function fetchIssues() {
   const response = await fetch('/data-sources/issues.json');
   return response.json();
@@ -19,15 +21,7 @@ export async function addLabel(label) {
   return response.json();
 }
 
-let fetchLabelsAbortController;
-
-export async function fetchLabelsWithDelay() {
-  try {
-    if (fetchLabelsAbortController) {
-      fetchLabelsAbortController.abort();
-    }
-    fetchLabelsAbortController = new AbortController();
-    const response = await fetch('/labels-delay', { signal: fetchLabelsAbortController.signal });
-    return response.json();
-  } catch { }
-}
+export const fetchLabelsWithDelay = withAbortController(async (signal) => {
+  const response = await fetch('/labels-delay', { signal });
+  return response.json();
+})

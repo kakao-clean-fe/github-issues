@@ -28,3 +28,14 @@ export function loadCreateForm() {
   const savedForm = localStorage.getItem(localStorageKey.createForm);
   return savedForm ? JSON.parse(savedForm) : {};
 }
+
+export function withAbortController(callback) {
+  let abortController;
+  return (...args) => {
+    if (abortController) {
+      abortController.abort();
+    }
+    abortController = new AbortController();
+    return callback(abortController.signal, ...args);
+  }
+}
