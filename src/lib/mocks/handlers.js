@@ -21,4 +21,5 @@ export const handlers = [
         labels.push(newData);
         return res(ctx.status(201), ctx.json(labels));
     }),
+
 ];
