@@ -45,6 +45,10 @@ class FetchController {
           signal: abortControl ? abortController.signal : undefined,
         })
       );
+      if (res.status >= 400) {
+        throw new Error(`fetch ${res.status} 에러 발생`);
+      }
+
       FetchController.interceptor(res);
       const json = await res.json();
       return json;
