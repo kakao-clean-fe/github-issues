@@ -2,16 +2,10 @@ import { getApi } from '~/utils/api';
 import { Labels } from '~/types/label';
 import { ref, watch } from '~/utils/reactive';
 import { unwrapRefValues } from '~/utils/store';
+import { abortFetchController } from '~/utils/abort-fetch-controller';
 
 const refObject = {
   labels: ref<Labels>([])
-};
-
-interface Controller {
-  labelWithDelay: AbortController | undefined
-}
-const fetchController: Controller = {
-  labelWithDelay: undefined
 };
 
 export const labelStore = {
@@ -29,19 +23,19 @@ export const labelStore = {
     return await getApi<Labels>({ url: '/labels' });
   },
 
-  async fetchLabelsWithDelay ({ controller }: { controller: AbortController | undefined }): Promise<Labels> {
-    if (controller) {
-      controller.abort();
+  async fetchLabelsWithDelay (): Promise<Labels> {
+    const KEY = 'GET /labels-delay';
+    if (abortFetchController.has(KEY)) {
+      abortFetchController.abort(KEY);
     }
-    fetchController.labelWithDelay = new AbortController();
-    const signal = fetchController.labelWithDelay.signal;
+    const signal = abortFetchController.create(KEY).getSignal(KEY);
 
     return await getApi<Labels>({ url: '/labels-delay', options: { signal } });
   },
 
   fetchAndSetLabels ({ delay }: { delay: boolean } = { delay: false }) {
     const fetchFunction = delay
-      ? () => this.fetchLabelsWithDelay({ controller: fetchController.labelWithDelay })
+      ? this.fetchLabelsWithDelay
       : this.fetchLabels;
 
     fetchFunction()
