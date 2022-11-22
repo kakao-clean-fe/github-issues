@@ -6,7 +6,6 @@ import { createHeader } from './components/Header';
 import { createIssuePage } from './components/IssuePage';
 import { createLabelPage } from './components/LabelPage';
 import { $, loadCreateForm } from './util';
-// import { ToastMessage } from './components/ToastMessage';
 
 async function createApp() {
   const [issues, labels] = await Promise.all([fetchIssues(), fetchLabels()]);
