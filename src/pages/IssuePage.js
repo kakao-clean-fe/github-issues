@@ -1,6 +1,12 @@
 import { getIssueTpl, getIssueItemTpl } from '/src/tpl';
 import { curry, go, filter, map } from '/src/util/fp';
-import { fetchData } from '/src/util/common';
+import { on, fetchData } from '/src/util/common';
+
+const CONST = {
+  FONT_BOLD: 'font-bold',
+  OPEN: 'open',
+  CLOSE: 'close'
+};
 export default class IssuePage {
   constructor(app) {
     this.$app = app;
@@ -17,15 +23,15 @@ export default class IssuePage {
 
   initClickEvent() {
     // ClickEvent
-    this.$openCount.addEventListener('click', () => {
-      this.renderIssue(filterIssue('open'));
-      this.$openCount.classList.add('font-bold');
-      this.$closeCount.classList.remove('font-bold');
+    on(this.$openCount, 'click', () => {
+      this.renderIssue(filterIssue(CONST.OPEN));
+      this.$openCount.classList.add(CONST.FOND_BOLD);
+      this.$closeCount.classList.remove(CONST.FOND_BOLD);
     });
-    this.$closeCount.addEventListener('click', () => {
-      this.renderIssue(filterIssue('close'));
-      this.$closeCount.classList.add('font-bold');
-      this.$openCount.classList.remove('font-bold');
+    on(this.$closeCount, 'click', () => {
+      this.renderIssue(filterIssue(CONST.CLOSE));
+      this.$closeCount.classList.add(CONST.FOND_BOLD);
+      this.$openCount.classList.remove(CONST.FOND_BOLD);
     });
   }
 
