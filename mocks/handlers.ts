@@ -138,7 +138,6 @@ export const handlers = [
   }),
 
   rest.post('/labels', async (req, res, ctx) => {
-    console.log('newData', req);
     const newData = await req.json();
 
     if (Math.floor(Math.random() * 10) > 5) {

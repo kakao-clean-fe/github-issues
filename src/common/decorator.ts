@@ -28,7 +28,10 @@ export const Logger = {
     return function (target, propertyKey, descriptor) {
       const targetMethod = target[propertyKey];
       descriptor.value = function (error: Error) {
-        console.groupCollapsed(`[data fetch error] `, getTimeByKor(new Date()));
+        console.groupCollapsed(
+          `[error log] ${error.message}`,
+          getTimeByKor(new Date())
+        );
         console.error('error', error);
         console.groupEnd();
         targetMethod(error);
@@ -44,25 +47,21 @@ export const Logger = {
       descriptor.value = async function (...res) {
         let _res;
         let start;
-        try {
-          if (fetchingTimeLogging) {
-            start = new Date().getTime();
-          }
-          _res = await targetMethod(...res);
-          const end = new Date().getTime();
-          if (_res) {
-            console.groupCollapsed(
-              `[data fetch end] `,
-              getTimeByKor(new Date()),
-              res[0].method,
-              res[0].url,
-              fetchingTimeLogging ? `(${(end - start) / 1000} sec)` : ''
-            );
-            console.log('data', _res);
-            console.groupEnd();
-          }
-        } catch (error) {
-          console.error(`[data fetch error]`);
+        if (fetchingTimeLogging) {
+          start = new Date().getTime();
+        }
+        _res = await targetMethod(...res);
+        const end = new Date().getTime();
+        if (_res) {
+          console.groupCollapsed(
+            `[data fetch end] `,
+            getTimeByKor(new Date()),
+            res[0].method,
+            res[0].url,
+            fetchingTimeLogging ? `(${(end - start) / 1000} sec)` : ''
+          );
+          console.log('data', _res);
+          console.groupEnd();
         }
         return _res;
       };

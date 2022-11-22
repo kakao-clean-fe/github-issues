@@ -1,4 +1,3 @@
-import { COLORS } from '../../common/constants';
 import FunctionComponent from '../../common/FunctionComponent';
 import { getLabelCreateTpl } from '../../common/tpl';
 import { pipe } from '../../common/util';
@@ -19,9 +18,9 @@ const LabelCreator = () => {
     labelObserver;
   subscribe(app);
   let newLabel: ILabelCls = new LabelCls.builder()
-    .setData('name', localStorage.getItem('name'))
-    .setData('color', localStorage.getItem('color'))
-    .setData('description', localStorage.getItem('description'))
+    .setData('name', localStorage.getItem('name') || '')
+    .setData('color', localStorage.getItem('color') || '')
+    .setData('description', localStorage.getItem('description') || '')
     .build();
   const setCreateLabelBtnEnabled =
     (createLabelBtn: HTMLButtonElement) => (hidden: boolean) => {

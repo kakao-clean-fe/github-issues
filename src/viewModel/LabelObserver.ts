@@ -50,9 +50,7 @@ const LabelObservable = () => {
     });
   };
 
-  setTimeout(() => {
-    initLabelList();
-  });
+  initLabelList();
   return {
     subscribe,
     setCreateHidden,

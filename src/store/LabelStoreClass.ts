@@ -39,42 +39,6 @@ export class LabelCls implements ILabelCls {
   }
 }
 
-// export class LabelBuilder {
-//   #name: string;
-//   #color: string;
-//   #description: string;
-//   constructor(label?: Label) {
-//     if (label) {
-//       this.#name = label.name;
-//       this.#color = label.color;
-//       this.#description = label.description;
-//     } else {
-//       this.#name = '';
-//       this.#color = '';
-//       this.#description = '';
-//     }
-//   }
-//   setName(name: string) {
-//     this.#name = name;
-//     return this;
-//   }
-//   setColor(color: string) {
-//     this.#color = color;
-//     return this;
-//   }
-//   setDescription(description: string) {
-//     this.#description = description;
-//     return this;
-//   }
-//   build() {
-//     return new LabelCls({
-//       name: this.#name,
-//       color: this.#color,
-//       description: this.#description,
-//     });
-//   }
-// }
-
 const labelStore = Store({
   createHidden: true,
   labelList: [],

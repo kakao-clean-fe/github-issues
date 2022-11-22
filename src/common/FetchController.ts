@@ -21,44 +21,42 @@ class FetchController {
     abortControl?: boolean
   ): Promise<T> {
     const fetchId = new Date().getTime();
+    try {
+      const request = FetchController.requestList.find(
+        (request) => request.url === url && request.method === method
+      );
+      const abortController = new AbortController();
 
-    const request = FetchController.requestList.find(
-      (request) => request.url === url && request.method === method
-    );
-    const abortController = new AbortController();
-
-    if (request) {
-      request.abortController.abort();
-      request.abortController = abortController;
-    }
-    FetchController.requestList.push({
-      fetchId,
-      url,
-      abortController,
-      method,
-    });
-    return fetch(
-      url,
-      removeUndefinedParam({
+      if (request) {
+        request.abortController.abort();
+        request.abortController = abortController;
+      }
+      FetchController.requestList.push({
+        fetchId,
+        url,
+        abortController,
         method,
-        body,
-        signal: abortControl ? abortController.signal : undefined,
-      })
-    )
-      .then((res) => {
-        FetchController.interceptor(res);
-        return res.json();
-      })
-      .catch((error) => {
-        if (FetchController.errorHandler !== null) {
-          FetchController.errorHandler(error);
-        }
-      })
-      .finally(() => {
-        FetchController.requestList = FetchController.requestList.filter(
-          (request) => request.fetchId !== fetchId
-        );
       });
+      const res = await fetch(
+        url,
+        removeUndefinedParam({
+          method,
+          body,
+          signal: abortControl ? abortController.signal : undefined,
+        })
+      );
+      FetchController.interceptor(res);
+      const json = await res.json();
+      return json;
+    } catch (error) {
+      if (FetchController.errorHandler !== null) {
+        FetchController.errorHandler(error);
+      }
+    } finally {
+      FetchController.requestList = FetchController.requestList.filter(
+        (request) => request.fetchId !== fetchId
+      );
+    }
   }
 }
 
