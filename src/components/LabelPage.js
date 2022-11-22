@@ -20,31 +20,25 @@ export function createLabelPage({ store }) {
     go($(sel.labelCount), setInnerText(`${labelList.length} Labels`));
   }
   function renderUpdateLabelsButton() {
-    go(
-      $(sel.updateLabelsButton),
-      setEvent('click', () => {
-        fetchLabelsWithDelay().then(setLabels);
-      })
-    )
+    go($(sel.updateLabelsButton), setEvent('click', () => fetchLabelsWithDelay().then(setLabels)));
+  }
+  function renderLabelComponents(labels) {
+    renderLabelLayout();
+    renderLabels(labels);
+    renderLabelCount(labels);
+    renderUpdateLabelsButton();
+    newLabelForm.render();
   }
   function handlePageChange(event) {
     const [labels] = store.useState(storeKey.labels);
     if (event.detail === pageType.label) {
-      renderLabelLayout();
-      renderLabels(labels);
-      renderLabelCount(labels);
-      renderUpdateLabelsButton();
-      newLabelForm.render();
+      renderLabelComponents(labels);
     }
   }
   function render() {
     const [page] = store.useState(storeKey.page);
     if (page === pageType.label) {
-      renderLabelLayout();
-      renderLabels(labels);
-      renderLabelCount(labels);
-      renderUpdateLabelsButton();
-      newLabelForm.render();
+      renderLabelComponents(labels);
     }
     saveCreateFormBeforeUnload(store);
     store.useEffect(storeKey.page, handlePageChange);
