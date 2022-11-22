@@ -6,7 +6,7 @@ import {labelStore} from "../../lib/stores/label.js";
 import {get} from "../../lib/api.js";
 
 export const renderLabel = (selector) => {
-    getInitialData("/data-sources/labels.json")
+    getInitialData("/labels")
     new LabelForm(selector, labelStore).render()
     new LabelHeader(LABEL_SELECTOR.HEADER, labelStore).render()
     new LabelItems(LABEL_SELECTOR.LIST, labelStore).render()
