@@ -77,6 +77,10 @@ export function createNewLabelForm({ store }) {
     const [labelForm, setLabelForm] = store.useState(storeKey.labelForm);
     const [, setIsFormOpen] = store.useState(storeKey.isNewLabelFormOpen);
 
+    function showToastErrorMessage(error) {
+      setToast({ isOpen: true, message: error.message, duration: 3000 });
+    }
+
     const isDescendantOf = pipe(isDescendant(event.target));
     if (isDescendantOf($(sel.newLabelButton))) {
       setIsFormOpen((prev) => !prev);
@@ -85,7 +89,7 @@ export function createNewLabelForm({ store }) {
     } else if (isDescendantOf($(sel.labelCreateButton))) {
       addLabel(labelForm)
         .then(setLabels)
-        .catch(error => setToast({ isOpen: true, message: error.message, duration: 3000 }));
+        .catch(showToastErrorMessage);
     } else if (isDescendantOf($(sel.randomColorButton))) {
       setLabelForm((prev) => ({ ...prev, color: getRandomColor() }));
     }
