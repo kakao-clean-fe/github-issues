@@ -1,37 +1,25 @@
-// src/mocks/handlers.js
 import { rest } from 'msw';
+import { labels } from './data';
 
 export const handlers = [
-  rest.post('/login', (req, res, ctx) => {
-    // Persist user's authentication in the session
-    sessionStorage.setItem('is-authenticated', 'true');
-
-    return res(
-      // Respond with a 200 status code
-      ctx.status(200)
-    );
+  rest.get('/labels', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(labels));
   }),
 
-  rest.get('/user', (req, res, ctx) => {
-    // Check if the user is authenticated in this session
-    const isAuthenticated = sessionStorage.getItem('is-authenticated');
+  rest.post('/labels', async (req, res, ctx) => {
+    const newData = await req.json();
 
-    if (!isAuthenticated) {
-      // If not authenticated, respond with a 403 error
-      return res(
-        ctx.status(403),
-        ctx.json({
-          errorMessage: 'Not authorized'
-        })
-      );
+    if (Math.floor(Math.random() * 10) > 5) {
+      return res(ctx.status(500), ctx.json({ error: '서버에러 발생' }));
     }
 
-    // If authenticated, return a mocked user details
-    return res(
-      ctx.status(200),
-      ctx.json({
-        username: 'admin'
-      })
-    );
+    labels.push(newData);
+    return res(ctx.status(201), ctx.json(labels));
+  }),
+
+  rest.get('/labels-delay', async (req, res, ctx) => {
+    await new Promise(resolve => setTimeout(() => resolve(), 5000));
+    return res(ctx.status(200), ctx.json(labels));
   })
+
 ];
