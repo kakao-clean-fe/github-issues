@@ -21,7 +21,6 @@ const LabelApi = {
     const res = await fetch('/labels');
     return res.json();
   },
-
   async fetchDelayLabels() {
     try {
       init();
@@ -33,6 +32,31 @@ const LabelApi = {
       return res.json();
     } catch (error) {
       throw error;
+    }
+  },
+  async postLabels(params) {
+    try {
+      const res = await fetch('/labels', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(params),
+      });
+
+      if (res.status >= 400) {
+        throw {
+          status: res.status,
+        };
+      }
+
+      return res.json();
+    } catch (error) {
+      console.error(`${error.status} 에러 발생`);
+
+      throw {
+        message: '잠시 뒤 다시 시도해 주세요',
+      };
     }
   },
 };

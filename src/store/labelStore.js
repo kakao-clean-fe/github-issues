@@ -19,7 +19,7 @@ const reducer = (state, action) => {
     case ADD_LABEL:
       return {
         ...state,
-        labelList: [...state.labelList, state.labelItem],
+        labelList: [...action.payload],
       };
   }
 };

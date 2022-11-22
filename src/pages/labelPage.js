@@ -176,12 +176,22 @@ export default class LabelPage extends BaseComponent {
     labelFormWrapper.classList.add('hidden');
   };
 
-  onSubmit = (e) => {
-    e.preventDefault();
+  onSubmit = async (e) => {
+    try {
+      e.preventDefault();
 
-    LabelStore.dispatch({
-      type: ADD_LABEL,
-    });
+      const newLabels = await LabelApi.postLabels(
+        LabelStore.getState().labelItem
+      );
+      
+      // 액션 호출
+      LabelStore.dispatch({
+        type: ADD_LABEL,
+        payload: newLabels
+      });
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   onLabelUpdateButtonClick = async () => {
