@@ -1,12 +1,11 @@
 import { getLabelCreatorTpl } from "../tpl"
-import { addEventListener, selectAllElement, selectElement, toggleClass } from '../utils/dom';
+import { addEventListener, selectElement, toggleClass } from '../utils/dom';
 import { SELECTOR } from '../constants/selector';
 import { EVENT } from '../constants/event';
 import { HIDDEN } from '../constants/status';
 import { LABEL_COLOR } from "../constants/labelColor";
 import { generateColor } from '../utils/label';
 import { addLabelData } from '../common/api';
-import { setLabelData } from "../store/dataStore";
 import { localStorageUtil, resetLocalStorage } from '../utils/localStorage';
 import { LOCAL_STORAGE_KEY } from "../constants/localStorage";
 

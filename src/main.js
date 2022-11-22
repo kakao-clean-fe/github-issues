@@ -7,7 +7,9 @@ import { labelDataProxy } from './store/dataStore';
 import { worker } from './mocks/browser';
 
 // msw worker
-worker.start();
+worker.start({
+  onUnhandledRequest: 'bypass',
+});
 
 const issueTabButton = selectElement(SELECTOR.ISSUE_TAB);
 const labelTabButton = selectElement(SELECTOR.LABEL_TAB);
