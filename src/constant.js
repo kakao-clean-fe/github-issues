@@ -19,7 +19,8 @@ export const selector = {
   labelCreateButton: '#label-create-button',
   labelCancelButton: '#label-cancel-button',
   updateLabelsButton: '.refresh-labels',
-  toastContainer: '.toast-box',
+  toastContainer: '#toast',
+  toastBox: '.toast-box',
   toastMessage: '.toast-message'
 };
 

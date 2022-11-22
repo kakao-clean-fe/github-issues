@@ -1,12 +1,12 @@
 import { worker } from './mocks/browser';
 import { fetchIssues, fetchLabels } from './service';
-import { storeKey, pageType } from './constant';
+import { storeKey, pageType, selector as sel } from './constant';
 import { Store, EventBus } from './store';
 import { createHeader } from './components/Header';
 import { createIssuePage } from './components/IssuePage';
 import { createLabelPage } from './components/LabelPage';
-import { loadCreateForm } from './util';
-import { ToastMessage } from './components/ToastMessage';
+import { $, loadCreateForm } from './util';
+// import { ToastMessage } from './components/ToastMessage';
 
 async function createApp() {
   const [issues, labels] = await Promise.all([fetchIssues(), fetchLabels()]);
@@ -35,7 +35,9 @@ async function createApp() {
     createHeader({ store }).render();
     createIssuePage({ store }).render();
     createLabelPage({ store }).render();
-    new ToastMessage({ store, $root: document.getElementById('toast') });
+    import('./components/ToastMessage').then(({ ToastMessage }) => {
+      new ToastMessage({ store, $root: $(sel.toastContainer) });
+    })
   }
 
   return { render };

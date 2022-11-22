@@ -15,7 +15,7 @@ export class ToastMessage extends Component {
     this.handleToastChange = this.handleToastChange.bind(this);
   }
   afterRender() {
-    this.$toast = this.$root.querySelector(sel.toastContainer);
+    this.$toast = this.$root.querySelector(sel.toastBox);
     this.$toastMessage = this.$toast.querySelector(sel.toastMessage);
     this.showToastMessage = () => go(this.$toast, removeClass('hidden'));
     this.hideToastMessage = () => go(this.$toast, addClass('hidden'));
