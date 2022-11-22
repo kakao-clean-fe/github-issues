@@ -43,11 +43,14 @@ export default class LabelPage extends BaseComponent {
     LabelStore.subscribe(ADD_LABEL, this.addLabel);
     LabelStore.subscribe(ADD_LABEL, this.renderLabelCount);
 
-    // action 호출
+    // 라벨 리스트 세팅
     LabelStore.dispatch({
       type: SET_LABEL_LIST,
       payload: labels,
     });
+
+    // 로컬 캐시 세팅
+    this.initLocalStorage();
 
     // 이벤트 등록
     const newLabelButton = findElement(labelSelector.NEW_LABEL_BUTTON);
@@ -55,6 +58,20 @@ export default class LabelPage extends BaseComponent {
 
     const labelUpdateButton = findElement(labelSelector.LABEL_UPDATE_BUTTON);
     labelUpdateButton.addEventListener('click', this.onLabelUpdateButtonClick);
+  };
+
+  initLocalStorage = () => {
+    const labelItem = localStorage.getItem('labelItem');
+
+    if (!labelItem) {
+      const labelItemString = JSON.stringify({
+        name: '',
+        description: '',
+        color: '',
+      });
+
+      localStorage.setItem('labelItem', labelItemString);
+    }
   };
 
   renderLabelCount = () => {
@@ -102,10 +119,17 @@ export default class LabelPage extends BaseComponent {
         labelForm.attatchTo(labelFormWrapper, 'beforeend');
       })();
 
-      // 이벤트 등록
+      // 로컬 스토리지로부터 기존 저장된 라벨 아이템 추출
+      const labelItem = JSON.parse(localStorage.getItem('labelItem'));
+
+      /* 이벤트 및 value 등록 */
+
+      // Name
       const labelNameInput = findElement(labelSelector.LABEL_NAME_INPUT);
       labelNameInput.addEventListener('input', this.onLabelNameInputChange);
+      labelNameInput.value = labelItem.name;
 
+      // Description
       const labelDescriptionInput = findElement(
         labelSelector.LABEL_DESCRIPTION_INPUT
       );
@@ -113,24 +137,50 @@ export default class LabelPage extends BaseComponent {
         'input',
         this.onLabelDescriptionInputChange
       );
+      labelDescriptionInput.value = labelItem.description;
 
+      // Color
       const newLabelColorButton = findElement(labelSelector.NEW_LABEL_COLOR);
+      const labelColorInput = findElement(labelSelector.LABEL_COLOR_VALUE);
       newLabelColorButton.addEventListener(
         'click',
         this.onNewLabelColorButtonClick
       );
 
+      // color 값이 있을 때에만
+      if (!!labelItem.color) {
+        const [r, g, b] = this.chunkSubstr(labelItem.color, 2);
+        const colorStyle = `background-color: rgb(${parseInt(
+          r,
+          16
+        )}, ${parseInt(g, 16)}, ${parseInt(b, 16)})`;
+        newLabelColorButton.style = colorStyle;
+        labelColorInput.value = `#${labelItem.color}`;
+      }
+
+      // Cancel Button
       const labelCancelButton = findElement(labelSelector.LABEL_CANCEL_BUTTON);
       labelCancelButton.addEventListener(
         'click',
         this.onLabelCancelButtonClick
       );
 
+      // Create Label
       const labelSubmitButton = findElement(labelSelector.LABEL_INPUT_FORM);
       labelSubmitButton.addEventListener('submit', this.onSubmit);
+
+      // 스토어에 로컬 스토리지 값 세팅
+      LabelStore.dispatch({
+        type: SET_LABEL_ITEM,
+        payload: labelItem,
+      });
     }
 
     labelFormWrapper.classList.remove('hidden');
+  };
+
+  chunkSubstr = (str, size) => {
+    return str.match(new RegExp(`.{1,${size}}`, 'g'));
   };
 
   onLabelNameInputChange = (e) => {
@@ -140,6 +190,10 @@ export default class LabelPage extends BaseComponent {
       type: SET_LABEL_ITEM,
       payload: labelItem,
     });
+
+    // 로컬 스토리지에 세팅
+    const labelItemString = JSON.stringify(labelItem);
+    localStorage.setItem('labelItem', labelItemString);
   };
 
   onLabelDescriptionInputChange = (e) => {
@@ -149,6 +203,10 @@ export default class LabelPage extends BaseComponent {
       type: SET_LABEL_ITEM,
       payload: labelItem,
     });
+
+    // 로컬 스토리지에 세팅
+    const labelItemString = JSON.stringify(labelItem);
+    localStorage.setItem('labelItem', labelItemString);
   };
 
   onNewLabelColorButtonClick = () => {
@@ -169,6 +227,10 @@ export default class LabelPage extends BaseComponent {
       type: SET_LABEL_ITEM,
       payload: labelItem,
     });
+
+    // 로컬 스토리지에 세팅
+    const labelItemString = JSON.stringify(labelItem);
+    localStorage.setItem('labelItem', labelItemString);
   };
 
   onLabelCancelButtonClick = () => {
@@ -183,11 +245,11 @@ export default class LabelPage extends BaseComponent {
       const newLabels = await LabelApi.postLabels(
         LabelStore.getState().labelItem
       );
-      
+
       // 액션 호출
       LabelStore.dispatch({
         type: ADD_LABEL,
-        payload: newLabels
+        payload: newLabels,
       });
     } catch (error) {
       alert(error.message);
