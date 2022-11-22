@@ -13,5 +13,5 @@ export const renderLabel = (selector) => {
 }
 
 const getInitialData = (url) => {
-    get(url).then(data => labelStore.set(...data))
+    get({url}).then(data => labelStore.set(...data))
 }

@@ -1,9 +1,10 @@
 import {ClientError, ServerError} from "./errors.js";
 
-export const get = async (url) => {
-    return await fetch(url).then((response) => {
-        return response.json();
-    });
+export const get = async ({url, signal}) => {
+    return await fetch(url, {signal})
+        .then((response) => {
+            return response.json()
+        });
 };
 
 export const post = async ({url, data}) => {
@@ -26,3 +27,20 @@ export const handle = (promise) => {
     return promise.then((response) => ({error: null, response}))
         .catch((error) => ({error, response: null}))
 }
+
+function abortRequest() {
+    const abortControllerMap = {}
+    return function (url) {
+        const controller = new AbortController();
+        abortControllerMap[url]?.abort()
+        abortControllerMap[url] = controller
+        return get({url, signal: controller.signal})
+            .then((data) => {
+                    delete abortControllerMap.url
+                    return data
+                }
+            )
+    }
+}
+
+export const abort = abortRequest()

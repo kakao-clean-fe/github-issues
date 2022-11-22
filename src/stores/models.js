@@ -22,7 +22,6 @@ export class ArrayStore extends Observable {
         this.list = Array.isArray(initialData) ? initialData : []
     }
 
-
     set(...element) {
         this.list = [...element]
         this.notify(this.list)

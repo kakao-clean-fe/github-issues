@@ -20,7 +20,7 @@ export const LABEL_SELECTOR = {
     FORM: '#new-label-form',
     NEW_BUTTON: '.new-label-button',
     HIDDEN: 'hidden',
-
+    REFRESH: '.refresh-labels'
 }
 
 

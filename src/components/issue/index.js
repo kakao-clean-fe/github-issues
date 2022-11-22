@@ -13,7 +13,7 @@ export const renderIssue = (selector) => {
 }
 
 const getInitialData = (url) => {
-    get(url).then(data => {
+    get({url}).then(data => {
         issueStatusStore.set(ISSUE_STATUS.OPEN)
         issueStore.set(...data)
         setSelectedIssueStore()
