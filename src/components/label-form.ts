@@ -1,7 +1,7 @@
 import { LABEL_FORM_SELECTOR, CREATE_LABEL_BUTTON_SELECTOR, LABEL_NAME_INPUT_SELECTOR, LABEL_INPUT_WRAPPER, LABEL_DESCRIPTION_INPUT_SELECTOR, LABEL_COLOR_INPUT_SELECTOR, CANCEL_CREATE_LABEL_BUTTON } from '~/constants/selector';
 import { addElementToDOM, removeElementFromDOM } from '~/utils/page';
 import type { Component } from '~/types/component-interface';
-import { addClass, disableButton, enableButton, removeClass, setEventListenerToElement } from '~/utils/dom';
+import { addClass, clearInputValue, disableButton, enableButton, removeClass, setEventListenerToElement } from '~/utils/dom';
 import { getElement } from '~/store/element-store';
 import { DISABLED_CREATE_BUTTON_CLASS } from '~/tpl';
 import { labelStore } from '~/store/label-store';
@@ -33,6 +33,20 @@ export class LabelForm implements Component {
     return getElement({
       fromElement: this.$inputWrapper,
       selector: LABEL_NAME_INPUT_SELECTOR
+    }) as HTMLInputElement;
+  }
+
+  get $descriptionInput (): HTMLInputElement | null {
+    return getElement({
+      fromElement: this.$inputWrapper,
+      selector: LABEL_DESCRIPTION_INPUT_SELECTOR
+    }) as HTMLInputElement;
+  }
+
+  get $colorInput (): HTMLInputElement | null {
+    return getElement({
+      fromElement: this.$inputWrapper,
+      selector: LABEL_COLOR_INPUT_SELECTOR
     }) as HTMLInputElement;
   }
 
@@ -145,8 +159,14 @@ export class LabelForm implements Component {
     labelStore.setLabels(newLabels);
   }
 
+  private clearAllInputValue (): void {
+    const inputElements = [this.$nameInput, this.$descriptionInput, this.$colorInput];
+    inputElements.forEach(clearInputValue);
+  }
+
   private submitFormHandler (event: Event): void {
     this.submitForm(event);
+    this.clearAllInputValue();
     this.unmount();
   }
 }

@@ -52,3 +52,10 @@ export const disableButton = (element: HTMLButtonElement | null): void => {
   }
   element.disabled = true;
 };
+
+export const clearInputValue = (element: HTMLInputElement | null): void => {
+  if (!element) {
+    return;
+  }
+  element.value = '';
+};
