@@ -9,6 +9,7 @@ export const ISSUE_LIST_SELECTOR = '.issue-list > ul';
 // label page
 export const LABEL_LIST_SELECTOR = '.label-list';
 export const LABEL_OPEN_COUNT_SELECTOR = '.label-header .open-count';
+export const UPDATE_LABEL_BUTTON_SELECTOR = '#update-label-button';
 
 // label page > label form
 export const NEW_LABEL_BUTTON_SELECTOR = '.new-label-button';

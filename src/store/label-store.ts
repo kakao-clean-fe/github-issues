@@ -19,11 +19,16 @@ export const labelStore = {
   },
 
   async fetchLabels (): Promise<Labels> {
-    return await getApi<Labels>({ url: '/data-sources/labels.json' });
+    return await getApi<Labels>({ url: '/labels' });
   },
 
-  fetchAndSetLabels () {
-    this.fetchLabels()
+  async fetchLabelsWithDelay (): Promise<Labels> {
+    return await getApi<Labels>({ url: '/labels-delay' });
+  },
+
+  fetchAndSetLabels ({ delay }: { delay: boolean } = { delay: false }) {
+    const fetchFunction = delay ? this.fetchLabelsWithDelay : this.fetchLabels;
+    fetchFunction()
       .then((labels: Labels) => { this.setLabels(labels); })
       .catch((error: Error) => error);
   }
