@@ -1,4 +1,3 @@
-import {LabelForm} from "./LabelForm.js";
 import {LabelHeader} from "./LabelHeader.js";
 import {LabelItems} from "./LabelItems.js";
 import {LABEL_SELECTOR} from "../../lib/constants/selector.js";
@@ -8,13 +7,7 @@ import {LabelCreateHeader} from "./LabelCreateHeader.js";
 
 export const renderLabel = (selector) => {
     getInitialData("/labels")
-    new LabelCreateHeader(selector).render()
-    // import("./LabelForm.js").then(
-    //     ({LabelForm}) => {
-    //         new LabelForm('.label-form', labelStore).render()
-    //     }
-    // )
-    new LabelForm(LABEL_SELECTOR.LABEL_FORM, labelStore).render()
+    new LabelCreateHeader(selector,labelStore).render()
     new LabelHeader(LABEL_SELECTOR.HEADER, labelStore).render()
     new LabelItems(LABEL_SELECTOR.LIST, labelStore).render()
 }

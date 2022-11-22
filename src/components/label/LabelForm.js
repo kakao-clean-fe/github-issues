@@ -15,13 +15,12 @@ export class LabelForm extends Component {
             }
         )
         this.labelStore = labelStore
-
     }
 
     render() {
         this._render(
             null,
-            [this.#addLabelCreateEvent(this.#labelCreateEventCallback(this.labelStore))]
+            [this.#addLabelCreateEvent(this.#labelCreateEventCallback.bind(this))]
         )
     }
 
@@ -31,16 +30,15 @@ export class LabelForm extends Component {
         }
     }
 
-    #labelCreateEventCallback(labelStore) {
-        return async function () {
-            const data = {
-                name: selectElementById(LABEL_SELECTOR.NAME_INPUT).value,
-                color: selectElementById(LABEL_SELECTOR.COLOR_INPUT).value,
-                description: selectElementById(LABEL_SELECTOR.DESCRIPTION_INPUT).value
-            }
-            const {error, response} = await handle(post({url: "/labels", data}))
-            error ? (console.error(error.message), alert(error.message)) : labelStore.set(...response)
+    async #labelCreateEventCallback() {
+        const data = {
+            name: selectElementById(LABEL_SELECTOR.NAME_INPUT).value,
+            color: selectElementById(LABEL_SELECTOR.COLOR_INPUT).value,
+            description: selectElementById(LABEL_SELECTOR.DESCRIPTION_INPUT).value
         }
+        const {error, response} = await handle(post({url: "/labels", data}))
+        error ? (console.error(error.message), alert(error.message)) : this.labelStore.set(...response)
+
     }
 }
 

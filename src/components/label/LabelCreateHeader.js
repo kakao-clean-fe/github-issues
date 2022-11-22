@@ -4,7 +4,9 @@ import {selectElement} from "../../lib/utils.js";
 import {LABEL_SELECTOR} from "../../lib/constants/selector.js";
 
 export class LabelCreateHeader extends Component {
-    constructor(rootSelector) {
+    isLabelFormExist = false
+
+    constructor(rootSelector, labelStore) {
         super({
                 rootSelector,
                 templateFn: getNewLabelButton,
@@ -12,12 +14,13 @@ export class LabelCreateHeader extends Component {
                 }
             }
         )
+        this.labelStore = labelStore
     }
 
     render() {
         this._render(
             null,
-            [this.#addToggleFormEvent(this.#toggleFormEventCallback)]
+            [this.#addToggleFormEvent(this.#toggleFormEventCallback.bind(this))]
         )
     }
 
@@ -27,7 +30,12 @@ export class LabelCreateHeader extends Component {
         }
     }
 
-    #toggleFormEventCallback() {
+    async #toggleFormEventCallback() {
+        if (!this.isLabelFormExist) {
+            const {LabelForm} = await import("./LabelForm.js")
+            new LabelForm(LABEL_SELECTOR.LABEL_FORM, this.labelStore).render()
+            this.isLabelFormExist = true
+        }
         selectElement(LABEL_SELECTOR.FORM).classList.toggle(LABEL_SELECTOR.HIDDEN)
     }
 }
