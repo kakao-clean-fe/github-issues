@@ -10,7 +10,6 @@ export class Observer {
   }
 }
 
-
 export class LabelInput extends Observer {
   #name
   #description
@@ -20,9 +19,22 @@ export class LabelInput extends Observer {
     super();
     const { name, description, color} = props;
 
-    this.name = name;
-    this.description = description;
-    this.color = color;
+    this.#name = name;
+    this.#description = description;
+    this.#color = color;
+  }
+
+
+  get name() {
+    return this.#name;
+  }
+
+  get description() {
+    return this.#description;
+  }
+
+  get color() {
+    return this.#color;
   }
 
   set name(value) {
@@ -38,11 +50,5 @@ export class LabelInput extends Observer {
   set color(value) {
     this.#color = value;
     this.notify();
-  }
-
-  initialize() {
-    this.name = '';
-    this.description = '';
-    this.color = '';
   }
 }

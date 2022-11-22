@@ -1,5 +1,5 @@
-import {ISSUE_TAB} from "./store/index.js";
-import {getIssueTpl, getLabelTpl} from "./tpl.js";
+import {ISSUE_TAB} from "../store/index.js";
+import {getIssueTpl, getLabelTpl} from "../templates/tpl.js";
 
 export function curry(fn) {
   return function curryFn(...args1) {

@@ -1,13 +1,22 @@
-import {getIssueItemTpl, getLabelItemTpl} from "./tpl.js";
-import {createTabElement, createAppendChild, htmlToElement, pipe, removeChildren} from "./utils.js";
+import {getIssueItemTpl, getLabelItemTpl} from "./templates/tpl.js";
+import {createTabElement, createAppendChild, htmlToElement, pipe, removeChildren} from "./utils";
 import {
   CLOSE_BUTTON_SELECTOR,
   ISSUE_UL_SELECTOR,
   LABEL_UL_SELECTOR,
   OPEN_BUTTON_SELECTOR
 } from "./const.js";
-import store, {GET_ISSUES, GET_LABELS, ISSUE_TAB, LABEL_TAB} from './store';
-import {LabelInput} from "./classes.js";
+import store, {
+  GET_ISSUES,
+  GET_LABELS,
+  GET_UPDATED_LABELS,
+  ISSUE_TAB,
+  LABEL_TAB,
+  POST_LABEL, POST_LABEL_FAILED,
+  POST_LABEL_SUCCESS
+} from './store';
+import {LabelInput} from "./utils/observer";
+import {generateRandomColor} from "./utils/color.js";
 
 export const createIssueTab = () => {
   const tabElement = createTabElement(ISSUE_TAB);
@@ -57,18 +66,26 @@ export const createLabelTab = () => {
   app?.appendChild(tabElement);
 
   const newLabelButton = document.getElementById('new-label');
-  const labelCancelButton = document.getElementById('label-cancel-button');
-  const form = document.getElementById('new-label-form');
-  const toggleHandler = toggleVisibility(form);
+  const updateLabelButton = document.getElementById('update-label-button')
 
-  newLabelButton?.addEventListener('click', toggleHandler);
-  labelCancelButton?.addEventListener('click', toggleHandler);
+  newLabelButton?.addEventListener('click', loadFormElement);
+  updateLabelButton?.addEventListener('click', () => {
+    store.dispatch({type: GET_UPDATED_LABELS});
+  });
 
   const appendToUlFunction = createAppendChild(LABEL_UL_SELECTOR);
   const appendLabel = (item) => pipe(getLabelItemTpl, htmlToElement, appendToUlFunction)(item);
 
   store.subscribe((prev, cur, action) => {
-    if (action.type !== GET_LABELS) return;
+    if (
+      action.type !== GET_LABELS
+      && action.type !== GET_UPDATED_LABELS
+      && action.type !== POST_LABEL
+    ) return;
+
+    // update labels
+    const ulElement = document.querySelector(LABEL_UL_SELECTOR);
+    removeChildren(ulElement);
 
     const {labels} = cur;
     labels.map((label) => {
@@ -81,11 +98,25 @@ export const createLabelTab = () => {
   });
 };
 
-const toggleVisibility = (element) => {
+const loadFormElement = async () => {
+  // check if form is already mounted
+  const existingForm = document.getElementById('new-label-form');
+  if (existingForm) return;
+
+  // use dynamic import
+  const {getNewLabelFormTpl} = await import("./templates/getNewLabelsTpl");
+  const form = htmlToElement(getNewLabelFormTpl());
+  const formWrapper = document.getElementById('form-wrapper');
+  formWrapper.appendChild(form);
+
   const labelInput = new LabelInput({name: '', description: '', color: ''});
+  const labelPreview = document.getElementById('label-preview');
   const nameInput = document.getElementById('label-name-input');
   const descriptionInput = document.getElementById('label-description-input');
   const colorInput = document.getElementById('label-color-value');
+
+  const newColorButton = document.getElementById('new-label-color');
+  const cancelButton = document.getElementById('label-cancel-button');
   const submitButton = document.getElementById('label-create-button');
   const enableSubmit = () => {
     submitButton.classList.remove('opacity-50');
@@ -95,20 +126,27 @@ const toggleVisibility = (element) => {
     submitButton.classList.add('opacity-50');
     submitButton.setAttribute('disabled', '');
   };
-  const initialize = () => {
-    element.classList.add('hidden');
-    disableSubmit();
-    labelInput.initialize();
-    nameInput.value = '';
-    descriptionInput.value = '';
-    colorInput.value = '';
-  }
 
   labelInput.subscribe(() => {
+    colorInput.value = labelInput.color;
+    labelPreview.style.backgroundColor = `#${labelInput.color}`;
+    newColorButton.style.backgroundColor = `#${labelInput.color}`;
+
     if (nameInput.value !== '' && descriptionInput.value !== '' && colorInput.value !== '') {
       enableSubmit();
     } else {
       disableSubmit();
+    }
+  });
+
+  store.subscribe((prevState, state, action) => {
+    switch (action.type) {
+      case POST_LABEL_SUCCESS:
+        removeFormElement();
+        break;
+      case POST_LABEL_FAILED:
+        alert('post failed: internal server error!');
+        break;
     }
   });
 
@@ -121,20 +159,20 @@ const toggleVisibility = (element) => {
   colorInput.addEventListener('input', (e) => {
     labelInput.color = e.target.value;
   });
+  newColorButton.addEventListener('click', () => {
+    labelInput.color = generateRandomColor();
+  });
+  cancelButton.addEventListener('click', removeFormElement);
   submitButton.addEventListener('click', (e) => {
     e.preventDefault();
-    initialize();
+    store.dispatch({
+      type: POST_LABEL,
+      data: {name: labelInput.name, description: labelInput.description, color: labelInput.color}
+    });
   });
+};
 
-
-  let isVisible = false;
-
-  return () => {
-    if (isVisible) {
-      initialize();
-    } else {
-      element.classList.remove('hidden');
-    }
-    isVisible = !isVisible;
-  };
-}
+const removeFormElement = () => {
+  const formWrapper = document.getElementById('form-wrapper');
+  removeChildren(formWrapper);
+};

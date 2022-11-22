@@ -5,6 +5,9 @@ import {
 import {createIssueTab, createLabelTab} from "./handlers.js";
 import store, {ISSUE_TAB, LABEL_TAB} from './store';
 
+import { worker } from './mocks/browser';
+worker.start();
+
 // entrypoint
 window.addEventListener('DOMContentLoaded', function () {
   store.subscribe((prevState, state, action) => {
@@ -28,6 +31,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
   // 처음에는 이슈 탭을 default로 보여준다.
   store.dispatch({
-    type: ISSUE_TAB
+    type: LABEL_TAB
   });
 });
