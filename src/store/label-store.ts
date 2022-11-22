@@ -7,6 +7,13 @@ const refObject = {
   labels: ref<Labels>([])
 };
 
+interface Controller {
+  labelWithDelay: AbortController | undefined
+}
+const fetchController: Controller = {
+  labelWithDelay: undefined
+};
+
 export const labelStore = {
   state: unwrapRefValues(refObject),
 
@@ -22,15 +29,28 @@ export const labelStore = {
     return await getApi<Labels>({ url: '/labels' });
   },
 
-  async fetchLabelsWithDelay (): Promise<Labels> {
-    return await getApi<Labels>({ url: '/labels-delay' });
+  async fetchLabelsWithDelay ({ controller }: { controller: AbortController | undefined }): Promise<Labels> {
+    if (controller) {
+      controller.abort();
+    }
+    fetchController.labelWithDelay = new AbortController();
+    const signal = fetchController.labelWithDelay.signal;
+
+    return await getApi<Labels>({ url: '/labels-delay', options: { signal } });
   },
 
   fetchAndSetLabels ({ delay }: { delay: boolean } = { delay: false }) {
-    const fetchFunction = delay ? this.fetchLabelsWithDelay : this.fetchLabels;
+    const fetchFunction = delay
+      ? () => this.fetchLabelsWithDelay({ controller: fetchController.labelWithDelay })
+      : this.fetchLabels;
+
     fetchFunction()
       .then((labels: Labels) => { this.setLabels(labels); })
-      .catch((error: Error) => error);
+      .catch((error: Error) => {
+        console.error(error);
+
+        throw error;
+      });
   }
 
 };
