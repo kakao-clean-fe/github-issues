@@ -2,7 +2,7 @@ import { Component } from './Component';
 import { createToastMessageTemplate } from '../tpl';
 import { storeKey, selector as sel } from '../constant';
 import { go } from '../fp';
-import { addClass, removeClass, setInnerText } from '../curry/dom';
+import { addClass, removeClass, setInnerText, setStyle } from '../curry/dom';
 
 export class ToastMessage extends Component {
   constructor({ store, $root }) {
@@ -11,7 +11,6 @@ export class ToastMessage extends Component {
   }
   beforeMounted() {
     this.useToastState = () => this.store.useState(storeKey.toast);
-    this.useToastOpenState = () => this.store.useState(storeKey.isToastOpen);
     this.useToastEffect = onChange => this.store.useEffect(storeKey.toast, onChange)
     this.handleToastChange = this.handleToastChange.bind(this);
   }
@@ -20,6 +19,7 @@ export class ToastMessage extends Component {
     this.$toastMessage = this.$toast.querySelector(sel.toastMessage);
     this.showToastMessage = () => go(this.$toast, removeClass('hidden'));
     this.hideToastMessage = () => go(this.$toast, addClass('hidden'));
+    this.setToastDuration = (duration) => go(this.$toast, setStyle({ animationDuration: `${duration / 1000}s`}))
     this.setToastMessage = (message) => go(this.$toastMessage, setInnerText(message))
   }
   hydrate() {
@@ -44,10 +44,10 @@ export class ToastMessage extends Component {
     if (this.timeoutID) {
       this.hideToastMessage();
     }
+    this.setToastDuration(duration);
     this.showToastMessage();
     this.setToastMessage(message);
     this.timeoutID = setTimeout(() => {
-      go(this.$toast, addClass('hidden'));
       this.hideToastMessage();
       this.timeoutID = null;
     }, duration);

@@ -85,7 +85,7 @@ export function createNewLabelForm({ store }) {
     } else if (isDescendantOf($(sel.labelCreateButton))) {
       addLabel(labelForm)
         .then(setLabels)
-        .catch(error => setToast({ isOpen: true, message: error.message, duration: 2000 }));
+        .catch(error => setToast({ isOpen: true, message: error.message, duration: 3000 }));
     } else if (isDescendantOf($(sel.randomColorButton))) {
       setLabelForm((prev) => ({ ...prev, color: getRandomColor() }));
     }
