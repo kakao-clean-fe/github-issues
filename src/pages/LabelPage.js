@@ -34,10 +34,10 @@ export default class LabelPage {
 
     // 입력 이벤트를 Store에 바인딩
     this.labelFormStore = new LabelFormStore();
-    on($.INPUT_LABEL_NAME, 'input', (e) => this.labelFormStore.name = e.target.value);
-    on($.INPUT_LABEL_DESCRIPTION, 'input', (e) => this.labelFormStore.description = e.target.value);
-    on($.INPUT_LABEL_COLOR, 'input', (e) => {
-      this.setColor(e.target.value);
+    on($.INPUT_LABEL_NAME, 'input', ({ target }) => this.labelFormStore.name = target.value);
+    on($.INPUT_LABEL_DESCRIPTION, 'input', ({ target }) => this.labelFormStore.description = target.value);
+    on($.INPUT_LABEL_COLOR, 'input', ({ target }) => {
+      this.setColor(target.value);
     });
 
     // 컬러 랜덤 선택기

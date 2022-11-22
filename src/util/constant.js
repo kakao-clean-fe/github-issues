@@ -1,4 +1,6 @@
 export const $ = {
+  OPEN_COUNT: '.statusTab .open-count',
+  CLOSE_COUNT: '.statusTab .close-count',
   LABEL_LIST: 'ul.label-list',
   LABEL_SHOW_BTN: '.new-label-button',
   LABEL_HIDE_BTN: '#label-cancel-button',

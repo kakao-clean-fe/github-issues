@@ -1,6 +1,7 @@
 import { getIssueTpl, getIssueItemTpl } from '/src/tpl';
 import { curry, go, filter, map } from '/src/util/fp';
 import { on, fetchData } from '/src/util/common';
+import { $ } from '/src/util/constant';
 
 const CONST = {
   FONT_BOLD: 'font-bold',
@@ -23,13 +24,13 @@ export default class IssuePage {
 
   initClickEvent() {
     // ClickEvent
-    on(this.$openCount, 'click', () => {
-      this.renderIssue(filterIssue(CONST.OPEN));
+    on($.OPEN_COUNT, 'click', () => {
+      this.renderIssue(this.filterIssue(CONST.OPEN));
       this.$openCount.classList.add(CONST.FOND_BOLD);
       this.$closeCount.classList.remove(CONST.FOND_BOLD);
     });
-    on(this.$closeCount, 'click', () => {
-      this.renderIssue(filterIssue(CONST.CLOSE));
+    on($.CLOSE_COUNT, 'click', () => {
+      this.renderIssue(this.filterIssue(CONST.CLOSE));
       this.$closeCount.classList.add(CONST.FOND_BOLD);
       this.$openCount.classList.remove(CONST.FOND_BOLD);
     });
@@ -52,8 +53,8 @@ export default class IssuePage {
   initVariables() {
     this.$app.innerHTML = getIssueTpl();
     this.$issueList = document.querySelector('.issue-list ul');
-    this.$openCount = document.querySelector('.statusTab .open-count');
-    this.$closeCount = document.querySelector('.statusTab .close-count');
+    this.$openCount = document.querySelector($.OPEN_COUNT);
+    this.$closeCount = document.querySelector($.CLOSE_COUNT);
   }
 
   renderIssue(issues) {
