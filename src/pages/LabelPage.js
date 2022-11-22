@@ -36,31 +36,29 @@ export default class LabelPage {
     this.labelFormStore = new LabelFormStore();
     on($.INPUT_LABEL_NAME, 'input', ({ target }) => this.labelFormStore.name = target.value);
     on($.INPUT_LABEL_DESCRIPTION, 'input', ({ target }) => this.labelFormStore.description = target.value);
-    on($.INPUT_LABEL_COLOR, 'input', ({ target }) => {
-      this.setColor(target.value);
-    });
+    on($.INPUT_LABEL_COLOR, 'input', ({ target }) => this.#setColor(target.value));
 
     // 컬러 랜덤 선택기
-    on($.LABEL_COLOR_BTN, 'click', () => {
-      const getRandomColor = () => Math.floor((Math.random() * 256)).toString(16);
-      const r = getRandomColor();
-      const g = getRandomColor();
-      const b = getRandomColor();
-      const color = `${r}${g}${b}`;
-      Q($.INPUT_LABEL_COLOR).value = color;
-      this.#setColor(color);
-    });
+    on($.LABEL_COLOR_BTN, 'click', () => this.#onClickColor());
 
     // Update Label
-    on($.UPDATE_LABELS_BTN, 'click', () => {
-      this.labelStore.update();
-    })
+    on($.UPDATE_LABELS_BTN, 'click', () => this.labelStore.update());
   }
   
   #setColor(color) {
     Q($.LABEL_COLOR_BTN).style.background = `#${color}`;
     Q($.LABEL_PREVIEW).style.background = `#${color}`;
     this.labelFormStore.color = color;
+  }
+
+  #onClickColor() {
+    const getRandomColor = () => Math.floor((Math.random() * 256)).toString(16);
+    const r = getRandomColor();
+    const g = getRandomColor();
+    const b = getRandomColor();
+    const color = `${r}${g}${b}`;
+    Q($.INPUT_LABEL_COLOR).value = color;
+    this.#setColor(color);
   }
 
   #onClickLabelShow() {
