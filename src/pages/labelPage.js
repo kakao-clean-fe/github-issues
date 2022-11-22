@@ -188,6 +188,12 @@ export default class LabelPage extends BaseComponent {
     try {
       const delayedLabels = await LabelApi.fetchDelayLabels();
       console.log(delayedLabels);
+
+      // 지연응답으로 받은 labels 데이터로 다시 렌더링
+      LabelStore.dispatch({
+        type: SET_LABEL_LIST,
+        payload: delayedLabels,
+      });
     } catch (error) {
       if (error.name === 'AbortError') {
         console.log('AbortError');
