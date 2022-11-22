@@ -37,9 +37,20 @@ export const fetchDataWithAbort = async (path, controller) => {
   try {
     const res = await fetch(`/${path}`, { signal });
     const data = await res.json();
-    console.log(data);
     controller.ref = null;
+    return data;
   } catch(err) {
     console.log(err.name);
   }
+}
+
+export const postData = async (path, data) => {
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify(data)
+  }
+  return fetch(path, options);
 }

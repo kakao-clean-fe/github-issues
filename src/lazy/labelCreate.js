@@ -8,6 +8,7 @@ export const initLabelCreate = (labelFormStore, labelStore) => {
       description: labelFormStore.description,
       color: labelFormStore.color,
     }
-    labelStore.addLabel(newLabel); // Observer로 render 메소드 호출
+    
+    labelStore.add(newLabel); // Observer로 render 메소드 호출
   });
 }
