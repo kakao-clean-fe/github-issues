@@ -1,6 +1,7 @@
 import {Label} from "../types";
-import {readLabels} from "../request";
+import {readDelaiedLabels, readLabels, updateLabels} from "../request";
 import {BaseModel} from "./base";
+import { DelayRequestOption } from "../request";
 
 export { type LabelModel as LabelModelType };
 
@@ -16,6 +17,19 @@ class LabelModel extends BaseModel<Array<Label>> {
     set setResource(payload: Array<Label>) {
         this.resource = payload;
         this.notify(this.resource);
+    }
+
+    public updateResource(payload: Array<Label>) {
+        return updateLabels(payload).then(() => {
+            this.resource = payload;
+            this.notify(this.resource);
+        });
+    }
+
+    public loadDelaiedLabel({signal}: DelayRequestOption) {
+        readDelaiedLabels({ signal }).then(labels => {
+            this.setResource = labels;
+        })
     }
 
     public loadLabel() {
