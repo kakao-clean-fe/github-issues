@@ -2,6 +2,7 @@ import {getLabelForm} from "../../tpl.js";
 import {selectElement, selectElementById} from "../../lib/utils.js";
 import {LABEL_SELECTOR} from "../../lib/constants/selector.js";
 import {Component} from "../Component.js";
+import {post} from "../../lib/api.js";
 
 
 export class LabelForm extends Component {
@@ -35,11 +36,15 @@ export class LabelForm extends Component {
 
     #labelCreateEventCallback(labelStore) {
         return function () {
-            labelStore.add({
+            const data = {
                 name: selectElementById(LABEL_SELECTOR.NAME_INPUT).value,
                 color: selectElementById(LABEL_SELECTOR.COLOR_INPUT).value,
                 description: selectElementById(LABEL_SELECTOR.DESCRIPTION_INPUT).value
-            })
+            }
+            post({url: "/labels", data}).then((res) => {
+                    labelStore.set(...res)
+                }
+            )
         }
     }
 
