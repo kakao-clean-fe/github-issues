@@ -69,7 +69,7 @@ export class LabelForm implements Component {
     setEventListenerToElement({
       element: this.$cancelButton,
       event: 'click',
-      eventHandler: () => { this.unmount(); }
+      eventHandler: () => this.unmount()
     });
   }
 
@@ -77,7 +77,7 @@ export class LabelForm implements Component {
     setEventListenerToElement({
       element: this.$nameInput,
       event: 'input',
-      eventHandler: this.nameInputHandler.bind(this)
+      eventHandler: (event) => this.nameInputHandler(event)
     });
   }
 
@@ -125,7 +125,7 @@ export class LabelForm implements Component {
     setEventListenerToElement({
       element: this.$labelForm,
       event: 'submit',
-      eventHandler: this.submitFormHandler.bind(this)
+      eventHandler: (event) => this.submitFormHandler(event)
     });
   }
 
