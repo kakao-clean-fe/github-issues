@@ -73,6 +73,7 @@ export function createNewLabelForm({ store }) {
   function handleClickEvents(event) {
     event.preventDefault();
     const [, setLabels] = store.useState(storeKey.labels);
+    const [, setToast] = store.useState(storeKey.toast);
     const [labelForm, setLabelForm] = store.useState(storeKey.labelForm);
     const [, setIsFormOpen] = store.useState(storeKey.isNewLabelFormOpen);
 
@@ -82,7 +83,9 @@ export function createNewLabelForm({ store }) {
     } else if (isDescendantOf($(sel.labelCancelButton))) {
       setIsFormOpen(false);
     } else if (isDescendantOf($(sel.labelCreateButton))) {
-      addLabel(labelForm).then(setLabels);
+      addLabel(labelForm)
+        .then(setLabels)
+        .catch(error => setToast({ isOpen: true, message: error.message, duration: 2000 }));
     } else if (isDescendantOf($(sel.randomColorButton))) {
       setLabelForm((prev) => ({ ...prev, color: getRandomColor() }));
     }

@@ -6,6 +6,7 @@ import { createHeader } from './components/Header';
 import { createIssuePage } from './components/IssuePage';
 import { createLabelPage } from './components/LabelPage';
 import { loadCreateForm } from './util';
+import { ToastMessage } from './components/ToastMessage';
 
 async function createApp() {
   const [issues, labels] = await Promise.all([fetchIssues(), fetchLabels()]);
@@ -22,6 +23,11 @@ async function createApp() {
         color: '#ffffff',
         ...loadCreateForm()
       },
+      [storeKey.toast]: {
+        isOpen: false,
+        message: '',
+        duration: 3000,
+      }
     },
   });
 
@@ -29,6 +35,7 @@ async function createApp() {
     createHeader({ store }).render();
     createIssuePage({ store }).render();
     createLabelPage({ store }).render();
+    new ToastMessage({ store, $root: document.getElementById('toast') });
   }
 
   return { render };

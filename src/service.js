@@ -15,6 +15,9 @@ export async function addLabel(label) {
     method: 'post',
     body: JSON.stringify(label)
   });
+  if (!response.ok) {
+    throw new Error('레이블 생성에 실패했습니다. 잠시후 다시 시도해주세요.');
+  }
   return response.json();
 }
 
@@ -28,5 +31,5 @@ export async function fetchLabelsWithDelay() {
     fetchLabelsAbortController = new AbortController();
     const response = await fetch('/labels-delay', { signal: fetchLabelsAbortController.signal });
     return response.json();
-  } catch {}
+  } catch { }
 }

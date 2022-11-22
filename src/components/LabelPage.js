@@ -38,12 +38,15 @@ export function createLabelPage({ store }) {
     }
   }
   function render() {
+    const [page] = store.useState(storeKey.page);
+    if (page === pageType.label) {
+      renderLabelLayout();
+      renderLabels(labels);
+      renderLabelCount(labels);
+      renderUpdateLabelsButton();
+      newLabelForm.render();
+    }
     saveCreateFormBeforeUnload(store);
-    renderLabelLayout();
-    renderLabels(labels);
-    renderLabelCount(labels);
-    renderUpdateLabelsButton();
-    newLabelForm.render();
     store.useEffect(storeKey.page, handlePageChange);
   }
 

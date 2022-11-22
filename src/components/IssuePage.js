@@ -11,8 +11,7 @@ import { getIssueItemTpl, getIssueTpl } from '../tpl';
 import { selector as sel, storeKey, pageType } from '../constant';
 
 export function createIssuePage({ store }) {
-  const [page, setPage] = store.useState(storeKey.page);
-  const [issues, setIssues] = store.useState(storeKey.issues);
+  const [issues] = store.useState(storeKey.issues);
   const openedIssues = issues.filter(isOpenedIssue);
   const closedIssues = issues.filter(isClosedIssue);
 
