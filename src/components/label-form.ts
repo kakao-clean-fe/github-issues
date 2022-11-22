@@ -1,7 +1,7 @@
 import { LABEL_FORM_SELECTOR, CREATE_LABEL_BUTTON_SELECTOR, LABEL_NAME_INPUT_SELECTOR, LABEL_INPUT_WRAPPER, LABEL_DESCRIPTION_INPUT_SELECTOR, LABEL_COLOR_INPUT_SELECTOR, CANCEL_CREATE_LABEL_BUTTON } from '~/constants/selector';
 import { addElementToDOM, removeElementFromDOM } from '~/utils/page';
 import type { Component } from '~/types/component-interface';
-import { addClass, clearInputValue, disableButton, enableButton, removeClass, setEventListenerToElement } from '~/utils/dom';
+import { addClass, clearInputValue, disableButton, enableButton, getInputValue, removeClass, setEventListenerToElement } from '~/utils/dom';
 import { getElement } from '~/store/element-store';
 import { DISABLED_CREATE_BUTTON_CLASS } from '~/tpl';
 import { labelStore } from '~/store/label-store';
@@ -107,8 +107,17 @@ export class LabelForm implements Component {
     }
   }
 
+  private getFormData (): Label {
+    return {
+      name: getInputValue(this.$nameInput) ?? '',
+      description: getInputValue(this.$descriptionInput) ?? '',
+      color: 'red' // TODO : color 로직 추가
+    };
+  }
+
   private isValidForm (): boolean {
-    return !!(this.$nameInput?.value.length);
+    const { name } = this.getFormData();
+    return !!name.length;
   }
 
   private enableCreateLabelButton (): void {
@@ -125,14 +134,6 @@ export class LabelForm implements Component {
     }
     addClass(this.$createButton, DISABLED_CREATE_BUTTON_CLASS);
     disableButton(this.$createButton);
-  }
-
-  private getFormData (): Label {
-    return {
-      name: this.$nameInput?.value ?? '',
-      description: 'description',
-      color: 'red'
-    };
   }
 
   private addSubmitFormHandler (): void {

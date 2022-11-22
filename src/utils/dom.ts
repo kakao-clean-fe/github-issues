@@ -59,3 +59,5 @@ export const clearInputValue = (element: HTMLInputElement | null): void => {
   }
   element.value = '';
 };
+
+export const getInputValue = (element: HTMLInputElement | null): string | undefined => element?.value;
