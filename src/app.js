@@ -1,4 +1,3 @@
-import { worker } from './mocks/browser';
 import { fetchIssues, fetchLabels } from './service';
 import { storeKey, pageType, selector as sel } from './constant';
 import { Store, EventBus } from './store';
