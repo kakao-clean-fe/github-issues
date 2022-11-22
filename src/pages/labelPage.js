@@ -52,6 +52,9 @@ export default class LabelPage extends BaseComponent {
     // 이벤트 등록
     const newLabelButton = findElement(labelSelector.NEW_LABEL_BUTTON);
     newLabelButton.addEventListener('click', this.onNewLabelButtonClick);
+
+    const labelUpdateButton = findElement(labelSelector.LABEL_UPDATE_BUTTON);
+    labelUpdateButton.addEventListener('click', this.onLabelUpdateButtonClick);
   };
 
   renderLabelCount = () => {
@@ -179,6 +182,17 @@ export default class LabelPage extends BaseComponent {
     LabelStore.dispatch({
       type: ADD_LABEL,
     });
+  };
+
+  onLabelUpdateButtonClick = async () => {
+    try {
+      const delayedLabels = await LabelApi.fetchDelayLabels();
+      console.log(delayedLabels);
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        console.log('AbortError');
+      }
+    }
   };
 
   randomRgb = () => {

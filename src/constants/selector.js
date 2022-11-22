@@ -27,4 +27,5 @@ export const labelSelector = {
   LABEL_CANCEL_BUTTON: '#label-cancel-button',
   LABEL_CREATE_BUTTON: '#label-create-button',
   LABEL_LIST: '#labels-wrapper .label-list',
+  LABEL_UPDATE_BUTTON: '#labelUpdateButton',
 };
