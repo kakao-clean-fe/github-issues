@@ -1,5 +1,3 @@
-import { response } from 'msw';
-
 export async function fetchIssues() {
   const response = await fetch('/data-sources/issues.json');
   return response.json();

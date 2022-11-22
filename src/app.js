@@ -7,28 +7,27 @@ import { createIssuePage } from './components/IssuePage';
 import { createLabelPage } from './components/LabelPage';
 import { $, loadCreateForm } from './util';
 
-async function createApp() {
+export async function createApp() {
   const [issues, labels] = await Promise.all([fetchIssues(), fetchLabels()]);
-  const store = new Store({
-    eventBus: new EventBus(),
-    initialState: {
-      [storeKey.page]: pageType.issue,
-      [storeKey.issues]: issues,
-      [storeKey.labels]: labels,
-      [storeKey.isNewLabelFormOpen]: false,
-      [storeKey.labelForm]: {
-        name: '',
-        description: '',
-        color: '#ffffff',
-        ...loadCreateForm()
-      },
-      [storeKey.toast]: {
-        isOpen: false,
-        message: '',
-        duration: 3000,
-      }
+  const eventBus = new EventBus();
+  const initialState = {
+    [storeKey.page]: pageType.issue,
+    [storeKey.issues]: issues,
+    [storeKey.labels]: labels,
+    [storeKey.isNewLabelFormOpen]: false,
+    [storeKey.labelForm]: {
+      name: '',
+      description: '',
+      color: '#ffffff',
+      ...loadCreateForm()
     },
-  });
+    [storeKey.toast]: {
+      isOpen: false,
+      message: '',
+      duration: 3000,
+    }
+  }
+  const store = new Store({ eventBus, initialState });
 
   function render() {
     createHeader({ store }).render();
@@ -41,9 +40,3 @@ async function createApp() {
 
   return { render };
 }
-
-window.addEventListener('DOMContentLoaded', async () => {
-  worker.start();
-  const app = await createApp();
-  app.render();
-});
