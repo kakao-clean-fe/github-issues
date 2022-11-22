@@ -2,7 +2,7 @@ import {LabelForm} from "./LabelForm.js";
 import {LabelHeader} from "./LabelHeader.js";
 import {LabelItems} from "./LabelItems.js";
 import {LABEL_SELECTOR} from "../../lib/constants/selector.js";
-import {labelStore} from "../../lib/stores/label.js";
+import {labelStore} from "../../stores/label.js";
 import {get} from "../../lib/api.js";
 
 export const renderLabel = (selector) => {
@@ -13,5 +13,5 @@ export const renderLabel = (selector) => {
 }
 
 const getInitialData = (url) => {
-    get(url).then(data => labelStore.add(...data))
+    get(url).then(data => labelStore.set(...data))
 }

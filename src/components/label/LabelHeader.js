@@ -1,5 +1,5 @@
 import {getLabelTpl} from "../../tpl.js";
-import {Component} from "./Component.js";
+import {Component} from "../Component.js";
 
 export class LabelHeader extends Component {
     constructor(rootSelector, labelStore) {
@@ -7,13 +7,12 @@ export class LabelHeader extends Component {
             rootSelector,
             templateFn: getLabelTpl,
             templateDataFn: (data) => data.length,
-            labelStore
+            bindingStore: labelStore
         });
     }
 
     render() {
-        this._render(this.labelStore.get())
-        this.bind()
+        this._render(this.bindingStore.get())
     }
 
 }

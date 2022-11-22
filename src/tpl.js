@@ -1,4 +1,4 @@
-export function getIssueTpl(openItemsCount = 0, closedItemsCount = 0) {
+export function getIssueTpl({openItemsCount = 0, closedItemsCount = 0}) {
     return `
     <div id="issue-wrapper" class="w-9/12 m-auto min-w-min">
     <div id="header" class="flex justify-between">
@@ -64,6 +64,10 @@ export function getIssueTpl(openItemsCount = 0, closedItemsCount = 0) {
     </div>
   </div>
     `;
+}
+
+export function getIssueItemsTpl(items) {
+    return items.map((item)=> getIssueItemTpl(item)).join('')
 }
 
 export function getIssueItemTpl(item) {
@@ -245,6 +249,10 @@ export function getLabelItemTpl({name, color, description}) {
 }
 
 
-export function getLabelItemsTpl (labels) {
-    return labels.map(label => getLabelItemTpl({name: label.name, color: label.color, description: label.description})).join('')
+export function getLabelItemsTpl(labels) {
+    return labels.map(label => getLabelItemTpl({
+        name: label.name,
+        color: label.color,
+        description: label.description
+    })).join('')
 }

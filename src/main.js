@@ -2,7 +2,7 @@ import {renderLabel} from "./components/label/index.js";
 import {renderIssue} from "./components/issue/index.js";
 import {COMMON_SELECTOR} from "./lib/constants/selector.js";
 import {selectElement} from "./lib/utils.js";
-import {worker} from "./mocks/browser.js";
+import {worker} from "./lib/mocks/browser.js";
 
 function selectNavTab(event) {
     const tabName = event.target.id
