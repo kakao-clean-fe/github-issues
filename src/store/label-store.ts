@@ -1,4 +1,4 @@
-import { getApi } from '~/utils/api';
+import { getAPI } from '~/utils/api';
 import { Labels } from '~/types/label';
 import { ref, watch } from '~/utils/reactive';
 import { unwrapRefValues } from '~/utils/store';
@@ -19,11 +19,11 @@ export const labelStore = {
   },
 
   async fetchLabels (): Promise<Labels> {
-    return await getApi<Labels>({ url: '/labels' });
+    return await getAPI<Labels>({ url: '/labels' });
   },
 
   async fetchLabelsWithDelay (): Promise<Labels> {
-    return await getApi<Labels>({ url: '/labels-delay', abort: true });
+    return await getAPI<Labels>({ url: '/labels-delay', abort: true });
   },
 
   fetchAndSetLabels ({ delay }: { delay: boolean } = { delay: false }) {
