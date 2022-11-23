@@ -4,4 +4,5 @@ export interface ApiArgs {
   method: Method
   headers?: object
   options?: object
+  abort?: boolean
 }

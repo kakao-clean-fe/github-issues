@@ -1,26 +1,31 @@
 
 interface AbortFetchController {
-  _controllerWeakMap: Map<string, AbortController>
-  create: (key: string) => AbortFetchController
+  _controllerMap: Map<string, AbortController>
+  create: (key: string) => AbortController
   abort: (key: string) => void
   has: (key: string) => boolean
-  getSignal: (key: string) => AbortSignal | undefined
+  cancelPendingRequest: (key: string) => void
 }
 
 export const abortFetchController: AbortFetchController = {
-  _controllerWeakMap: new Map(),
-  create (this: AbortFetchController, key: string): typeof abortFetchController {
-    this._controllerWeakMap.set(key, new AbortController());
-    return this;
+  _controllerMap: new Map(),
+  create (this: AbortFetchController, key: string) {
+    const abortController = new AbortController();
+    this._controllerMap.set(key, abortController);
+
+    return abortController;
   },
   abort (this: AbortFetchController, key: string) {
-    const controller = this._controllerWeakMap.get(key);
+    const controller = this._controllerMap.get(key);
     controller?.abort();
   },
   has (this: AbortFetchController, key: string) {
-    return this._controllerWeakMap.has(key);
+    return this._controllerMap.has(key);
   },
-  getSignal (this: AbortFetchController, key: string) {
-    return this._controllerWeakMap.get(key)?.signal;
+  cancelPendingRequest (this: AbortFetchController, key: string) {
+    if (!this.has(key)) {
+      return;
+    }
+    this.abort(key);
   }
 };
