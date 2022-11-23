@@ -47,14 +47,14 @@ export const LabelPage = class {
 
   onClickNewLabel () {
     const newLabelButton = selectElement(SELECTOR.NEW_LABEL_BUTTON);
-    newLabelButton.addEventListener(EVENT.CLICK, async () => {
-      await this.initLabelCreatorView();
+    newLabelButton.addEventListener(EVENT.CLICK, () => {
+      this.initLabelCreatorView();
     });
   }
 
   onClickUpdateLabels () {
-    selectElement(SELECTOR.UPDATE_LABEL_BUTTON).addEventListener(EVENT.CLICK, async () => {
-      await updateLabelData();
+    selectElement(SELECTOR.UPDATE_LABEL_BUTTON).addEventListener(EVENT.CLICK, () => {
+      updateLabelData();
     });
   }
 }
