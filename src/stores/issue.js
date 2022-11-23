@@ -1,12 +1,18 @@
 import {requestGet, removeItem} from "../utils.js";
 import AppState from "../libs/state.js";
 import IssueItem from "../components/issue/model.js";
-import LabelItem from "../components/label/model.js";
 
 
 const asLabelModel = (data, notify) => {
-  AppState.get().issues?.forEach(label => AppState.unsubscribe(label))
-  AppState.update({issues: data.map(item => new IssueItem(item))}, notify)
+  (
+    AppState.get()
+      .issues
+      ?.forEach(label => AppState.unsubscribe(label))
+  )
+  AppState.update(
+    {issues: data.map(item => new IssueItem(item))},
+    notify
+  )
 }
 
 const IssueStore = {

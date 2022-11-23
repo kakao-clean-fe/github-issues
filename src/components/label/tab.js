@@ -32,17 +32,14 @@ class LabelTab extends View {
 
   bindEvents() {
     // toggle new label button
-    const handleNewLabelButton = () => {
-      if (!localState.isFormImported) {
-        import("./form.js")
-          .then(module => module.default)
-          .then((LabelForm) => {
-            localState.isFormImported = true
-            new LabelForm()
-            const {showNewLabel} = AppState.get()
-            AppState.update({showNewLabel: !showNewLabel})
-          })
+    const handleNewLabelButton = async () => {
+      if (localState.isFormImported) {
+        const {showNewLabel} = AppState.get()
+        AppState.update({showNewLabel: !showNewLabel})
       } else {
+        const {default: LabelForm} = await import("./form.js")
+        localState.isFormImported = true
+        new LabelForm()
         const {showNewLabel} = AppState.get()
         AppState.update({showNewLabel: !showNewLabel})
       }

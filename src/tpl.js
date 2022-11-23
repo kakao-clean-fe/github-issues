@@ -168,7 +168,8 @@ export function getLabelFormTpl(
     lastInputs = {}
   }
 ) {
-  const {name, description, color = randomColor} = lastInputs
+  const {name, description, color} = lastInputs
+  const initColor = color || randomColor
   const $parent = document.createElement('form')
   $parent.id = 'new-label-form'
   $parent.className = `${showNewLabel ? '' : 'hidden'} p-3 mb-3 mt-6 border rounded-sm font-bold`
@@ -179,7 +180,7 @@ export function getLabelFormTpl(
       <span 
       id="label-preview" 
       class="rounded-lg border p-2 px-3 mt-2 inline-block" 
-      style="background-color: #${color};">
+      style="background-color: #${initColor};">
         Label preview
       </span>
     </div>
@@ -239,7 +240,7 @@ export function getLabelFormTpl(
             data-view-component="true"
             class="rounded-md border px-1 font-bold text-4xl"
             aria-labelledby="tooltip-1664858299420-7732"
-            style="background-color: #${color};">
+            style="background-color: #${initColor};">
             ⟳
           </button>
           <tool-tip for="new-label-color" data-direction="s" data-type="label" data-view-component="true"
@@ -248,7 +249,7 @@ export function getLabelFormTpl(
           <div class="ml-2">
             <input type="text" id="label-color-value" name="label-color[description]"
             class="w-full p-2 base-outer focus:outline-none"
-            value="#${color}"
+            value="#${initColor}"
             placeholder="#color" value="" maxlength="100">
           </div>
 

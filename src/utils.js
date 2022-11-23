@@ -1,3 +1,5 @@
+import {REQUEST_POST_FAILED} from "./msg.js";
+
 /** define useful Function files */
 export const selectOne = (selector) => document.querySelector(selector)
 export const selectAll = (selector) => document.querySelectorAll(selector)
@@ -12,28 +14,26 @@ export const asyncPipe = (...functions) =>
 
 /** fetch의 try/catch를 추가합니다. */
 export const requestGet = async (url, options = {}) => {
-  try {
-    const res = await fetch(url, options)
-    return res.json()
-  } catch (err) {
-    console.error("GET method Failed:", err)
-    throw err
-  }
+  return fetch(url, options)
+    .then(res => res.json())
+    .catch((err) => {
+      console.error(REQUEST_POST_FAILED, err)
+      throw err
+    })
 }
-export const requestPost = async (url, options = {}) => {
-  try {
-    const res = await fetch(
-      url,
-      {
-        method: "POST",
-        ...options
-      }
-    )
-    return res.json()
-  } catch (err) {
-    console.error("POST method Failed:", err)
-    throw err
-  }
+export const requestPost = (url, options = {}) => {
+  return fetch(
+    url,
+    {
+      method: "POST",
+      ...options
+    }
+  )
+    .then(res => res.json())
+    .catch((err) => {
+      console.error(REQUEST_GET_FAILED, err)
+      throw err
+    })
 }
 
 

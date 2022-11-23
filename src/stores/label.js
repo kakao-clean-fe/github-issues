@@ -1,6 +1,7 @@
 import {requestGet, isHexColor, removeItem, requestPost} from "../utils.js";
 import AppState from "../libs/state.js";
 import LabelItem from "../components/label/model.js";
+import {CREATE_LABEL_SUCCESS, CREATE_LABEL_FAILED} from "../msg.js";
 
 
 const asLabelModel = (data, notify) => {
@@ -37,12 +38,12 @@ const LabelStore = {
         body: JSON.stringify(item)
       }
     ).then((res) => {
-      if (res.status === 201) {
-        console.log("Creating Label: Success", item.name)
+      if (200 <= res.status < 300) {
+        console.log(CREATE_LABEL_SUCCESS, item.name)
       }
     }).catch((err) => {
       if (err.status === 500) {
-        console.error("Creating Label: Failed")
+        console.error(CREATE_LABEL_FAILED)
         alert("Label이 생성되지 않았습니다. 다시 시도해주세요")
       }
     })
