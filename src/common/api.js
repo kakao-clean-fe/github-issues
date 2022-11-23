@@ -29,7 +29,6 @@ let controller;
 export const updateLabelData = () => {
   if (controller) {
     controller.abort();
-    console.log('Abort Update Labels');
   }
 
   controller = new AbortController();
