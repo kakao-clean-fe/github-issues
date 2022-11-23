@@ -5,15 +5,17 @@ export const findElement = ({ fromElement, selector }: FindElementArgs): Element
 };
 
 export const renderInnerHtml = ({ parent, html }: RenderInnerHtmlArgs): void => {
-  if (parent != null) {
-    parent.innerHTML = html;
+  if (parent === null) {
+    return;
   }
+  parent.innerHTML = html;
 };
 
 export const setEventListenerToElement = ({ element, event, eventHandler }: SetEventListenerToElementArgs): void => {
-  if (element !== null) {
-    element.addEventListener(event, eventHandler);
+  if (element === null) {
+    return;
   }
+  element.addEventListener(event, eventHandler);
 };
 
 export const clearEventListenerToElement = ({ element, event, eventHandler }: SetEventListenerToElementArgs): void => {
