@@ -16,8 +16,8 @@ new LabelPage(labelPageStr, '#app', labelList);
   const buttonClickEvent = (e) => {
     // #app 내부 초기화
     querySelector('#app').innerHTML = '';
-    const name = e.target.innerHTML;
-    switch(name){
+    const pageName = e.target.innerHTML;
+    switch(pageName){
       case 'Label':
         new LabelPage(labelPageStr, '#app', labelList);
         break;

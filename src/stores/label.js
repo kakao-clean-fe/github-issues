@@ -22,10 +22,6 @@ export class LabelStore extends Observer {
     this._labelList = labelList;
     this.notify(); //등록된 렌더링 함수들 호출
   }
-  addLabelList(label) {
-    this.labelList = [...this.labelList, label];
-    this.notify(); //등록된 렌더링 함수들 호출
-  }
 
   get label() {
     return this._label;
