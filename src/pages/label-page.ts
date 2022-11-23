@@ -7,7 +7,7 @@ import { labelStore } from '~/store/label-store';
 export const initLabelPage = (): void => {
   labelStore.fetchAndSetLabels();
 
-  new LabelPageLayout({ labelFormComponent: new LabelForm() }).init();
+  new LabelPageLayout().init();
 
   const labelList = new LabelList();
   labelList.init({ labels: labelStore.state.labels });

@@ -9,7 +9,6 @@ import { labelStore } from '~/store/label-store';
 export class LabelPageLayout implements Component {
   parent: Element | null = null;
   templateFunction = getLabelTpl;
-  labelFormComponent;
 
   get $updateLabelButton (): HTMLButtonElement | null {
     return getElement({ selector: UPDATE_LABEL_BUTTON_SELECTOR }) as HTMLButtonElement;
@@ -21,12 +20,10 @@ export class LabelPageLayout implements Component {
 
   constructor ({
     parentSelector = ROOT_SELECTOR,
-    templateFunction = getLabelTpl,
-    labelFormComponent
-  }: LabelPageLayoutArgs) {
+    templateFunction = getLabelTpl
+  }: LabelPageLayoutArgs = {}) {
     this.parent = getElement({ selector: parentSelector });
     this.templateFunction = templateFunction;
-    this.labelFormComponent = labelFormComponent;
   }
 
   init (): void {
@@ -53,7 +50,11 @@ export class LabelPageLayout implements Component {
   private addNewLabelButtonHandler (): void {
     addClickEventListener({
       element: this.$newLabelButton,
-      eventHandler: () => { this.labelFormComponent.init.bind(this.labelFormComponent)(); }
+      eventHandler: () => {
+        import('~/components/label-form')
+          .then(({ LabelForm }) => new LabelForm().init())
+          .catch((e) => console.error(e));
+      }
     });
   }
 
