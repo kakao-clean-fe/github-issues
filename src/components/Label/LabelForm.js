@@ -1,5 +1,5 @@
 import {Button, Component} from "..";
-import { postDataToMSW } from "../../api";
+import { postLabelDataToPath } from "../../api";
 import { LABEL_COLOR, LABEL_NAME_TO_KEY } from "../../constants";
 import { labelCreateActionDivStr, labelCreateCancelButtonStr, labelCreateSubmitButtonStr, labelInputDivStr } from "../../constants/template-label";
 import { querySelector, querySelectorAll } from "../../utils/dom-selector";
@@ -108,7 +108,7 @@ class SubmitButton extends Button{
     this.state = false;
     this.setOnClickListener(this.template, async (e)=>{
       e.preventDefault();
-      const data = await postDataToMSW('/labels', store.label);
+      const data = await postLabelDataToPath('/labels', store.label);
       if(data){
         store.labelList = data;
       }

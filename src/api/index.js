@@ -11,7 +11,7 @@ export const getFetchData = async (fileName) => {
   return;
 }
 
-export const getDataFromMSW = async (path) => {
+export const getDataFromPath = async (path) => {
   try{
     const response = await fetch(path);
     return await response.json();
@@ -21,7 +21,7 @@ export const getDataFromMSW = async (path) => {
   }
 }
 
-export const postDataToMSW = async (path, data) => {
+export const postLabelDataToPath = async (path, data) => {
   try{
     const response = await fetch(path, {
       method: "POST",
