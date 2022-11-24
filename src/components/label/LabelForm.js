@@ -1,7 +1,8 @@
-import {getLabelForm, getLabelTpl} from "../../tpl.js";
-import {selectElement, selectElementById} from "../../lib/utils.js";
+import {getLabelForm} from "../../tpl.js";
+import {selectElementById} from "../../lib/utils.js";
 import {LABEL_SELECTOR} from "../../lib/constants/selector.js";
-import {Component} from "./Component.js";
+import {Component} from "../Component.js";
+import {handle, post} from "../../lib/api.js";
 
 
 export class LabelForm extends Component {
@@ -9,33 +10,35 @@ export class LabelForm extends Component {
         super({
                 rootSelector,
                 templateFn: getLabelForm,
-                templateDataFn: function () {
-                },
-                labelStore
+                templateDataFn: () => {
+                }
             }
         )
+        this.labelStore = labelStore
     }
 
     render() {
-        this._render()
-        this.addLabelCreateEvent(this.labelStore)
-        this.addToggleFormEvent()
+        this._render(
+            null,
+            [this.#addLabelCreateEvent(this.#labelCreateEventCallback.bind(this))]
+        )
     }
 
-    addLabelCreateEvent(labelStore) {
-        selectElementById(LABEL_SELECTOR.CREATE_BUTTON).addEventListener("click", function () {
-            labelStore.add({
-                name: selectElementById(LABEL_SELECTOR.NAME_INPUT).value,
-                color: selectElementById(LABEL_SELECTOR.COLOR_INPUT).value,
-                description: selectElementById(LABEL_SELECTOR.DESCRIPTION_INPUT).value
-            })
-        })
+    #addLabelCreateEvent(cb) {
+        return function () {
+            selectElementById(LABEL_SELECTOR.CREATE_BUTTON).addEventListener("click", cb)
+        }
     }
 
-    addToggleFormEvent() {
-        selectElement(LABEL_SELECTOR.NEW_BUTTON).addEventListener('click', function () {
-            selectElement(LABEL_SELECTOR.FORM).classList.toggle(LABEL_SELECTOR.HIDDEN)
-        })
+    async #labelCreateEventCallback() {
+        const data = {
+            name: selectElementById(LABEL_SELECTOR.NAME_INPUT).value,
+            color: selectElementById(LABEL_SELECTOR.COLOR_INPUT).value,
+            description: selectElementById(LABEL_SELECTOR.DESCRIPTION_INPUT).value
+        }
+        const {error, response} = await handle(post({url: "/labels", data}))
+        error ? (console.error(error.message), alert(error.message)) : this.labelStore.set(...response)
+
     }
 }
 

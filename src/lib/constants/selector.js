@@ -4,7 +4,8 @@ export const COMMON_SELECTOR = {
 }
 
 export const ISSUE_SELECTOR = {
-    OPEN_TAB: ".statusTab>.open-count",
+    STATUS_TAB: ".statusTab",
+    OPEN_TAB: "open-count",
     LIST: ".issue-list>ul",
     BOLD_FONT: "font-bold"
 }
@@ -19,7 +20,8 @@ export const LABEL_SELECTOR = {
     FORM: '#new-label-form',
     NEW_BUTTON: '.new-label-button',
     HIDDEN: 'hidden',
-
+    REFRESH: '.refresh-labels',
+    LABEL_FORM: '.label-form'
 }
 
 

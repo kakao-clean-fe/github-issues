@@ -1,4 +1,4 @@
-export function getIssueTpl(openItemsCount = 0, closedItemsCount = 0) {
+export function getIssueTpl({openItemsCount = 0, closedItemsCount = 0}) {
     return `
     <div id="issue-wrapper" class="w-9/12 m-auto min-w-min">
     <div id="header" class="flex justify-between">
@@ -66,6 +66,10 @@ export function getIssueTpl(openItemsCount = 0, closedItemsCount = 0) {
     `;
 }
 
+export function getIssueItemsTpl(items) {
+    return items.map((item)=> getIssueItemTpl(item)).join('')
+}
+
 export function getIssueItemTpl(item) {
     return `
         <li> 
@@ -90,25 +94,29 @@ export function getIssueItemTpl(item) {
         </li>`;
 }
 
+export function getNewLabelButton() {
+    return `
+      <div id="label-wrapper" class="w-9/12 m-auto min-w-min">
+      <div id="header" class="flex justify-between">
+        <div class="filter-menu w-2/3 px-3 py-1 flex base-outer items-center">
+          <form action="/" class="p-1 w-full">
+            <input type="text" class="w-full bg-slate-100 focus:outline-none" name="filter-text" id="filter-input"placeholder="search all filter...">
+          </form>
+        </div>
+
+        <div class="new-label-button cursor-pointer p-1 py-1 base-outer flex items-center justify-center w-2/12 ml-4 bg-green-700 text-white">
+          <a href="#">New label</a>
+        </div>
+      </div>
+      
+      <span class="label-form"></span>
+      <span class="label-header"></span>
+      </div>
+    `
+}
+
 export function getLabelForm() {
     return `
-  <div id="label-wrapper" class="w-9/12 m-auto min-w-min">
-
-  <div id="header" class="flex justify-between">
-
-    <div class="filter-menu w-2/3 px-3 py-1 flex base-outer items-center">
-      <form action="/" class="p-1 w-full">
-        <input type="text" class="w-full bg-slate-100 focus:outline-none" name="filter-text" id="filter-input"
-          placeholder="search all filter...">
-      </form>
-    </div>
-
-    <div class="new-label-button cursor-pointer p-1 py-1 base-outer flex items-center justify-center w-2/12 ml-4 bg-green-700 text-white">
-      <a href="#">New label</a>
-    </div>
-  </div>
-
-
   <form class="hidden p-3 mb-3 mt-6 border rounded-sm font-bold" id="new-label-form" action="/labels" accept-charset="UTF-8" method="post">
     <div class="form-group mt-0 mb-2"
       data-url-template="/labels/preview/" data-default-name="Label preview">
@@ -199,7 +207,6 @@ export function getLabelForm() {
     </div>
 
   </form>
-  <span class="label-header"></span>
 `
 }
 
@@ -245,6 +252,10 @@ export function getLabelItemTpl({name, color, description}) {
 }
 
 
-export function getLabelItemsTpl (labels) {
-    return labels.map(label => getLabelItemTpl({name: label.name, color: label.color, description: label.description})).join('')
+export function getLabelItemsTpl(labels) {
+    return labels.map(label => getLabelItemTpl({
+        name: label.name,
+        color: label.color,
+        description: label.description
+    })).join('')
 }
