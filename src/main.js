@@ -1,3 +1,7 @@
+//msw worker
+import { worker } from "./mocks/browser";
+worker.start();
+
 import initializeIssue from "./pages/issue";
 import initializeLabel from "./pages/label";
 

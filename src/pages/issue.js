@@ -9,7 +9,7 @@ import {
 } from "../utils/helper";
 import { getIssueTpl, getIssueItemTpl } from "../tpl";
 
-const DATA_SOURCE_ISSUES = "/data-sources/issues.json";
+const DATA_SOURCE_ISSUES = "/issues";
 
 const renderIssueLayout = renderLayout(getIssueTpl);
 

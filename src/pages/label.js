@@ -1,18 +1,28 @@
 import Store from "../lib/Store";
 import LabelList from "../core/LabelList";
-import LabelCreateUI from "../core/LabelCreator";
 
-import { LABEL_CLASS_NAME } from "../constants";
+import { CLASS_NAME } from "../constants";
+import { toFetch } from "../utils/helper";
 
-const DATA_SOURCE_LABEL = "/data-sources/labels.json";
-
-const label = new Store(DATA_SOURCE_LABEL);
+const DATA_SOURCE_LABEL = "/labels";
 
 const initializeLabel = async (target) => {
+  const items = await toFetch(DATA_SOURCE_LABEL);
+  const label = new Store(items);
+
   const listUI = new LabelList(label, target, () => {
-    const itemUI = new LabelCreateUI(LABEL_CLASS_NAME.ADD_FORM, label);
-    listUI.addEvent(() => itemUI.toggle());
+    import("../core/LabelCreator")
+      .then((module) => module.default)
+      .then((LabelCreateUI) => {
+        const itemUI = new LabelCreateUI(CLASS_NAME["label"].ADD_FORM, label);
+        listUI.addNewLabelBtnEvent(() => itemUI.toggle());
+        itemUI.toggle();
+      })
+      .catch((err) => {
+        alert(err);
+      });
   });
+
   listUI.updateItems();
   label.subscribe(() => listUI.updateItems());
 };
