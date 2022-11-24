@@ -1,5 +1,6 @@
 import { APIArgs, Method } from '~/types/utils/api';
-import { abortFetchController } from './abort-fetch-controller';
+import { abortFetchController } from '~/utils/abort-fetch-controller';
+import { APIError, fetchErrorHandler } from '~/utils/api-error';
 
 const getAbortKey = ({ method, url }: { method: Method, url: string }): string => `${method} ${url}`;
 
@@ -8,7 +9,7 @@ const handleAbortAndGetSignal = (key: string): AbortSignal => {
   return abortFetchController.create(key).signal;
 };
 
-const baseFetch = async <T>({ url, headers = {}, options = {}, method, abort = false }: APIArgs): Promise<T> => {
+const baseFetch = async <Data>({ url, headers = {}, options = {}, method, abort = false }: APIArgs): Promise<Data | Error | Response> => {
   const signal = abort ? handleAbortAndGetSignal(getAbortKey({ method, url })) : undefined;
   const requestOption = {
     method,
@@ -17,14 +18,31 @@ const baseFetch = async <T>({ url, headers = {}, options = {}, method, abort = f
       ...headers
     },
     signal,
-    ...options
+    ...options,
+    body: options.body !== undefined ? JSON.stringify(options.body) : undefined
   };
-  const response = await fetch(url, requestOption);
 
-  return await (response.json() as Promise<T>);// parses JSON response into native JavaScript objects
+  return await new Promise((resolve, reject) => {
+    fetch(url, requestOption)
+      .then(async (response: Response) => {
+        const data = await response.json();
+        if (response.ok) {
+          resolve(data as Data);
+        } else {
+          console.error(response.statusText, response);
+          fetchErrorHandler(response);
+          reject(response);
+        }
+      })
+      .catch((error: Error) => {
+        console.error(error);
+        fetchErrorHandler(error);
+        reject(error);
+      });
+  });
 };
 
-const setMethod = (method: Method) => async <T>(args: Omit<APIArgs, 'method'>): Promise<T> => await baseFetch({ method, ...args });
+const setMethod = (method: Method) => async <T>(args: Omit<APIArgs, 'method'>): ReturnType<typeof baseFetch<T>> => await baseFetch({ method, ...args });
 
 export const getAPI = setMethod('GET');
 export const postAPI = setMethod('POST');
