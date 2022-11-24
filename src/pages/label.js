@@ -37,18 +37,16 @@ export class LabelPage extends Component {
         document.querySelector(SELECTOR.LABEL_UPDATE_BUTTON)?.addEventListener('click', this.#onUpdateBtnClick.bind(this))
     }
 
-    #onUpdateBtnClick() {
+    async #onUpdateBtnClick() {
         const controller = this._props?.updateLabelController;
         const isFetching = !!controller;
         if (isFetching) controller.abort();
         this._props.updateLabelController = new AbortController();
-        updateLabels(this._props.updateLabelController.signal).then((result) => {
-            result
-                .doOnSuccess(({data: labels}) => {
-                    this._props.updateLabelController = null;
-                    setLabels(labels);
-                });
-        })
+        (await updateLabels(this._props.updateLabelController.signal))
+            .doOnSuccess(({data: labels}) => {
+                this._props.updateLabelController = null;
+                setLabels(labels);
+            });
     }
 
     #updateChildAndLabelsCount() {
