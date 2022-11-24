@@ -1,12 +1,14 @@
 import {Button, Component} from "..";
+import { postLabelDataToPath } from "../../api";
 import { LABEL_COLOR, LABEL_NAME_TO_KEY } from "../../constants";
 import { labelCreateActionDivStr, labelCreateCancelButtonStr, labelCreateSubmitButtonStr, labelInputDivStr } from "../../constants/template-label";
 import { querySelector, querySelectorAll } from "../../utils/dom-selector";
 
 export default class LabelForm extends Component{
-  constructor(templateStr, targetQuery, store){
-    super(templateStr, targetQuery);
+  constructor(templateStr, targetQuery, store, appendOption){
+    super(templateStr, targetQuery, appendOption);
     this.store = store;
+    this.toggleForm();
     this.labelInputDiv = new LabelInputDiv(labelInputDivStr, '#new-label-form', store);
 
     this.store.subscribe(() => this.toggleForm());
@@ -29,11 +31,16 @@ class LabelInputDiv extends Component{
     this.store.subscribe(() => this.updatedLabel());
 
     this.inputs = querySelectorAll(`${this.#childTargetQuery} input`);
-    this.inputs.forEach(inputElement => this.addInputEvent(inputElement));
+    this.inputs.forEach(inputElement => this.initInput(inputElement));
     this.labelCreateActionDiv = new LabelCreateActionDiv(labelCreateActionDivStr, this.#childTargetQuery, store);
     
     this.changeColorButton = querySelector('#new-label-color');
     this.addChangeLabelColorEvent(this.changeColorButton);
+  }
+  initInput(inputElement){
+    const key = LABEL_NAME_TO_KEY[inputElement.name];
+    inputElement.value = this.store.label && this.store.label[key] || '';
+    this.addInputEvent(inputElement);
   }
   addInputEvent(inputElement){
     const event = (e) => {
@@ -60,7 +67,7 @@ class LabelInputDiv extends Component{
   }
   setColorTemplate(){
     const color = this.store.label.color;
-    [ this.changeColorButton, querySelector('#label-preview')]
+    [this.changeColorButton, querySelector('#label-preview')]
       .forEach(element => element.style.backgroundColor = `#${color}`);
     ;
   }
@@ -78,8 +85,6 @@ class LabelInputDiv extends Component{
     return label.name && label.description && label.color ? true : false;
   }
 }
-
-
 class LabelCreateActionDiv extends Component{
   constructor(templateStr, targetQuery, store) {
     super(templateStr, targetQuery);
@@ -101,9 +106,12 @@ class SubmitButton extends Button{
   constructor(templateStr, targetQuery, store) {
     super(templateStr, targetQuery);
     this.state = false;
-    this.setOnClickListener(this.template, (e)=>{
+    this.setOnClickListener(this.template, async (e)=>{
       e.preventDefault();
-      store.addLabelList(store.label);
+      const data = await postLabelDataToPath('/labels', store.label);
+      if(data){
+        store.labelList = data;
+      }
     });
   }
   setSubmitState(state){
