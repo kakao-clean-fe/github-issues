@@ -1,18 +1,20 @@
-import { fetchBody } from "../../utils";
+import { fetchBody, getLocalStorage, setLocalStorage } from "../../utils";
 import Observer from "../observer";
 import LabelApi from './Api';
-const initialForm = {
-  name: "",
-  description: "",
-  color: "#BE185D",
-};
+
 class LabelModel extends Observer {
+  labelKey = 'label'
+  initialLabelForm = {
+    name: "",
+    description: "",
+    color: "#BE185D",
+  }
   constructor() {
     super();
 
     this.setState({
       labels: [],
-      labelForm: initialForm,
+      labelForm: this.getLabelForm(),
     });
     this.initState();
   }
@@ -43,7 +45,27 @@ class LabelModel extends Observer {
       ...this.state,
       labelForm,
     });
+    this.saveLabelForm(labelForm);
   }
+
+  saveLabelForm(labelForm) {
+    setLocalStorage(this.labelKey, labelForm);
+  }
+
+  getLabelForm() {
+    return getLocalStorage(this.labelKey) || this.initialLabelForm    
+  }
+
+  async refreshLabel() {
+    try {
+      const labels = await LabelApi.getLabelsDelay();
+      this.setState({...this.state, labels});
+    } catch(e) {
+      alert('라벨을 갱신하던 중 문제가 발생하였습니다.');
+      console.error(e);
+    }
+  }
+
   async initState() {
     try {
       const labels = await LabelApi.getLabels();

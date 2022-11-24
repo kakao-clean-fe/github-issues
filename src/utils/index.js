@@ -62,6 +62,19 @@ const Lazy = (importFunc) => {
   }
 }
 
+const setLocalStorage =(key, value) => {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+const getLocalStorage = (key, {isJson} = {isJson:true}) => {
+  const value = localStorage.getItem(key);
+  if(value && isJson) {
+    return JSON.parse(value);
+  }
+
+  return value;
+}
+
 export {
   render,
   on ,
@@ -72,4 +85,6 @@ export {
   cacheFunction,
   getRandomColor,
   Lazy,
+  setLocalStorage,
+  getLocalStorage
 };

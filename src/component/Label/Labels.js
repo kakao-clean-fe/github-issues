@@ -15,6 +15,7 @@ const SELECTORS = {
   LABEL_DESCRIPTION_INPUT: "#label-description-input",
   LABEL_CREATE_BUTTON: "#label-create-button",
   DELETE_BUTTON: ".delete-button",
+  REFRESH_BUTTON:".refresh-labels"
 };
 
 const CLASS_HIDDEN = "hidden";
@@ -52,6 +53,7 @@ export default class Labels extends Component {
     this.removeLabel = this.removeLabel.bind(this);
     this.render = this.render.bind(this);
     this.setLabel = this.setLabel.bind(this);
+    this.refreshLabel = this.refreshLabel.bind(this);
   }
 
   setLabel(labels) {
@@ -116,6 +118,10 @@ export default class Labels extends Component {
     this.setState({ labelForm: initialForm });
   }
 
+  refreshLabel() {
+    this.model.refreshLabel();
+  }
+
   setListeners() {
     this.on(SELECTORS.NEW_LABEL_BUTTON, EVENTS.CLICK, this.toggleForm);
     this.on(SELECTORS.NEW_LABEL_COLOR, EVENTS.CLICK, this.setNewLabelColor);
@@ -127,6 +133,7 @@ export default class Labels extends Component {
     );
     this.on(SELECTORS.LABEL_CREATE_BUTTON, EVENTS.CLICK, this.addNewLabel);
     this.on(SELECTORS.DELETE_BUTTON, EVENTS.CLICK, this.removeLabel);
+    this.on(SELECTORS.REFRESH_BUTTON, EVENTS.CLICK, this.refreshLabel);
   }
 
   render() {
