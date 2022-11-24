@@ -1,6 +1,6 @@
 import { APIArgs, Method } from '~/types/utils/api';
 import { abortFetchController } from '~/utils/abort-fetch-controller';
-import { APIError, fetchErrorHandler } from '~/utils/api-error';
+import { fetchErrorHandler } from '~/utils/api-error';
 
 const getAbortKey = ({ method, url }: { method: Method, url: string }): string => `${method} ${url}`;
 

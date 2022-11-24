@@ -1,7 +1,6 @@
 import { LabelList } from '~/components/label-list';
 import { LabelPageLayout } from '~/components/label-page-layout';
 import { LabelCount } from '~/components/label-count';
-import { LabelForm } from '~/components/label-form';
 import { labelStore } from '~/store/label-store';
 
 export const initLabelPage = (): void => {
