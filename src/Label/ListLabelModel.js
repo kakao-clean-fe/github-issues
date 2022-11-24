@@ -1,15 +1,11 @@
-import { getLabelsData } from "../api";
+import { getLabelsData, getLabelsDataDelay, postLabelsData } from "../api";
 import { Observable } from "../lib/observable";
 
 export default class ListLabelModel extends Observable {
   constructor() {
     super();
+    this.abortController = new AbortController();
     this.labels = [];
-  }
-
-  addLabel(label) {
-    this.labels = [...this.labels, label];
-    this.notify(this.labels);
   }
 
   setLabels(labels) {
@@ -24,5 +20,17 @@ export default class ListLabelModel extends Observable {
   async getInitialData() {
     const labels = await getLabelsData();
     this.setLabels(labels);
+  }
+
+  async getDelayInitialData() {
+    const labels = await getLabelsDataDelay(this.abortController.signal, this.abortController);
+    if (labels.length === 0) return;
+    this.setLabels(labels);
+  }
+
+  async addLabelData(data) {
+    const label = await postLabelsData(data);
+    if (!label) return;
+    this.setLabels(label);
   }
 }
