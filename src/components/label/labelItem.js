@@ -2,9 +2,9 @@
 import { BaseComponent } from '../component';
 
 // Templates
-import { getLabelItemTpl } from '../../tpl';
+import { getLabelItemTpl } from '../../template/label';
 
-export class LabelItem extends BaseComponent {
+export default class LabelItem extends BaseComponent {
   constructor({ name, color, description }) {
     super(getLabelItemTpl({ name, color, description }));
   }

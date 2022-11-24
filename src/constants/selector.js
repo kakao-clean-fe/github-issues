@@ -1,21 +1,31 @@
-export const ROOT = '#app';
+/* For Main Page */
+export const mainSelector = {
+  ROOT: '#app',
+  NAVBAR: '#navbar',
+  ISSUE_PAGE_BUTTON: '#issuePageButton',
+  LABEL_PAGE_BUTTON: '#labelPageButton',
+};
 
 /* For Issue Page */
-export const ISSUE_PAGE_BUTTON = '#issuePageButton';
-export const LABEL_PAGE_BUTTON = '#labelPageButton';
-export const ISSUE_LIST = '.issue-list ul';
-export const OPEN_TAB = '#openTab';
-export const CLOSE_TAB = '#closeTab';
+export const issueSelector = {
+  ISSUE_LIST: '.issue-list ul',
+  OPEN_TAB: '#openTab',
+  CLOSE_TAB: '#closeTab',
+};
 
 /* For Label Page */
-export const LABEL_COUNT = '#labelCount';
-export const NEW_LABEL_BUTTON = '#newLabelButton';
-export const LABEL_INPUT_FORM = '#labelInputForm';
-export const LABEL_NAME_INPUT = '#label-name-input';
-export const LABEL_DESCRIPTION_INPUT = '#label-description-input';
-export const NEW_LABEL_COLOR = '#new-label-color';
-export const LABEL_COLOR_VALUE = '#label-color-value';
-export const LABEL_PREVIEW = '#label-preview';
-export const LABEL_CANCEL_BUTTON = '#label-cancel-button';
-export const LABEL_CREATE_BUTTON = '#label-create-button';
-export const LABEL_LIST = '#labels-wrapper .label-list';
+export const labelSelector = {
+  LABEL_COUNT: '#labelCount',
+  NEW_LABEL_BUTTON: '#newLabelButton',
+  LABEL_FORM_WRAPPER: '#labelFormWrapper',
+  LABEL_INPUT_FORM: '#labelInputForm',
+  LABEL_NAME_INPUT: '#label-name-input',
+  LABEL_DESCRIPTION_INPUT: '#label-description-input',
+  NEW_LABEL_COLOR: '#new-label-color',
+  LABEL_COLOR_VALUE: '#label-color-value',
+  LABEL_PREVIEW: '#label-preview',
+  LABEL_CANCEL_BUTTON: '#label-cancel-button',
+  LABEL_CREATE_BUTTON: '#label-create-button',
+  LABEL_LIST: '#labels-wrapper .label-list',
+  LABEL_UPDATE_BUTTON: '#labelUpdateButton',
+};

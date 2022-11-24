@@ -3,10 +3,10 @@ import { BaseComponent } from '../components/component';
 import { IssueItem } from '../components/issue/issueItem';
 
 // Templates
-import { getIssueTpl } from '../tpl';
+import { getIssueTpl } from '../template/issue';
 
 // Constants
-import { ROOT, ISSUE_LIST, OPEN_TAB, CLOSE_TAB } from '../constants/selector';
+import { issueSelector } from '../constants/selector';
 
 // Api
 import IssueApi from '../api/issue';
@@ -23,27 +23,27 @@ import IssueStore, {
 import { pipe, filter } from '../utils/fx';
 import { findElement } from '../utils/dom';
 
-export class IssuePage extends BaseComponent {
-  constructor() {
+export default class IssuePage extends BaseComponent {
+  constructor($container) {
     super(getIssueTpl());
+
+    this.$container = $container;
   }
 
-  #rootEl = null;
   #tabs = {
-    open: OPEN_TAB,
-    close: CLOSE_TAB,
+    open: issueSelector.OPEN_TAB,
+    close: issueSelector.CLOSE_TAB,
   };
 
   initPage = async () => {
     // 데이터 패치
     const issues = await IssueApi.fetchIssues();
 
-    // 루트 선택 및 페이지 렌더링
-    this.#rootEl = findElement(ROOT);
-    this.attatchTo(this.#rootEl);
+    // 페이지 렌더링
+    this.attatchTo(this.$container);
 
     // subscribe 등록
-    IssueStore.subscribe(SET_ISSUE_LIST, this.loadIssuePage);
+    IssueStore.subscribe(SET_ISSUE_LIST, this.renderIssues);
     IssueStore.subscribe(SET_OPEN_COUNT, this.renderOpenCount);
     IssueStore.subscribe(SET_CLOSE_COUNT, this.renderCloseCount);
     IssueStore.subscribe(SET_CURRENT_TAB, this.renderIssues);
@@ -76,15 +76,6 @@ export class IssuePage extends BaseComponent {
     });
   };
 
-  loadIssuePage = () => {
-    this.removeFrom(this.#rootEl);
-    this.setElement(getIssueTpl());
-    this.attatchTo(this.#rootEl);
-
-    // 이슈 리스트 렌더링
-    this.renderIssues();
-  };
-
   filterIssues = (status) => {
     return pipe(
       (issues) => issues,
@@ -93,19 +84,21 @@ export class IssuePage extends BaseComponent {
   };
 
   clearIssues = () => {
-    while (findElement(ISSUE_LIST).firstChild) {
-      findElement(ISSUE_LIST).removeChild(findElement(ISSUE_LIST).firstChild);
+    while (findElement(issueSelector.ISSUE_LIST).firstChild) {
+      findElement(issueSelector.ISSUE_LIST).removeChild(
+        findElement(issueSelector.ISSUE_LIST).firstChild
+      );
     }
   };
 
   renderOpenCount = () => {
-    const openTab = findElement(OPEN_TAB);
+    const openTab = findElement(issueSelector.OPEN_TAB);
     openTab.innerText = `${IssueStore.getState().openCount} Opens`;
   };
 
   renderCloseCount = () => {
-    const closeTab = findElement(CLOSE_TAB);
-    closeTab.innerText = `${IssueStore.getState().closeCount} Opens`;
+    const closeTab = findElement(issueSelector.CLOSE_TAB);
+    closeTab.innerText = `${IssueStore.getState().closeCount} Closed`;
   };
 
   renderIssues = () => {
@@ -115,7 +108,7 @@ export class IssuePage extends BaseComponent {
     const filteredIssues = this.filterIssues(IssueStore.getState().currentTab);
     filteredIssues.forEach((issue) => {
       const issueItem = new IssueItem(issue);
-      issueItem.attatchTo(findElement(ISSUE_LIST), 'beforeend');
+      issueItem.attatchTo(findElement(issueSelector.ISSUE_LIST), 'beforeend');
     });
   };
 
