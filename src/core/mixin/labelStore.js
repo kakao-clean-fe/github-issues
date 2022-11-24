@@ -1,4 +1,4 @@
-import { request } from "../../utils/api";
+import { commonAPI } from "../../utils/api";
 
 const CHANGE_LABEL_LIST = 'CHANGE_LABEL_LIST';
 const CHANGE_LABEL_NAME = 'CHANGE_LABEL_NAME';
@@ -27,12 +27,29 @@ export const labelStoreMixin = {
     },
   },
   fetchLabels () {
-    const LABEL_API = '/data-sources/labels.json';
+    const LABEL_API = '/labels';
 
-    request(LABEL_API)
+    return commonAPI.get(LABEL_API)
       .then(data => {
         this.setLabelList(data);
       })
+  },
+  fetchDelayLabel () {
+    const SIGNAL_KEY = 'fetchDelayLabel';
+    const LABEL_DELAY_API = '/labels-delay';
+  
+    return commonAPI.get(LABEL_DELAY_API, {signalKey: SIGNAL_KEY})
+      .then(data => {
+        this.setLabelList(data);
+      })
+  },
+  fetchAddLabel (label) {
+    const LABEL_API = '/labels';
+
+    return commonAPI.post(LABEL_API, label)
+    .then(data => {
+      this.setLabelList(data);
+    })
   },
   setLabelList (labelList) {
     this._commit(CHANGE_LABEL_LIST, labelList);

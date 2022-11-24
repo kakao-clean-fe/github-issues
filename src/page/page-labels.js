@@ -1,14 +1,14 @@
-import { getElement } from './utils/element';
-import Component from './core/component';
-import { LabelMaker } from './components/LabelMaker';
-import { LabelList } from './components/LabelList';
-import { labelStoreMixin } from './core/mixin/labelStore';
+import { getElement } from '../utils/element';
+import Component from '../core/component';
+import { LabelMaker } from '../components/LabelMaker';
+import { LabelList } from '../components/LabelList';
+import { labelStoreMixin } from '../core/mixin/labelStore';
 
-class Main extends Component {
+export default class LabelPage extends Component {
   static getInstance(...args) {
-    Object.assign(Main.prototype, labelStoreMixin);
+    Object.assign(LabelPage.prototype, labelStoreMixin);
 
-    return new Main(...args);
+    return new LabelPage(...args);
   }
 
   onClickNewLabelButton () {
@@ -20,14 +20,16 @@ class Main extends Component {
   }
 
   onClickCreateLabelButton () {
-    const nextLabelList = [...this.labelState.labelList, {
+    const label = {
       name: this.labelState.labelName,
       color: this.labelState.color,
       description: this.labelState.description,
-    }]
+    };
 
-    this.setLabelList(nextLabelList);
-    this.clearInputField();
+    this.fetchAddLabel(label)
+      .catch(({error: errorMessage}) => {
+        alert(errorMessage);
+      })
   }
 
   initState () {
@@ -58,4 +60,4 @@ class Main extends Component {
   }
 }
 
-Main.getInstance(getElement('#app')).render();
+LabelPage.getInstance(getElement('#app')).render();
