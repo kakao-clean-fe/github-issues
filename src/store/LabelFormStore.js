@@ -30,13 +30,7 @@ export default class LabelFormStore {
     return this._color;
   }
   validate() {
-    if (
-      this._name &&
-      this._description &&
-      this._color &&
-      this._name.length > 0 &&
-      this._description.length > 0 &&
-      this._color.length > 0)
+    if (this.isValid())
     {
       toggleClass($.LABEL_CREATE_BTN, 'opacity-50', false);
       toggleAttr($.LABEL_CREATE_BTN, 'disabled', false);
@@ -44,5 +38,15 @@ export default class LabelFormStore {
       toggleClass($.LABEL_CREATE_BTN, 'opacity-50', true);
       toggleAttr($.LABEL_CREATE_BTN, 'disabled', true);
     }
+  }
+  isValid() {
+    return (
+      this._name &&
+      this._description &&
+      this._color &&
+      this._name.length > 0 &&
+      this._description.length > 0 &&
+      this._color.length > 0
+    )
   }
 }

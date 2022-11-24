@@ -1,6 +1,13 @@
 import { getIssueTpl, getIssueItemTpl } from '/src/tpl';
 import { curry, go, filter, map } from '/src/util/fp';
+import { on, fetchData } from '/src/util/common';
+import { $ } from '/src/util/constant';
 
+const CONST = {
+  FONT_BOLD: 'font-bold',
+  OPEN: 'open',
+  CLOSE: 'close'
+};
 export default class IssuePage {
   constructor(app) {
     this.$app = app;
@@ -17,21 +24,21 @@ export default class IssuePage {
 
   initClickEvent() {
     // ClickEvent
-    this.$openCount.addEventListener('click', () => {
-      this.renderIssue(filterIssue('open'));
-      this.$openCount.classList.add('font-bold');
-      this.$closeCount.classList.remove('font-bold');
+    on($.OPEN_COUNT, 'click', () => {
+      this.renderIssue(this.filterIssue(CONST.OPEN));
+      this.$openCount.classList.add(CONST.FOND_BOLD);
+      this.$closeCount.classList.remove(CONST.FOND_BOLD);
     });
-    this.$closeCount.addEventListener('click', () => {
-      this.renderIssue(filterIssue('close'));
-      this.$closeCount.classList.add('font-bold');
-      this.$openCount.classList.remove('font-bold');
+    on($.CLOSE_COUNT, 'click', () => {
+      this.renderIssue(this.filterIssue(CONST.CLOSE));
+      this.$closeCount.classList.add(CONST.FOND_BOLD);
+      this.$openCount.classList.remove(CONST.FOND_BOLD);
     });
   }
 
   async initIssueList() {
     // Data Fetch
-    [this.issueData] = await this.fetchData('issues');
+    this.issueData = await fetchData('issues');
 
     const openIssueCount = this.filterIssue('open').length;
     const closeIssueCount = this.filterIssue('close').length;
@@ -46,19 +53,10 @@ export default class IssuePage {
   initVariables() {
     this.$app.innerHTML = getIssueTpl();
     this.$issueList = document.querySelector('.issue-list ul');
-    this.$openCount = document.querySelector('.statusTab .open-count');
-    this.$closeCount = document.querySelector('.statusTab .close-count');
+    this.$openCount = document.querySelector($.OPEN_COUNT);
+    this.$closeCount = document.querySelector($.CLOSE_COUNT);
   }
 
-  async fetchData(...nameList) {
-    const arr = await Promise.all(
-      nameList
-        .map(async (name) => {
-          return await (await fetch(`/data-sources/${name}.json`)).json();
-        })
-    );
-    return arr;
-  }
   renderIssue(issues) {
     const setHTML = curry((dom, html) => {
       dom.innerHTML = html;

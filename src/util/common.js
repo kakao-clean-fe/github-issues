@@ -22,8 +22,35 @@ export const toggleAttr = ( selector, attrName, type) => {
   }
 }
 
-export const fetchData = async (filename) => {
-  const res = await fetch(`/data-sources/${filename}.json`);
+export const fetchData = async (path) => {
+  const res = await fetch(`/${path}`);
   const data = await res.json();
   return data;
+}
+
+export const fetchDataWithAbort = async (path, controller) => {
+  if (controller.ref) {
+    controller.ref.abort();
+  }
+  controller.ref = new AbortController();
+  const signal = controller.ref.signal;
+  try {
+    const res = await fetch(`/${path}`, { signal });
+    const data = await res.json();
+    controller.ref = null;
+    return data;
+  } catch(err) {
+    console.log(err.name);
+  }
+}
+
+export const postData = async (path, data) => {
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify(data)
+  }
+  return fetch(path, options);
 }
