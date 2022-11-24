@@ -6,7 +6,7 @@ export const handlers = [
     return res(ctx.status(200), ctx.json(labels));
   }),
 
-  rest.post('/labels', async (req, res, ctx) => {
+  rest.post('/label', async (req, res, ctx) => {
     const newData = await req.json();
 
     if (Math.floor(Math.random() * 10) > 5) {

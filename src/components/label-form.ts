@@ -5,10 +5,16 @@ import { addClass, clearInputValue, disableButton, enableButton, getInputValue, 
 import { getElement } from '~/store/element-store';
 import { DISABLED_CREATE_BUTTON_CLASS } from '~/tpl';
 import { labelStore } from '~/store/label-store';
-import { Label } from '~/types/label';
+import type { Label, Labels } from '~/types/label';
+import { isHandledError } from '~/utils/api-error';
 
 export class LabelForm implements Component {
   isEventHandlerInitialized = false;
+
+  ERROR = {
+    SUBMIT: '라벨 생성에 실패하였습니다. 다시 시도해주세요.',
+    FORM: '라벨 형식에 맞춰 입력해주세요. (이름 필수)'
+  } as const;
 
   get $inputWrapper (): Element | null {
     return getElement({
@@ -144,20 +150,8 @@ export class LabelForm implements Component {
     });
   }
 
-  private submitForm (event: Event): void {
-    event.stopPropagation();
-    event.preventDefault();
-    if (!this.isValidForm()) {
-      console.error('invalid form');
-      return;
-    }
-
-    const newLabels = [
-      ...labelStore.state.labels,
-      this.getFormData()
-    ];
-
-    labelStore.setLabels(newLabels);
+  private async submitForm () {
+    return await labelStore.fetchSubmitLabel(this.getFormData());
   }
 
   private clearAllInputValue (): void {
@@ -166,8 +160,22 @@ export class LabelForm implements Component {
   }
 
   private submitFormHandler (event: Event): void {
-    this.submitForm(event);
-    this.clearAllInputValue();
-    this.unmount();
+    event.stopPropagation();
+    event.preventDefault();
+    if (this.isValidForm()) {
+      this.submitForm()
+        .then((labels: Labels) => {
+          labelStore.setLabels(labels);
+          this.clearAllInputValue();
+          this.unmount();
+        })
+        .catch((error: Response | Error) => {
+          if (!isHandledError(error)) {
+            alert(this.ERROR.SUBMIT);
+          }
+        });
+    } else {
+      alert(this.ERROR.FORM);
+    }
   }
 }

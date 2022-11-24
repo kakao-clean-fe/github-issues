@@ -1,7 +1,7 @@
-import { getAPI } from '~/utils/api';
-import { Labels } from '~/types/label';
+import { getAPI, postAPI } from '~/utils/api';
 import { ref, watch } from '~/utils/reactive';
 import { unwrapRefValues } from '~/utils/store';
+import type { Labels, Label } from '~/types/label';
 
 const refObject = {
   labels: ref<Labels>([])
@@ -18,11 +18,15 @@ export const labelStore = {
     this.state.labels = labels;
   },
 
-  async fetchLabels (): Promise<Labels> {
+  async fetchSubmitLabel (label: Label) {
+    return await postAPI<Labels>({ url: '/label', options: { body: label } });
+  },
+
+  async fetchLabels () {
     return await getAPI<Labels>({ url: '/labels' });
   },
 
-  async fetchLabelsWithDelay (): Promise<Labels> {
+  async fetchLabelsWithDelay () {
     return await getAPI<Labels>({ url: '/labels-delay', abort: true });
   },
 
