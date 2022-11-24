@@ -22,7 +22,7 @@ const removeClassList = ({
 }) =>
 element.querySelector(selector).classList.remove(classes);
 
-const fetchBody = (url) => fetch(url).then((response) => response.json());
+const fetchBody = (url, options={}) => fetch(url, options).then((response) => response.json());
 const pipe = (...fns) => {
   return (args) =>
     fns.reduce((acc, fn) => {

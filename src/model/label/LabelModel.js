@@ -1,5 +1,6 @@
-import { fetchBody } from "../utils";
-import Observer from "./observer";
+import { fetchBody } from "../../utils";
+import Observer from "../observer";
+import LabelApi from './Api';
 const initialForm = {
   name: "",
   description: "",
@@ -16,11 +17,14 @@ class LabelModel extends Observer {
     this.initState();
   }
 
-  addLabel(label) {
-    this.setState({
-      ...this.state,
-      labels: this.state.labels.concat(label)
-    })
+  async addLabel(label) {
+    try {
+      const labels = await LabelApi.addLabels(label);
+      this.setState({...this.state, labels});
+    }catch(e) {
+      alert('라벨 추가에 실패하였습니다.');
+      console.error(e);
+    }
   }
 
   removeLabel(label) {
@@ -41,8 +45,13 @@ class LabelModel extends Observer {
     });
   }
   async initState() {
-    const labels = await fetchBody("/labels");
-    this.addLabel(labels);
+    try {
+      const labels = await LabelApi.getLabels();
+      this.setState({...this.state, labels});
+    } catch(e) {
+      alert('라벨을 가져오던중 문제가 발생하였습니다.');
+      console.error(e);
+    }
   }
 }
 
