@@ -89,3 +89,30 @@ li {
 #label-wrapper, #issue-wrapper {
   min-width: 960px;
 }
+
+#alert-portal {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 15px;
+  right: 15px;
+  width: 450px;
+}
+
+#alert-portal .alert-message {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  min-width: 350px;
+  cursor: pointer
+}
+
+/* fadeOut */
+.fade-out {
+  animation: fadeOut 0.5s forwards;
+}
+
+@keyframes fadeOut {
+  100% {
+    opacity: 0;
+  }
+}

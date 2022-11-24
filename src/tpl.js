@@ -1,4 +1,4 @@
-import {STATUS} from "./constants.js";
+import {ERROR_TYPE, STATUS} from "./constants.js";
 
 export function getIssueTpl({numOpened = 0, numClosed = 0, activeStatus, show}) {
   const isStatusOpen = activeStatus === STATUS.OPEN;
@@ -101,16 +101,21 @@ export function getIssueItemTpl(item) {
   return $parent;
 }
 
-export function getLabelTpl({numLabels = 0, show = false, isSearchResult}) {
+export function getLabelTpl({numLabels = 0, show = false, isSearchResult, lastSearch=""}) {
   const $parent = document.createElement('div')
   $parent.id = 'label-wrapper'
   $parent.className = `w-9/12 m-auto min-w-min ${show ? '' : 'hidden'}`
+
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+  svg.setAttributeNS(null, "viewBox", "0 0 16 16")
+  svg.setAttributeNS(null, "viewBox", "0 0 16 16")
+
   $parent.innerHTML = `
   <div id="header" class="flex justify-between">
 
     <div class="filter-menu w-2/3 px-3 py-1 flex base-outer items-center">
       <div class="p-1 w-full">
-        <input type="text" class="w-full bg-slate-100 focus:outline-none" name="filter-text" id="filter-input"
+        <input type="text" class="w-full bg-slate-100 focus:outline-none" name="filter-text" id="filter-input" value="${lastSearch}"
           placeholder="search all filter...">
       </div>
     </div>
@@ -394,6 +399,34 @@ export function getLabelFormTpl(
 }
 
 
-export const notiTpl = () => {
-
+export const alertTpl = ({type , message = ""}) => {
+  let color, title
+  switch (type) {
+    case ERROR_TYPE.ERROR:
+      title = "Error!"
+      color = "red"
+      break
+    case ERROR_TYPE.SUCCESS:
+      title = "Success"
+      color = "indigo"
+      break
+    case ERROR_TYPE.INFO:
+      title = "Info"
+      color = "orange"
+      break
+    case ERROR_TYPE.WARNING:
+      title = "Warning!"
+      color = "yellow"
+      break
+  }
+  const $parent = document.createElement('div')
+  $parent.className = `alert-message bg-${color}-100 border border-${color}-400 text-${color}-700 px-4 py-3 rounded relative opacity-90`
+  $parent.role = "alert"
+  $parent.innerHTML = `
+    <strong class="font-bold">${title}</strong>
+    <span class="block sm:inline">${message}</span>
+  `
+  return $parent
 }
+
+

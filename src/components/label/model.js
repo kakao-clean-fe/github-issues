@@ -2,8 +2,7 @@ import View from "../../libs/view.js";
 import {getRandomColorCode, isHexColor, selectOne} from "../../libs/utils.js";
 import {getLabelItemTpl} from "../../tpl.js";
 import LabelStore from "../../stores/label.js";
-import State, {AppState} from "../../libs/state.js";
-import {TAB} from "../../constants.js";
+import {ERROR_TYPE, TAB} from "../../constants.js";
 
 class LabelItem extends View {
   constructor(item = {}) {
@@ -14,10 +13,6 @@ class LabelItem extends View {
 
   get labelId() {
     return this.data.id
-  }
-
-  get labelName() {
-    return this.data.name
   }
 
   get $targetEl() {
@@ -87,9 +82,10 @@ class LabelItem extends View {
       }
 
       if (LabelStore.isValid(item)) {
-        await LabelStore.edit(this.labelId, item)
-        this.isEditing = false
-        this.state.notify()
+        if (await LabelStore.edit(this.labelId, item)) {
+          this.isEditing = false
+          this.state.notify()
+        }
       }
     }
     labelSaveButton?.addEventListener('click', handleSaveLabel)

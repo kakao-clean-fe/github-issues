@@ -2,7 +2,6 @@ import {selectOne} from "../../libs/utils.js";
 import {getLabelTpl} from "../../tpl.js";
 import {TAB} from "../../constants.js";
 import View from "../../libs/view.js";
-import {AppState} from "../../libs/state.js";
 import LabelStore from "../../stores/label.js";
 
 
@@ -28,7 +27,8 @@ class LabelTab extends View {
     return getLabelTpl({
       numLabels: labels?.length || 0,
       show: activeTab === 'label',
-      isSearchResult: this.isSearchResult
+      isSearchResult: this.isSearchResult,
+      lastSearch: this.$.searchInput?.value
     })
   }
 
@@ -62,13 +62,18 @@ class LabelTab extends View {
       }
       this.controller = new AbortController()
       try {
-        if (searchInput.value) this.isSearchResult = true
+        const params = {}
+        if (searchInput?.value) {
+          this.isSearchResult = true
+          params.search = searchInput.value
+        } else {
+          this.isSearchResult = false
+        }
+
         await LabelStore.updateItems(
           {
             signal: this.controller.signal,
-            params: {
-              search: searchInput.value
-            }
+            params: params
           }
         )
       } catch (err) {

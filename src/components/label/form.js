@@ -2,7 +2,6 @@ import View from "../../libs/view.js";
 import {getRandomColorCode, isHexColor, selectOne} from "../../libs/utils.js";
 import {getLabelFormTpl} from "../../tpl.js";
 import LabelStore from "../../stores/label.js";
-import {AppState} from "../../libs/state.js";
 
 class LabelForm extends View {
   get $targetEl() {
@@ -75,11 +74,12 @@ class LabelForm extends View {
       }
 
       if (LabelStore.isValid(item)) {
-        await LabelStore.add(item)
-        this.state.update({
-          previewLabelColor: getRandomColorCode(),
-          showNewLabel: false
-        }, true)
+        if (await LabelStore.add(item)) {
+          this.state.update({
+            previewLabelColor: getRandomColorCode(),
+            showNewLabel: false
+          }, true)
+        }
       }
     }
     labelCreateButton.addEventListener('click', handleCreateLabel)
