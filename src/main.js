@@ -1,18 +1,18 @@
-import { fetchIssues, fetchLabels} from './init';
-import { Label } from './components/label';
+import { getIssuesData, getLabelsData } from './service/apiService';
+import { labelObj } from './init';
+//msw worker
+import { worker } from './mocks/browser';
+worker.start();
 
 const main = () => {
 
     const loadData = async () => {
         const [issues, labels] = await Promise.all([
-            fetchIssues(),
-            fetchLabels()
+            getIssuesData(),
+            getLabelsData()
         ]);
             
-        // [TODO]: issue관리도 객체지향형으로 변경
-        // pipe(renderItems, setItemCounts, setEventListener, filterData)(issues);
-
-        new Label(labels).init();
+        labelObj.setLabels(labels);
     };
 
     loadData();
