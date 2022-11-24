@@ -1,15 +1,12 @@
-import Observable from "./observable";
+import Observable from "../store/observable";
 
 class Labels extends Observable {
-  constructor() {
+  constructor(labels) {
     super();
-    this.labels = [];
+    this.labels = labels || [];
   }
 
-  set allLabels(newLabels) {
-    this.labels = newLabels;
-  }
-  get allLabels() {
+  get() {
     return this.labels;
   }
 
@@ -20,6 +17,11 @@ class Labels extends Observable {
 
   remove(label) {
     this.labels = this.labels.filter((l) => l !== label);
+    this.notify(this.labels);
+  }
+
+  removeAll() {
+    this.labels = [];
     this.notify(this.labels);
   }
 }

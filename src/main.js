@@ -1,5 +1,7 @@
 import { renderIssue, renderLabel } from "./page";
-import { MENU } from "./constants";
+import { $, MENU } from "./constants";
+import { worker } from "./mocks/browser";
+worker.start();
 
 const { ISSUE, LABEL } = MENU;
 const renderMenu = async (selectedMenu) => {
@@ -10,7 +12,7 @@ const renderMenu = async (selectedMenu) => {
   }
 };
 
-document.querySelector("nav").addEventListener("click", function (e) {
+$("nav").addEventListener("click", function (e) {
   const option = e.target.innerHTML.toUpperCase();
   renderMenu(MENU[option]);
 });

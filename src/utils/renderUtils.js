@@ -1,12 +1,13 @@
 import { MENU } from "../constants";
 import { getIssueItemTpl, getLabelItemTpl } from "../template";
 
-const setItems = (target, showData, type) => {
-  if (type === MENU.ISSUE) {
-    target.innerHTML = "";
-  }
+const setItems = (item) => {
+  const { target, data, type } = item;
+  if (!target) return;
+  target.innerHTML = "";
+
   const tplFunction = type === MENU.ISSUE ? getIssueItemTpl : getLabelItemTpl;
-  showData.forEach((data) => (target.innerHTML += tplFunction(data)));
+  data.forEach((d) => (target.innerHTML += tplFunction(d)));
 };
 
 const renderUtils = { setItems };
