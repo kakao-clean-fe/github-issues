@@ -6,27 +6,35 @@ export class LabelCreateView {
   labelFormSubmit$ = new Observable();
   labelFormChange$ = new Observable();
   constructor() {
-    if ($("new-label-form").classList.contains("hidden")) {
-      $("new-label-form").classList.remove("hidden");
-    }
+    this.#showLabelForm();
+    this.#addDOMEventListeners();
+  }
 
+  #showLabelForm() {
+    const newLabelFormElement = $("new-label-form");
+    if (newLabelFormElement.classList.contains("hidden")) {
+      newLabelFormElement.classList.remove("hidden");
+    }
+  }
+
+  #addDOMEventListeners() {
     $("new-label-button").addEventListener(
       "click",
       this.onClickToggleCreateButton.bind(this)
     );
     $("new-label-color").addEventListener(
       "click",
-      this._onClickRefreshColorButton.bind(this)
+      this.#onClickRefreshColorButton.bind(this)
     );
     $("label-create-button").addEventListener(
       "click",
-      this._onClickLabelCreateButton.bind(this)
+      this.#onClickLabelCreateButton.bind(this)
     );
     $("label-name-input").addEventListener("change", (e) =>
-      this._onChangeLabelName(e)
+      this.#onChangeLabelName(e)
     );
     $("label-description-input").addEventListener("change", (e) =>
-      this._onChangeLabelDescription(e)
+      this.#onChangeLabelDescription(e)
     );
   }
 
@@ -47,30 +55,30 @@ export class LabelCreateView {
     }
   }
   updateForm(form) {
-    console.log("updateForm", form);
     $("label-name-input").value = form.name;
     $("label-description-input").value = form.description;
   }
-  _toggleCreateView() {
-    if ($("new-label-form").classList.contains("hidden")) {
-      $("new-label-form").classList.remove("hidden");
+  #toggleCreateView() {
+    const newLabelFormElement = $("new-label-form");
+    if (newLabelFormElement.classList.contains("hidden")) {
+      newLabelFormElement.classList.remove("hidden");
     } else {
-      $("new-label-form").classList.add("hidden");
+      newLabelFormElement.classList.add("hidden");
     }
   }
   onClickToggleCreateButton() {
-    this._toggleCreateView();
+    this.#toggleCreateView();
   }
-  _onClickRefreshColorButton() {
+  #onClickRefreshColorButton() {
     this.refreshColorBtnClick$.next();
   }
-  _onChangeLabelName(e) {
-    this.labelFormChange$.next({ name: e.target.value });
+  #onChangeLabelName({ target: { value: name } }) {
+    this.labelFormChange$.next({ name });
   }
-  _onChangeLabelDescription(e) {
-    this.labelFormChange$.next({ description: e.target.value });
+  #onChangeLabelDescription({ target: { value: description } }) {
+    this.labelFormChange$.next({ description });
   }
-  _onClickLabelCreateButton(e) {
+  #onClickLabelCreateButton(e) {
     e.preventDefault();
     this.labelFormSubmit$.next();
   }

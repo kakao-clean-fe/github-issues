@@ -1,4 +1,4 @@
-import { createLabel, getLabels, getLabelsWithDelay } from "../api/fetch.js";
+import { LabelApi } from "../api/fetch.js";
 
 export class LabelStore {
   _DEFAULT_FORM = {
@@ -10,6 +10,9 @@ export class LabelStore {
   _form = { ...this._DEFAULT_FORM };
   constructor() {
     this.getLabels();
+    this.#saveAndLoadFromLocalStorage();
+  }
+  #saveAndLoadFromLocalStorage() {
     window.addEventListener("unload", () => {
       localStorage.setItem("label-create", JSON.stringify(this._form));
     });
@@ -19,14 +22,14 @@ export class LabelStore {
     });
   }
   getLabels() {
-    getLabelsWithDelay().then((res) => {
+    LabelApi.getLabelsWithDelay().then((res) => {
       if (res) {
         this.labelList = res;
       }
     });
   }
   createLabel() {
-    createLabel(this._form).then((res) => {
+    LabelApi.postNewLabel(this._form).then((res) => {
       if (res.error) {
         console.error(res.error);
         alert(res.error);

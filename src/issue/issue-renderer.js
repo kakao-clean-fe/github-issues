@@ -1,12 +1,10 @@
 import { pipe } from "../helpers/fp-helpers.js";
-import { htmlToElement } from "../helpers/render-helpers.js";
+import { $, htmlToElement } from "../helpers/render-helpers.js";
 import { getIssueItemTpl, getIssueTpl } from "../helpers/tpl.js";
 
-document.getElementById("app").innerHTML = getIssueTpl();
-export const openedButtonElement =
-  document.getElementsByClassName("open-count")[0];
-export const closedButtonElement =
-  document.getElementsByClassName("close-count")[0];
+$("app").innerHTML = getIssueTpl();
+export const openedButtonElement = $("open-issues-count");
+export const closedButtonElement = $("closed-issues-count");
 const issuesListElement = document.querySelector(".issue-list ul");
 
 const appendIssueElement = (issueElement) =>

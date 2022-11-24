@@ -9,20 +9,20 @@ export class LabelListView {
     $("app").innerHTML = getLabelTpl();
     $("update-labels-button").addEventListener(
       "click",
-      this._onClickUpdateLabelsButton.bind(this)
+      this.#onClickUpdateLabelsButton.bind(this)
     );
   }
   render(labels) {
     $("label-list").innerHTML = "";
-    labels.forEach(this._renderLabel.bind(this));
+    labels.forEach(this.#renderLabel.bind(this));
     $("labels-count").innerText = labels.length + " Labels";
   }
-  _renderLabel(label) {
+  #renderLabel(label) {
     return pipe(getLabelItemTpl, htmlToElement, (ele) =>
       $("label-list").appendChild(ele)
     )(label);
   }
-  _onClickUpdateLabelsButton() {
+  #onClickUpdateLabelsButton() {
     this.updateLabelsButtonClick$.next();
   }
 }
