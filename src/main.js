@@ -1,17 +1,23 @@
 import initIssuePage from "./pages/issue.js";
-import {useAtom, useAtomValue} from "./store/atomHooks.js";
-import {labelsAtom, navBtnStatusAtom} from "./store/atom.js";
+import {useAtom, useSetAtomValue} from "./store/atomHooks.js";
+import {isLabelLayoutInit, navBtnStatusAtom} from "./store/atom.js";
 import {NAV_BTN_STATUS} from "./consts/const.js";
 import {LabelPage} from "./pages/label.js";
 import {SELECTOR} from "./consts/selector.js";
+import {worker} from './mocks/browser';
+
+worker.start().then(() => console.log("mock server start"));
 
 const [getNavBtnStatus, setNavBtnStatus] = useAtom(navBtnStatusAtom);
-const getLabels = useAtomValue(labelsAtom);
+const setIsLabelLayoutInit = useSetAtomValue(isLabelLayoutInit);
+
 let labelPage;
 
 const initMain = () => {
     initNavBar();
     renderByNavBtnStatus(getNavBtnStatus());
+    import("./labelForm.js")
+        .then(() => console.log("labelForm.js load complete!"));
 }
 
 const initNavBar = () => {
@@ -22,9 +28,11 @@ const initNavBar = () => {
 }
 
 const renderByNavBtnStatus = (navBtn) => {
-    if (navBtn === NAV_BTN_STATUS.ISSUE) initIssuePage();
-    else {
-        if(!labelPage) labelPage = new LabelPage({}, SELECTOR.ROOT);
+    if (navBtn === NAV_BTN_STATUS.ISSUE) {
+        initIssuePage();
+        setIsLabelLayoutInit(false);
+    } else {
+        if (!labelPage) labelPage = new LabelPage({}, SELECTOR.ROOT);
         labelPage.render();
     }
 }

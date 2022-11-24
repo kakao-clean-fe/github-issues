@@ -11,5 +11,6 @@ export const SELECTOR = {
     LABEL_FORM_DESCRIPTION: '#label-description-input',
     LABEL_FORM_COLOR: '#label-color-value',
     LABEL_PREVIEW: '#label-preview',
-    LABEL_COLOR_VALUE: '#label-color-value'
+    LABEL_COLOR_VALUE: '#label-color-value',
+    LABEL_UPDATE_BUTTON: '.refresh-labels'
 }
