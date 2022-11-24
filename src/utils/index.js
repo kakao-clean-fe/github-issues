@@ -52,6 +52,16 @@ const cacheFunction = (fn) => {
   };
 };
 
+const Lazy = (importFunc) => {
+  let LazyComponent;
+  return function (...args) {
+    if(!LazyComponent) {
+      return importFunc().then(module => LazyComponent = module.default).then(LazyComponent => this.component = new LazyComponent(...args))
+    }
+    this.component = new LazyComponent(...args);
+  }
+}
+
 export {
   render,
   on ,
@@ -61,4 +71,5 @@ export {
   pipe,
   cacheFunction,
   getRandomColor,
+  Lazy,
 };

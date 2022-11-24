@@ -1,7 +1,7 @@
 import Component from "..";
 import { EVENTS } from "../../constant";
-import { getLabelTpl } from "../../tpl";
-import { getRandomColor } from "../../utils";
+import { getLabelTpl } from "../../template/tpl";
+import { getRandomColor, Lazy } from "../../utils";
 import LabelItem from "./LabelItem";
 
 const SELECTORS = {
@@ -25,6 +25,10 @@ const initialForm = {
   description: "",
   color: "#BE185D",
 };
+
+
+
+const LabelForm = Lazy(() => import('./LebelForm.js'));
 
 export default class Labels extends Component {
   constructor({ model, ...args }) {
@@ -127,26 +131,15 @@ export default class Labels extends Component {
 
   render() {
     if (!this.state) {
-      this.template = null;
+      return this.template = null;
     }
+
     this.template = this.convertHTMLStringToNode(getLabelTpl());
+
     if (this.state.showForm) {
-      this.select(SELECTORS.NEW_LABEL_FORM).classList.remove(CLASS_HIDDEN);
-    }
-
-    const { name, description, color } = this.state.labelForm || {};
-
-    if (name && description && color) {
-      const button = this.select(SELECTORS.LABEL_CREATE_BUTTON);
-      button.disabled = false;
-      button.classList.remove(CLASS_DISABLED);
-    }
-
-    this.select(SELECTORS.LABEL_PREVIEW).style.backgroundColor = color;
-    this.select(SELECTORS.NEW_LABEL_COLOR).style.backgroundColor = color;
-    this.select(SELECTORS.LABEL_COLOR_INPUT).value = color;
-    this.select(SELECTORS.LABEL_NAME_INPUT).value = name;
-    this.select(SELECTORS.LABEL_DESCRIPTION_INPUT).value = description;
+      const formContainer = this.select("#form-wrapper");
+      new LabelForm({model: this.model, target: formContainer});
+    } 
 
     const list = this.select(SELECTORS.LABEL_LIST);
     this.state?.labels?.forEach(
@@ -156,5 +149,6 @@ export default class Labels extends Component {
           state: label,
         })
     );
+    return;
   }
 }

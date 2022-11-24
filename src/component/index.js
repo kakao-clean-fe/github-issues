@@ -30,7 +30,7 @@ export default class Component {
   setState(newState) {
     this.state = {
       ...this.state,
-      ...newState
+      ...newState,
     };
     this._render();
   }
@@ -42,20 +42,20 @@ export default class Component {
   selectAll(selector) {
     return this.template?.querySelectorAll(selector);
   }
-  
+
   _render() {
     const prevTemplate = this.template;
     this.render();
     this._replaceDOM(prevTemplate);
     this.setListeners();
   }
-  
-  _replaceDOM(prevTemplate) {
-    if(prevTemplate && this.template) {
-      return this.target.replaceChild(this.template, prevTemplate);
-    } 
 
-    if(!prevTemplate) {
+  _replaceDOM(prevTemplate) {
+    if (prevTemplate && this.template) {
+      return this.target.replaceChild(this.template, prevTemplate);
+    }
+
+    if (!prevTemplate) {
       return this.target.appendChild(this.template);
     }
 

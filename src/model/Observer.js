@@ -18,6 +18,7 @@ export default class Observer {
   }
 
   notify() {
+    console.log(this.state)
     this._observers.forEach(observer => observer(this.state));
   }
 }

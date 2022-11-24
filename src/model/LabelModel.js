@@ -8,7 +8,7 @@ const initialForm = {
 class LabelModel extends Observer {
   constructor() {
     super();
-    this._labels = [];
+
     this.setState({
       labels: [],
       labelForm: initialForm,
@@ -31,13 +31,13 @@ class LabelModel extends Observer {
   }
 
   initLabelForm() {
-    this.setLabelForm(labelForm);
+    this.setLabelForm(initialForm);
   }
 
-  setLabelForm(labelFrom) {
+  setLabelForm(labelForm) {
     this.setState({
       ...this.state,
-      labelFrom,
+      labelForm,
     });
   }
   async initState() {

@@ -24,10 +24,11 @@ export default class LabelForm extends Component {
     super({ ...args });
     this._bindMethod();
     this.model = model;
-    this.setState({
-      labelForm: this.model.labelForm,
-    });
-    this.model.subscribe(({labelFrom}) => this.setState({labelFrom}))
+    this.setState(this.model.state.labelForm);
+
+    this.model.subscribe(({labelForm}) => {
+      this.setState({labelForm})
+    })
   }
 
   _bindMethod() {
@@ -54,44 +55,43 @@ export default class LabelForm extends Component {
   setNewLabelColor() {
     const newColor = getRandomColor();
     const labelForm = {
-      ...this.state.labelForm,
+      ...this.state,
       color: newColor,
     };
-    this.setState({ labelForm });
-    this.model.subscribe(({labelForm}) => this.setState({labelForm}));
+    this.model.setLabelForm(labelForm)
   }
 
   /** 라벨 이름 변경 */
   setLabelName(e) {
     const newName = e.target.value;
     const labelForm = {
-      ...this.state.labelForm,
+      ...this.state,
       name: newName,
     };
-    this.setState({ labelForm });
+    this.model.setLabelForm(labelForm)
   }
 
   /** 라벨 설명 변경 */
   setLabelDescription(e) {
     const newDesc = e.target.value;
     const labelForm = {
-      ...this.state.labelForm,
+      ...this.state,
       description: newDesc,
     };
-    this.setState({ labelForm });
+    this.model.setLabelForm(labelForm)
   }
 
   /** 라벨 추가 */
   addNewLabel() {
     this.model.addLabel({
-      ...this.state.labelForm,
+      ...this.state,
       color: this.state.labelForm.color.replace("#", ""),
     });
-    this.initForm();
+    this.model.initLabelForm();
   }
 
   initForm() {
-    this.model.initForm();
+    this.model.initLabelForm();
   }
 
   render() {
@@ -100,7 +100,7 @@ export default class LabelForm extends Component {
     }
 
     this.template = this.convertHTMLStringToNode(getLabelForm());
-    const { name, description, color } = this.state?.labelForm || {};
+    const { name, description, color } = this.state || {};
     if (name && description && color) {
       const button = this.select(SELECTORS.LABEL_CREATE_BUTTON);
       button.disabled = false;
@@ -111,6 +111,10 @@ export default class LabelForm extends Component {
     this.select(SELECTORS.NEW_LABEL_COLOR).style.backgroundColor = color;
     this.select(SELECTORS.LABEL_COLOR_INPUT).value = color;
     this.select(SELECTORS.LABEL_NAME_INPUT).value = name;
+    
+
+
+    
     this.select(SELECTORS.LABEL_DESCRIPTION_INPUT).value = description;
   }
 }
