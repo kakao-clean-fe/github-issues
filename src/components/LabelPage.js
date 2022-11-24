@@ -1,12 +1,13 @@
 import { go } from '../fp';
-import { setInnerHTML, setInnerText } from '../curry/dom';
-import { $ } from '../util';
+import { setInnerHTML, setInnerText, setEvent } from '../curry/dom';
+import { $, saveCreateFormBeforeUnload } from '../util';
 import { getLabelTpl, getLabelItemTpl } from '../tpl';
 import { selector as sel, storeKey, pageType } from '../constant';
 import { createNewLabelForm } from './NewLabelForm';
+import { fetchLabelsWithDelay } from '../service';
 
 export function createLabelPage({ store }) {
-  const [labels] = store.useState(storeKey.labels);
+  const [labels, setLabels] = store.useState(storeKey.labels);
   const newLabelForm = createNewLabelForm({ store });
 
   function renderLabelLayout() {
@@ -18,20 +19,28 @@ export function createLabelPage({ store }) {
   function renderLabelCount(labelList) {
     go($(sel.labelCount), setInnerText(`${labelList.length} Labels`));
   }
-  function handlePageChange(event) {
-    const [labels] = store.useState(storeKey.labels);
-    if (event.detail === pageType.label) {
-      renderLabelLayout();
-      renderLabels(labels);
-      renderLabelCount(labels);
-      newLabelForm.render();
-    }
+  function renderUpdateLabelsButton() {
+    go($(sel.updateLabelsButton), setEvent('click', () => fetchLabelsWithDelay().then(setLabels)));
   }
-  function render() {
+  function renderLabelComponents(labels) {
     renderLabelLayout();
     renderLabels(labels);
     renderLabelCount(labels);
+    renderUpdateLabelsButton();
     newLabelForm.render();
+  }
+  function handlePageChange(event) {
+    const [labels] = store.useState(storeKey.labels);
+    if (event.detail === pageType.label) {
+      renderLabelComponents(labels);
+    }
+  }
+  function render() {
+    const [page] = store.useState(storeKey.page);
+    if (page === pageType.label) {
+      renderLabelComponents(labels);
+    }
+    saveCreateFormBeforeUnload(store);
     store.useEffect(storeKey.page, handlePageChange);
   }
 

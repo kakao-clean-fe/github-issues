@@ -239,3 +239,13 @@ export function getLabelItemTpl({ name, color, description }) {
             </li>
         `;
 }
+
+export function createToastMessageTemplate({ message }) {
+  return `
+    <div class="toast-box hidden">
+      <div class="toast-message-box">
+        <div class="toast-message">${message}</div>
+      </div>
+    </div>
+  `;
+}

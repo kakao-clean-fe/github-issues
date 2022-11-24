@@ -12,6 +12,7 @@ import {
 import { $, getRandomColor } from '../util';
 import { getLabelItemTpl } from '../tpl';
 import { selector as sel, storeKey } from '../constant';
+import { addLabel } from '../service';
 
 export function createNewLabelForm({ store }) {
   const show = pipe(removeClass('hidden'));
@@ -45,6 +46,11 @@ export function createNewLabelForm({ store }) {
       disableButton($(sel.labelCreateButton));
     }
   }
+  function setInitialFormValue(label) {
+    go($(sel.labelNameInput), setAttribute({ value: label.name }));
+    go($(sel.labelDescInput), setAttribute({ value: label.description}));
+    go($(sel.labelColorInput), setAttribute({value: label.color }));
+  }
 
   function handleInputEvents({ target }) {
     const [, setLabelForm] = store.useState(storeKey.labelForm);
@@ -67,8 +73,13 @@ export function createNewLabelForm({ store }) {
   function handleClickEvents(event) {
     event.preventDefault();
     const [, setLabels] = store.useState(storeKey.labels);
+    const [, setToast] = store.useState(storeKey.toast);
     const [labelForm, setLabelForm] = store.useState(storeKey.labelForm);
     const [, setIsFormOpen] = store.useState(storeKey.isNewLabelFormOpen);
+
+    function showToastErrorMessage(error) {
+      setToast({ isOpen: true, message: error.message, duration: 3000 });
+    }
 
     const isDescendantOf = pipe(isDescendant(event.target));
     if (isDescendantOf($(sel.newLabelButton))) {
@@ -76,7 +87,9 @@ export function createNewLabelForm({ store }) {
     } else if (isDescendantOf($(sel.labelCancelButton))) {
       setIsFormOpen(false);
     } else if (isDescendantOf($(sel.labelCreateButton))) {
-      setLabels((prev) => [{ ...labelForm }, ...prev]);
+      addLabel(labelForm)
+        .then(setLabels)
+        .catch(showToastErrorMessage);
     } else if (isDescendantOf($(sel.randomColorButton))) {
       setLabelForm((prev) => ({ ...prev, color: getRandomColor() }));
     }
@@ -91,6 +104,7 @@ export function createNewLabelForm({ store }) {
     const [labelForm] = store.useState(storeKey.labelForm);
     updateLabelForm(labelForm);
     bindEvents($(sel.labelWrapper));
+    setInitialFormValue(labelForm);
 
     store.useEffect(storeKey.isNewLabelFormOpen, toggleLabelForm);
     store.useEffect(storeKey.labels, ({ detail }) => {

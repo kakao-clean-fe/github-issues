@@ -18,6 +18,10 @@ export const selector = {
   labelWrapper: '#label-wrapper',
   labelCreateButton: '#label-create-button',
   labelCancelButton: '#label-cancel-button',
+  updateLabelsButton: '.refresh-labels',
+  toastContainer: '#toast',
+  toastBox: '.toast-box',
+  toastMessage: '.toast-message'
 };
 
 export const storeKey = {
@@ -26,9 +30,14 @@ export const storeKey = {
   labels: 'Labels',
   isNewLabelFormOpen: 'IsNewLabelFormOpen',
   labelForm: 'LabelForm',
+  toast: 'Toast',
 };
 
 export const pageType = {
   issue: 'issue',
   label: 'label',
 };
+
+export const localStorageKey = {
+  createForm: 'LC_CREATE_FORM',
+}
