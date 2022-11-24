@@ -134,14 +134,14 @@ export function getLabelTpl() {
 
     </ul>
   </div>
-    <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
+    <button class="refresh-labels base-outer p-2 mt-2 float-right _update_label_button">update labels</button>
 </div>
   `
 }
 
-export function getLabelCreatorTpl() {
+export function getLabelCreatorTpl(name='', description='', color='') {
   return `
-    <form class="hidden p-3 mb-3 mt-6 border rounded-sm font-bold _label_creator" id="new-label-form" action="/labels" accept-charset="UTF-8" method="post">
+    <form class="p-3 mb-3 mt-6 border rounded-sm font-bold _label_creator" id="new-label-form" action="/labels" accept-charset="UTF-8" method="post">
       <div class="form-group mt-0 mb-2"
         data-url-template="/labels/preview/" data-default-name="Label preview">
 
@@ -165,7 +165,7 @@ export function getLabelCreatorTpl() {
             <text-expander keys=":" data-emoji-url="/autocomplete/emoji?use_colon_emoji=true">
               <input type="text" data-maxlength="50" autocomplete="off" required="" pattern="^(?!(\.|\.\.)$).*$"
                 id="label-name-input" name="label[name]"
-                class="w-full p-2 base-outer focus:outline-none _label_name_input" placeholder="Label name" value="" >
+                class="w-full p-2 base-outer focus:outline-none _label_name_input" placeholder="Label name" value="${name}" >
             </text-expander>
           </dd>
           <dd class="" hidden="" id="label--name-error"></dd>
@@ -185,7 +185,7 @@ export function getLabelCreatorTpl() {
           <dd class="mt-2">
             <input type="text" id="label-description-input" name="label[description]"
               class="w-full p-2 base-outer focus:outline-none _label_desc_input"
-              placeholder="Description" value=""
+              placeholder="Description" value="${description}"
               maxlength="100">
           </dd>
           <dd class="" hidden="" id="label--description-error"></dd>
@@ -211,7 +211,7 @@ export function getLabelCreatorTpl() {
             <div class="ml-2">
               <input type="text" id="label-color-value" name="label-color[description]"
               class="w-full p-2 base-outer focus:outline-none _label_color_input"
-              placeholder="#color" value="" maxlength="100">
+              placeholder="#color" value="${color}" maxlength="100" disabled>
             </div>
 
           </dd>

@@ -1,19 +1,20 @@
 import { getLabelCreatorTpl } from "../tpl"
-import { addEventListener, selectAllElement, selectElement, toggleClass } from '../utils/dom';
+import { addEventListener, selectElement, toggleClass } from '../utils/dom';
 import { SELECTOR } from '../constants/selector';
-import { addLabelData } from "../store/dataStore";
 import { EVENT } from '../constants/event';
 import { HIDDEN } from '../constants/status';
+import { LABEL_COLOR } from "../constants/labelColor";
+import { generateColor } from '../utils/label';
+import { addLabelData } from '../common/api';
+import { localStorageUtil, resetLocalStorage } from '../utils/localStorage';
+import { LOCAL_STORAGE_KEY } from "../constants/localStorage";
 
 export const LabelCreator = class {
 
-  name = null;
-  description = null;
-  color = null;
-
-  get template () {
-    return getLabelCreatorTpl();
-  }
+  name = localStorageUtil.getItem(LOCAL_STORAGE_KEY.NAME) || '';
+  description = localStorageUtil.getItem(LOCAL_STORAGE_KEY.DESCRIPTION) || '';
+  color = localStorageUtil.getItem(LOCAL_STORAGE_KEY.COLOR) || '';
+  colorIndex = 0;
 
   constructor () {
     this.parentElement = selectElement(SELECTOR.LABEL_CREATOR_WRAPPER);
@@ -21,6 +22,11 @@ export const LabelCreator = class {
     this.initData();
     this.initTemplate();
   }
+
+  get template () {
+    return getLabelCreatorTpl(this.name, this.description, this.color);
+  }
+
 
   initData () {
 
@@ -50,16 +56,25 @@ export const LabelCreator = class {
     addLabelData({name, description, color});
   }
 
-  onInputLabelName ({target}) {
-    this.name = target.value;
+  onInputLabelName ({target: {value}}) {
+    this.name = value;
+    localStorageUtil.setItem(LOCAL_STORAGE_KEY.NAME, value);
   }
 
-  onInputLabelDesc ({target}) {
-    this.description = target.value;
+  onInputLabelDesc ({target: {value}}) {
+    this.description = value;
+    localStorageUtil.setItem(LOCAL_STORAGE_KEY.DESCRIPTION, value);
   }
 
-  onClickColorButton ({target}) {
+  onClickColorButton () {
+    const {colorIndex, color} = generateColor(LABEL_COLOR, this.colorIndex);
+    const labelColorInput = selectElement(SELECTOR.LABEL_COLOR_INPUT);
 
+    labelColorInput.value = color;
+    this.colorIndex = colorIndex;
+    this.color = color;
+
+    localStorageUtil.setItem(LOCAL_STORAGE_KEY.COLOR, color);
   }
 
   onInputLabelColor () {
@@ -69,24 +84,38 @@ export const LabelCreator = class {
   onClickCreateLabelButton (e) {
     e.preventDefault();
 
+    const canCreateLabel = this.name && this.description && this.color;
+    if (!canCreateLabel) { return; }
+    if (this.color.startsWith('#')) {
+      this.color = this.color.slice(1);
+    }
+
     this.createLabel({
       name: this.name,
       description: this.description,
-      color: 'bfdadc', // 임시 코드
-      // color: this.color
+      color: this.color
     });
 
     this.toggleLabelCreator();
+    resetLocalStorage();
   }
 
   onClickCancelButton () {
     this.resetLabelData();
+    this.resetLabelInput();
     this.toggleLabelCreator();
   }
 
   resetLabelData () {
-    // 데이터 초기화
-    // 입력란 초기화
+    this.name = '';
+    this.description = '';
+    this.color = ''
+  }
+
+  resetLabelInput () {
+    selectElement(SELECTOR.LABEL_NAME_INPUT).value = '';
+    selectElement(SELECTOR.LABEL_DESC_INPUT).value = '';
+    selectElement(SELECTOR.LABEL_COLOR_INPUT).value = '';
   }
 
   toggleLabelCreator () {

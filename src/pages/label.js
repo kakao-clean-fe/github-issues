@@ -1,16 +1,14 @@
 import { getLabelTpl } from '../tpl';
 import { createApp } from '../utils/template';
 import { LabelList } from '../views/LabelList';
-import { selectElement, removeClass, toggleClass } from '../utils/dom';
+import { selectElement, toggleClass } from '../utils/dom';
 import { SELECTOR } from '../constants/selector';
 import { EVENT } from '../constants/event';
-import { LabelCreator } from '../views/LabelCreator';
 import { HIDDEN } from '../constants/status';
+import { updateLabelData } from '../common/api';
+import { setLabelData } from '../store/dataStore';
 
 export const LabelPage = class {
-  get template () {
-    return getLabelTpl();
-  }
 
   constructor (labelData) {
     this.labelData = labelData;
@@ -19,19 +17,28 @@ export const LabelPage = class {
     this.initLabelChildrenView();
   }
 
+  get template () {
+    return getLabelTpl();
+  }
+
   initTemplate () {
     createApp(this.template);
   }
 
   initLabelChildrenView () {
     const labelList = new LabelList(this.labelData);
-    const labelCreator = new LabelCreator();
 
     this.initEvent();
   }
 
+  async initLabelCreatorView () {
+    const { LabelCreator } = await import('../views/LabelCreator');
+    const labelCreator = new LabelCreator();
+  }
+
   initEvent () {
     this.onClickNewLabel();
+    this.onClickUpdateLabels();
   }
 
   toggleLabelCreator () {
@@ -40,6 +47,14 @@ export const LabelPage = class {
 
   onClickNewLabel () {
     const newLabelButton = selectElement(SELECTOR.NEW_LABEL_BUTTON);
-    newLabelButton.addEventListener(EVENT.CLICK, this.toggleLabelCreator)
+    newLabelButton.addEventListener(EVENT.CLICK, () => {
+      this.initLabelCreatorView();
+    });
+  }
+
+  onClickUpdateLabels () {
+    selectElement(SELECTOR.UPDATE_LABEL_BUTTON).addEventListener(EVENT.CLICK, () => {
+      updateLabelData();
+    });
   }
 }

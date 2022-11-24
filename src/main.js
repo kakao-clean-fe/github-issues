@@ -2,21 +2,30 @@ import { SELECTOR } from './constants/selector';
 import {selectElement } from './utils/dom';
 import { createIssuePage } from './pages/issues';
 import { EVENT } from './constants/event';
-import { LabelPage } from './pages/label';
-import { fetchLabelsData } from './common/api';
+import { getLabelData } from './common/api';
 import { labelDataProxy } from './store/dataStore';
+import { worker } from './mocks/browser';
+
+// msw worker
+worker.start({
+  onUnhandledRequest: 'bypass',
+});
 
 const issueTabButton = selectElement(SELECTOR.ISSUE_TAB);
 const labelTabButton = selectElement(SELECTOR.LABEL_TAB);
+
+const initLabelPage = async () => {
+  const labelData = await getLabelData();
+  labelDataProxy.labelData = labelData;
+}
 
 issueTabButton.addEventListener(EVENT.CLICK, () => {
   createIssuePage();
 });
 
-labelTabButton.addEventListener(EVENT.CLICK, async () => {
-  // TODO: 프록시 사용 방법 개선
-  const labelData = await fetchLabelsData();
-  labelDataProxy.labelData = labelData;
+labelTabButton.addEventListener(EVENT.CLICK, () => {
+  initLabelPage();
 });
 
-createIssuePage();
+// createIssuePage();
+initLabelPage();
