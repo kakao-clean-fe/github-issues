@@ -1,4 +1,4 @@
-import AppState from "./state.js";
+import {AppState} from "./state.js";
 
 /**
  * Observer class
@@ -8,6 +8,10 @@ class View {
   constructor() {
     AppState.subscribe(this)
     this.contents = null
+  }
+
+  get state() {
+    return AppState
   }
 
   /** rendering시 처음 mount할 element */
@@ -36,7 +40,7 @@ class View {
    * */
   render() {
     this.clear()
-    this.contents = this.getTemplate(AppState.get())
+    this.contents = this.getTemplate(this.state.get())
     this.mountFunction(this.contents)
     this.bindEvents()
   }

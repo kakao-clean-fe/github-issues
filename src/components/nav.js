@@ -1,6 +1,6 @@
-import {selectAll} from "../utils.js";
+import {selectAll} from "../libs/utils.js";
 import {TAB} from "../constants.js";
-import AppState from "../libs/state.js";
+import {AppState} from "../libs/state.js";
 
 
 class Nav {

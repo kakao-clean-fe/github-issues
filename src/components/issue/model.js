@@ -1,7 +1,7 @@
 import View from "../../libs/view.js";
-import {selectOne} from "../../utils.js";
+import {selectOne} from "../../libs/utils.js";
 import {getIssueItemTpl} from "../../tpl.js";
-import AppState from "../../libs/state.js";
+import {AppState} from "../../libs/state.js";
 import {TAB} from "../../constants.js";
 
 class Model extends View {
@@ -19,7 +19,7 @@ class Model extends View {
   }
 
   render() {
-    const {activeTab, activeStatus} = AppState.get()
+    const {activeTab, activeStatus} = this.state.get()
     if (activeTab === TAB.ISSUE && activeStatus === this.data.status) super.render()
   }
 }

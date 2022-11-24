@@ -1,8 +1,8 @@
 import View from "../../libs/view.js";
-import {getRandomColorCode, isHexColor, selectOne} from "../../utils.js";
+import {getRandomColorCode, isHexColor, selectOne} from "../../libs/utils.js";
 import {getLabelFormTpl} from "../../tpl.js";
 import LabelStore from "../../stores/label.js";
-import AppState from "../../libs/state.js";
+import {AppState} from "../../libs/state.js";
 
 class LabelForm extends View {
   get $targetEl() {
@@ -75,8 +75,8 @@ class LabelForm extends View {
       }
 
       if (LabelStore.isValid(item)) {
-        await LabelStore.addData(item)
-        AppState.update({
+        await LabelStore.add(item)
+        this.state.update({
           previewLabelColor: getRandomColorCode(),
           showNewLabel: false
         }, true)
@@ -86,14 +86,13 @@ class LabelForm extends View {
 
     // cancel 버튼 클릭시 Form 숨김
     labelCancelButton.addEventListener('click', () => {
-      AppState.update({showNewLabel: false})
+      this.state.update({showNewLabel: false})
     })
   }
 
   get $() {
     const querySelector = (selector) => this.contents?.querySelector(selector)
     return {
-      newLabelButton: querySelector(".new-label-button"),
       resetColorButton: querySelector("#new-label-color"),
       labelNameInput: querySelector("#label-name-input"),
       labelDescInput: querySelector("#label-description-input"),
@@ -120,7 +119,7 @@ class LabelForm extends View {
   }
 
   render() {
-    const {showNewLabel} = AppState.get()
+    const {showNewLabel} = this.state.get()
     if (showNewLabel) {
       super.render();
     }
