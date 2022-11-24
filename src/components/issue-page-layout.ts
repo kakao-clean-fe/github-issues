@@ -10,5 +10,5 @@ const render = ({ parent }: { parent: Element | null }): void => {
 };
 
 export const initIssuePageLayout = ({ parentSelector }: { parentSelector: string }): void => {
-  render({ parent: getElement(parentSelector) });
+  render({ parent: getElement({ selector: parentSelector }) });
 };

@@ -1,18 +1,18 @@
 import { LabelList } from '~/components/label-list';
 import { LabelPageLayout } from '~/components/label-page-layout';
 import { LabelCount } from '~/components/label-count';
-import { LabelForm } from '~/components/label-form';
 import { labelStore } from '~/store/label-store';
-import type { Labels } from '~/types/label';
 
 export const initLabelPage = (): void => {
   labelStore.fetchAndSetLabels();
 
-  new LabelPageLayout({ labelFormComponent: new LabelForm() }).init();
+  new LabelPageLayout().init();
 
   const labelList = new LabelList();
-  labelStore.setLabelsWatcher((labels: Labels) => { labelList.init({ labels }); });
+  labelList.init({ labels: labelStore.state.labels });
+  labelStore.setLabelsWatcher(() => { labelList.render({ labels: labelStore.state.labels }); });
 
   const labelCount = new LabelCount();
-  labelStore.setLabelsWatcher((labels: Labels) => { labelCount.init({ labels }); });
+  labelCount.init({ labels: labelStore.state.labels });
+  labelStore.setLabelsWatcher(() => { labelCount.render({ labels: labelStore.state.labels }); });
 };

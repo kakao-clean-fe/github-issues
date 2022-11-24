@@ -1,5 +1,6 @@
 import { findElement } from '~/utils/dom';
 import { pipe } from '~/utils/functional-util';
+import type { FindElementArgs } from '~/types/utils/dom';
 
 type Selector = string;
 
@@ -11,16 +12,16 @@ const setElement = ({ selector, element }: { selector: Selector, element: Elemen
   elementMap.set(selector, element);
 };
 
-const findAndSetElement = (selector: Selector): void => {
+const findAndSetElement = ({ fromElement, selector }: FindElementArgs): void => {
   pipe(
     findElement,
     (element: Element | null) => setElement({ selector, element })
-  )({ selector });
+  )({ selector, fromElement });
 };
 
-export const getElement = (selector: Selector): Element | null => {
+export const getElement = ({ fromElement, selector }: FindElementArgs): Element | null => {
   if (!hasElement(selector)) {
-    findAndSetElement(selector);
+    findAndSetElement({ fromElement, selector });
   }
   return elementMap.get(selector) ?? null;
 };

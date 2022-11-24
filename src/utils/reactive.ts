@@ -21,10 +21,13 @@ export const ref = <T>(initValue: T): Ref<T> => new Proxy(
   }, {
     set (target: Ref<T>, prop: string, newValue: T, ...args) { // 내부 메서드 : [[Set]], 프로퍼티를 쓸 때
       const oldValue = target[prop];
+      const result = Reflect.set(target, prop, newValue, ...args);
+
       if (oldValue !== newValue) {
         target._runEffect(newValue);
       }
-      return Reflect.set(target, prop, newValue, ...args);
+
+      return result;
     }
   });
 

@@ -1,11 +1,18 @@
-export const filterArray = <T>({ arr, filterFunc }: { arr: T[], filterFunc: Parameters<typeof Array.prototype.filter>[0] }): T[] => {
+interface FilterArrayArgs<Item> {
+  arr: Item[]
+  filterFunc: Parameters<typeof Array.prototype.filter>[0]
+}
+export const filterArray = <Item>({ arr, filterFunc }: FilterArrayArgs<Item>): Item[] => {
   return arr.filter(filterFunc);
 };
 
-export const countArray = ({ arr }: { arr: unknown[] }): number => {
-  return arr.length;
-};
+export const countArray = ({ arr }: { arr: unknown[] }): number => arr.length;
 
-export const reduceArray = <ReturnValue>({ arr, initValue, reducer }: { arr: unknown[], initValue: unknown, reducer: Parameters<typeof Array.prototype.reduce>[0] }): ReturnValue => {
+interface ReduceArrayArgs {
+  arr: unknown[]
+  initValue: unknown
+  reducer: Parameters<typeof Array.prototype.reduce>[0]
+}
+export const reduceArray = <ReturnValue>({ arr, initValue, reducer }: ReduceArrayArgs): ReturnValue => {
   return arr.reduce(reducer, initValue) as ReturnValue;
 };

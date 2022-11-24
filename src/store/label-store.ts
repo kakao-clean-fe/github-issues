@@ -1,7 +1,7 @@
-import { getApi } from '~/utils/api';
-import { Labels } from '~/types/label';
+import { getAPI, postAPI } from '~/utils/api';
 import { ref, watch } from '~/utils/reactive';
 import { unwrapRefValues } from '~/utils/store';
+import type { Labels, Label } from '~/types/label';
 
 const refObject = {
   labels: ref<Labels>([])
@@ -14,14 +14,34 @@ export const labelStore = {
     watch(refObject.labels, effectFunction);
   },
 
-  async fetchLabels (): Promise<Labels> {
-    return await getApi<Labels>({ url: '/data-sources/labels.json' });
+  setLabels (labels: Labels) {
+    this.state.labels = labels;
   },
 
-  fetchAndSetLabels () {
-    this.fetchLabels()
-      .then((labels: Labels) => { this.state.labels = labels; })
-      .catch((error: Error) => error);
+  async fetchSubmitLabel (label: Label) {
+    return await postAPI<Labels>({ url: '/label', options: { body: label } });
+  },
+
+  async fetchLabels () {
+    return await getAPI<Labels>({ url: '/labels' });
+  },
+
+  async fetchLabelsWithDelay () {
+    return await getAPI<Labels>({ url: '/labels-delay', abort: true });
+  },
+
+  fetchAndSetLabels ({ delay }: { delay: boolean } = { delay: false }) {
+    const fetchFunction = delay
+      ? this.fetchLabelsWithDelay
+      : this.fetchLabels;
+
+    fetchFunction()
+      .then((labels: Labels) => { this.setLabels(labels); })
+      .catch((error: Error) => {
+        console.error(error);
+
+        throw error;
+      });
   }
 
 };

@@ -15,6 +15,6 @@ const render = ({ parent, issues }: { issues: Issue[], parent: Element | null })
 
 export const initIssueListComponent = ({ parentSelector = ISSUE_LIST_SELECTOR }: { parentSelector?: string }): void => {
   setIssuesToRenderWatcher((issues: Issue[]) => {
-    render({ parent: getElement(parentSelector), issues });
+    render({ parent: getElement({ selector: parentSelector }), issues });
   });
 };
