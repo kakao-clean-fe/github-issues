@@ -1,18 +1,19 @@
 import {FetchError} from "../errors/fetchError.js";
 import {FetchResult} from "../errors/fetchResult.js";
+import {API_PATH} from "../consts/const.js";
 
-export const fetchIssues = async () => fetchUtils("/issues");
+export const fetchIssues = async () => fetchUtils(API_PATH.GET_ISSUES);
 
-export const fetchLabels = async () => fetchUtils("/labels");
+export const fetchLabels = async () => fetchUtils(API_PATH.GET_LABELS);
 
 export const saveLabels = async (newLabel) => {
-    return await fetchUtils("/labels", {
+    return await fetchUtils(API_PATH.SAVE_LABELS, {
         method: "POST",
         body: JSON.stringify(newLabel)
     });
 }
 
-export const updateLabels = async (abortSignal) => fetchUtils("/labels-delay", {signal: abortSignal});
+export const updateLabels = async (abortSignal) => fetchUtils(API_PATH.UPDATE_LABELS, {signal: abortSignal});
 
 const fetchUtils = async (path, config = {method: 'GET'}) => {
     try {
