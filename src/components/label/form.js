@@ -1,8 +1,8 @@
-import View from "@/libs/view.js";
-import {getRandomColorCode, isHexColor, selectOne} from "@/utils.js";
-import {getLabelFormTpl} from "@/tpl.js";
-import LabelStore from "@/stores/label.js";
-import AppState from "@/libs/state.js";
+import View from "../../libs/view.js";
+import {getRandomColorCode, isHexColor, selectOne} from "../../utils.js";
+import {getLabelFormTpl} from "../../tpl.js";
+import LabelStore from "../../stores/label.js";
+import AppState from "../../libs/state.js";
 
 class LabelForm extends View {
   get $targetEl() {
@@ -14,10 +14,11 @@ class LabelForm extends View {
   }
 
   getTemplate(state) {
-    const {showNewLabel, previewLabelColor} = state
+    const {showNewLabel, randomColor} = state
     return getLabelFormTpl({
-      previewLabelColor: previewLabelColor,
-      showNewLabel: showNewLabel
+      randomColor: randomColor,
+      showNewLabel: showNewLabel,
+      lastInputs: this.lastInputs
     })
   }
 
@@ -41,11 +42,13 @@ class LabelForm extends View {
     // onClick reset color button
     resetColorButton.addEventListener('click', () => {
       changeColorCode(getRandomColorCode())
+      this.saveInputs()
     })
 
     // color input 입력시 hexColor이면 preview color 수정
     labelColorInput.addEventListener('input', ({target: {value}}) => {
       isHexColor(value) && changeColorCode(value.slice(1))
+      this.saveInputs()
     })
 
     // input validation을 체크하여 create-button을 활성화/비활성화
@@ -57,12 +60,13 @@ class LabelForm extends View {
         labelCreateButton.classList.add("opacity-50")
         labelCreateButton.disabled = true
       }
+      this.saveInputs()
     }
     labelNameInput.addEventListener('input', handleInputs)
     labelDescInput.addEventListener('input', handleInputs)
 
     // create button 클릭시 store에 LabelModel을 추가
-    const handleCreateLabel = (e) => {
+    const handleCreateLabel = async (e) => {
       e.preventDefault()
       const item = {
         name: labelNameInput.value,
@@ -71,8 +75,11 @@ class LabelForm extends View {
       }
 
       if (LabelStore.isValid(item)) {
-        AppState.update({previewLabelColor: getRandomColorCode()}, false)
-        LabelStore.add(item)
+        await LabelStore.addData(item)
+        AppState.update({
+          previewLabelColor: getRandomColorCode(),
+          showNewLabel: false
+        }, true)
       }
     }
     labelCreateButton.addEventListener('click', handleCreateLabel)
@@ -94,6 +101,21 @@ class LabelForm extends View {
       labelPreview: querySelector("#label-preview"),
       labelCreateButton: querySelector('#label-create-button'),
       labelCancelButton: querySelector('#label-cancel-button')
+    }
+  }
+
+  saveInputs() {
+    const {labelNameInput, labelDescInput, labelColorInput} = this.$
+    localStorage.setItem("name", labelNameInput.value)
+    localStorage.setItem("description", labelDescInput.value)
+    localStorage.setItem("color", labelColorInput.value.slice(1))
+  }
+
+  get lastInputs() {
+    return {
+      name: localStorage.getItem("name"),
+      description: localStorage.getItem("description"),
+      color: localStorage.getItem("color")
     }
   }
 

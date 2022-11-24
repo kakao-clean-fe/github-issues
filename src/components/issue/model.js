@@ -1,8 +1,8 @@
-import View from "@/libs/view.js";
-import {selectOne} from "@/utils.js";
-import {getIssueItemTpl} from "@/tpl.js";
-import AppState from "@/libs/state.js";
-import {TAB} from "@/constants.js";
+import View from "../../libs/view.js";
+import {selectOne} from "../../utils.js";
+import {getIssueItemTpl} from "../../tpl.js";
+import AppState from "../../libs/state.js";
+import {TAB} from "../../constants.js";
 
 class Model extends View {
   constructor(item = {}) {

@@ -1,15 +1,23 @@
-import {fetchData, removeItem} from "@/utils.js";
-import AppState from "@/libs/state.js";
-import IssueModel from "@/components/issue/model.js";
+import {requestGet, removeItem} from "../utils.js";
+import AppState from "../libs/state.js";
+import IssueItem from "../components/issue/model.js";
+
+
+const asLabelModel = (data, notify) => {
+  (
+    AppState.get()
+      .issues
+      ?.forEach(label => AppState.unsubscribe(label))
+  )
+  AppState.update(
+    {issues: data.map(item => new IssueItem(item))},
+    notify
+  )
+}
 
 const IssueStore = {
   getInitialData() {
-    return fetchData("data-sources/issues.json")
-      .then(
-        (data) => {
-          AppState.update({issues: data.map((item) => new IssueModel(item))}, false)
-        }
-      )
+    return requestGet("/issues").then(asLabelModel)
   },
   add(item) {
     const {labels} = AppState.get()
@@ -17,7 +25,7 @@ const IssueStore = {
       {
         labels: [
           ...labels,
-          new IssueModel(item)
+          new IssueItem(item)
         ]
       }
     )

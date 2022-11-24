@@ -1,8 +1,15 @@
-import {selectOne} from "@/utils.js";
-import {getLabelTpl} from "@/tpl.js";
-import {TAB} from "@/constants.js";
-import View from "@/libs/view.js";
-import AppState from "@/libs/state.js";
+import {requestPost, selectOne} from "../../utils.js";
+import {getLabelTpl} from "../../tpl.js";
+import {TAB} from "../../constants.js";
+import View from "../../libs/view.js";
+import AppState from "../../libs/state.js";
+import LabelStore from "../../stores/label.js";
+
+
+const localState = {
+  controller: undefined,
+  isFormImported: false
+}
 
 
 class LabelTab extends View {
@@ -25,14 +32,44 @@ class LabelTab extends View {
 
   bindEvents() {
     // toggle new label button
-    this.$newLabelButton.addEventListener('click', () => {
-      const {showNewLabel} = AppState.get()
-      AppState.update({showNewLabel: !showNewLabel})
-    })
+    const handleNewLabelButton = async () => {
+      if (localState.isFormImported) {
+        const {showNewLabel} = AppState.get()
+        AppState.update({showNewLabel: !showNewLabel})
+      } else {
+        const {default: LabelForm} = await import("./form.js")
+        localState.isFormImported = true
+        new LabelForm()
+        const {showNewLabel} = AppState.get()
+        AppState.update({showNewLabel: !showNewLabel})
+      }
+    }
+    this.$newLabelButton.addEventListener('click', handleNewLabelButton)
+
+    // click update labels button
+    const handleUpdateLabelsButton = async () => {
+      if (localState.controller) {
+        localState.controller.abort()
+      }
+      localState.controller = new AbortController()
+      try {
+        await LabelStore.updateData({signal: localState.controller.signal})
+      } catch (err) {
+        if (err.name === 'AbortError') {
+          return null
+        }
+      }
+    }
+    this.$updateLabelButton.addEventListener('click', handleUpdateLabelsButton)
+
   }
 
   get $newLabelButton() {
     return this.$targetEl.querySelector(".new-label-button")
+  }
+
+  get $updateLabelButton() {
+    return this.$targetEl.querySelector(".refresh-labels")
   }
 
   render() {
