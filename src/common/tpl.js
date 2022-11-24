@@ -352,6 +352,7 @@ export function getLabelListTpl(labelCnt, labels) {
         <ul class="label-list ml-auto text-sm bg-white">
           ${labels}
         </ul>
+        <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
     </div>
   `;
 }

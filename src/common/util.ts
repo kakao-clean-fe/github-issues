@@ -1,5 +1,6 @@
 import { Api } from '../../types';
 import { API_METHOD } from './constants';
+import FetchController from './FetchController';
 
 export const isEquals = <T = any>(a: T, b: T) => {
   try {
@@ -37,7 +38,7 @@ export const clickEventListener = (
 
 export const removeUndefinedParam = (obj: object) =>
   Object.entries(obj).reduce(
-    (prev, { keys, values }) =>
+    (prev, [keys, values]) =>
       values ? { ...prev, [`${keys}`]: values } : prev,
     {}
   );
@@ -48,32 +49,57 @@ const commonFetch = async <T = any>({
   body,
   errorMessage,
 }: Api) => {
-  const obj = removeUndefinedParam({ method, body });
   try {
-    const res = await fetch(url, obj);
+    const res = await fetch(url, removeUndefinedParam({ method, body }));
     return (await res.json()) as Promise<T>;
   } catch (err) {
     if (errorMessage !== '' && errorMessage) {
-      alert(errorMessage);
+      console.error(err);
     }
     throw err;
   }
 };
+export const getRandomColor = () => {
+  Math.random() * 10;
+};
 
 export const API = {
   GET<T = any>({ url, errorMessage }: Api) {
-    return commonFetch<T>({ url, method: API_METHOD.GET, errorMessage });
+    return FetchController.fetch<T>(
+      {
+        url,
+        method: API_METHOD.GET,
+        errorMessage,
+      },
+      true
+    );
   },
   POST<T = any>({ url, body, errorMessage }: Api) {
-    return commonFetch<T>({ url, method: API_METHOD.POST, body, errorMessage });
+    return FetchController.fetch<T>({
+      url,
+      method: API_METHOD.POST,
+      body: JSON.stringify(body),
+      errorMessage,
+    });
   },
   DELETE<T = any>({ url, errorMessage }: Api) {
-    return commonFetch<T>({ url, method: API_METHOD.DELETE, errorMessage });
+    return FetchController.fetch<T>({
+      url,
+      method: API_METHOD.DELETE,
+      errorMessage,
+    });
   },
   UPDATE<T = any>({ url, errorMessage }: Api) {
-    return commonFetch<T>({ url, method: API_METHOD.UPDATE, errorMessage });
+    return FetchController.fetch<T>({
+      url,
+      method: API_METHOD.UPDATE,
+      errorMessage,
+    });
   },
 };
+
+export const getTimeByKor = (now: Date) =>
+  new Intl.DateTimeFormat('ko', { timeStyle: 'medium' }).format(now);
 
 export const findElement = (rootElement: Element) => (querySelector: string) =>
   rootElement.querySelector(querySelector);

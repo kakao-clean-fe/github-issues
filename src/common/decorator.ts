@@ -1,3 +1,5 @@
+import { getTimeByKor } from './util';
+
 export function builder(...keys) {
   return (target) => {
     target.builder = class {
@@ -11,6 +13,7 @@ export function builder(...keys) {
       setData(key, value) {
         if (keys.includes(key)) {
           this[key] = value;
+          localStorage.setItem(key, value);
         }
         return this;
       }
@@ -18,6 +21,51 @@ export function builder(...keys) {
         return new target(this);
       }
     };
-    window['a'] = target;
   };
 }
+export const Logger = {
+  errorLogger() {
+    return function (target, propertyKey, descriptor) {
+      const targetMethod = target[propertyKey];
+      descriptor.value = function (error: Error) {
+        console.groupCollapsed(
+          `[error log] ${error.message}`,
+          getTimeByKor(new Date())
+        );
+        console.error('error', error);
+        console.groupEnd();
+        targetMethod(error);
+      };
+
+      return descriptor;
+    };
+  },
+  fetchLogger(props?: { fetchingTimeLogging: boolean }) {
+    const { fetchingTimeLogging = false } = props || {};
+    return function (target, propertyKey, descriptor) {
+      const targetMethod = target[propertyKey];
+      descriptor.value = async function (...res) {
+        let _res;
+        let start;
+        if (fetchingTimeLogging) {
+          start = new Date().getTime();
+        }
+        _res = await targetMethod(...res);
+        const end = new Date().getTime();
+        if (_res) {
+          console.groupCollapsed(
+            `[data fetch end] `,
+            getTimeByKor(new Date()),
+            res[0].method,
+            res[0].url,
+            fetchingTimeLogging ? `(${(end - start) / 1000} sec)` : ''
+          );
+          console.log('data', _res);
+          console.groupEnd();
+        }
+        return _res;
+      };
+      return descriptor;
+    };
+  },
+};
