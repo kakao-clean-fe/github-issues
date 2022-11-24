@@ -1,13 +1,21 @@
 import axios from 'axios';
 import { Issue, Label } from './types';
 
+export type DelayRequestOption = {
+    signal?: AbortSignal
+}
 
-export const readIssues = async () => {
-    const { data } = await axios.get<Array<Issue>>('/data-sources/issues.json', { responseType: 'json'});
+const GET = <T> (url: string) => async ({ signal }: DelayRequestOption = { signal: undefined }) => {
+    const { data } = await axios.get<T>(url, { responseType: 'json', signal });
     return data;
 }
 
-export const readLabels = async () => {
-    const { data } = await axios.get<Array<Label>>('/data-sources/labels.json', { responseType: 'json'});
+const POST = <T = any> (url: string) => async (json: any) => {
+    const { data } = await axios.post<T>(url, json);
     return data;
 }
+
+export const readIssues = GET<Array<Issue>>('/issues');
+export const readLabels = GET<Array<Label>>('/labels');
+export const readDelaiedLabels = GET<Array<Label>>('/labels-delay');
+export const updateLabels = POST('/labels');

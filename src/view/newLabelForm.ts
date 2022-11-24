@@ -17,6 +17,7 @@ export default class NewLabelForm {
     private readonly $labelRandomColor: HTMLButtonElement | null = null;
     private readonly $labelColorCode: HTMLInputElement | null = null;
     private readonly $createButton: HTMLButtonElement | null = null;
+    private readonly $closeButton: HTMLButtonElement | null = null;
     private labelState: LabelState = {name: '', desc: '', color: ''};
 
     public constructor(presenter: LabelPresenterType) {
@@ -28,6 +29,7 @@ export default class NewLabelForm {
         this.$labelRandomColor = $('#new-label-color', this.$form);
         this.$labelColorCode = $('#label-color-value', this.$form);
         this.$createButton = $('#label-create-button', this.$form);
+        this.$closeButton = $('#cancel-create-label', this.$form);
         this.attachEvent();
     }
 
@@ -35,7 +37,12 @@ export default class NewLabelForm {
         this.$form?.classList.toggle('hidden');
     }
 
+    public hide() {
+        this.$form?.classList.add('hidden');
+    }
+
     private attachEvent() {
+        this.$closeButton?.addEventListener('click', this.hide.bind(this));
         this.$labelRandomColor?.addEventListener('click', this.updateRandomColorCode.bind(this));
         this.$labelInput?.addEventListener('input', this.updateLabelInput.bind((this)));
         this.$labelDescription?.addEventListener('input', this.updateLabelDesc.bind(this));

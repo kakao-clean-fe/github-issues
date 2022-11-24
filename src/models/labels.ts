@@ -1,25 +1,40 @@
 import {Label} from "../types";
-import {LabelContactType} from "../presenter/labels";
-import {readLabels} from "../request";
+import {readDelaiedLabels, readLabels, updateLabels} from "../request";
+import {BaseModel} from "./base";
+import { DelayRequestOption } from "../request";
 
-let resource: Array<Label> = [];
+export { type LabelModel as LabelModelType };
 
-const model = (labelContact: LabelContactType) => {
-    const getResource = () => resource;
-    const setResource = (payload: Array<Label>) => {
-        resource = payload;
-        labelContact.notify(resource);
+class LabelModel extends BaseModel<Array<Label>> {
+    public constructor() {
+        super([]);
     }
 
-    const loadLabel = () => {
-        if (!resource.length) labelContact.notify(resource);
-        readLabels().then(labels => {
-            resource = labels;
-            labelContact.notify(resource);
-        });
-    };
+    get getResource(): Array<Label> {
+        return this.resource;
+    }
 
-    return { getResource, setResource, loadLabel }
+    set setResource(payload: Array<Label>) {
+        this.resource = payload;
+        this.notify(this.resource);
+    }
+
+    public updateResource(payload: Array<Label>) {
+        return updateLabels(payload).then(() => {
+            this.resource = payload;
+            this.notify(this.resource);
+        });
+    }
+
+    public loadDelaiedLabel({signal}: DelayRequestOption) {
+        readDelaiedLabels({ signal }).then(labels => {
+            this.setResource = labels;
+        })
+    }
+
+    public loadLabel() {
+        readLabels().then(labels => this.setResource = labels);
+    }
 }
 
-export default model;
+export default new LabelModel();
