@@ -1,70 +1,70 @@
-import { getRandom, isHexColor } from '../util/feature';
-import {createStoreObservable} from './proxy';
-import {getPromiseData} from './default';
-import {labelPage} from '../page/label';
-
-export const colorList = [
-  '#DC3535', '#f97516', '#fcd34d', '#22c55e', '#EE6983',
-  '#38bef8', '#4649FF', '#fde047', '#eef1ff', '#b1b2ff',
-];
+import { newLabelColorStore$, ProxyStore } from './color';
+import { Observable, ObserverArray } from './observable';
+import { fetchStoreData } from '../util/feature';
 
 /**
  * week2 객체 지향 프로그래밍
  * label 관련
  */
-export let labelStore$ = null;
-export const getLabelStore$ = (watchers) => {
-  getPromiseData('../../data-sources/labels.json').then((labels = []) => {
-    labelStore$ = createStoreObservable(labels, watchers);
-  });
+function createLabelStore(initialValue) {
+  // Observable의 constructor 로직 실행
+  Observable.call(this, initialValue);
+  this.addObserverList = new ObserverArray(); // 라벨 추가에 대한 observer
+  this.httpRequest = fetchStoreData(this);
+}
+/**
+ * Object.create(object) creates an object with a prototype of the
+ * passed in object.
+ */
+createLabelStore.prototype = Object.create(Observable.prototype);
+createLabelStore.constructor = createLabelStore;
+createLabelStore.prototype.fetchLabels = function() {
+  this.httpRequest('/labels')();
+}
+createLabelStore.prototype.updateLabels = function() {
+  this.httpRequest('/labels-delay')(); // GET은 setValue에서 notify
+}
+createLabelStore.prototype.add = async function(newLabel) {
+  const {status, data, isAborted, isOtherError} = await this.httpRequest('/labels')('POST', newLabel);
+
+  if (isAborted || isOtherError) {
+    return;
+  }
+
+  if (status !== 201) {
+    console.error(`label 추가 실패, status: ${status}`)
+    alert('label 추가에 실패했습니다. 다시 시도해주세요.');
+    return;
+  }
+  
+  /**
+   * todo. 일단 새로운 라벨을 추가로 그리기만 해도 되는지 확인
+   * 전체 라벨을 그린다면 fetchStoreData 함수 > POST일 때 setValue 추가
+   */
+  const newLabelRes = data[data.length-1];
+
+  this.value.push(newLabelRes);
+  this.notifyAddObservers(newLabelRes);
+
+  /**
+   * labelStore에 새로운 color 추가 (set이라 일단 add)
+   */
+  const color = newLabelRes.color;
+  color && newLabelColorStore$.colors.add(color);
 }
 
-const initialColorValue = {
-  colors: new Set(colorList),
-  curr: null,
-  next: null,
-  temp: null,
+createLabelStore.prototype.subscribeAdd = function(observers = []) {
+  this.addObserverList.add(observers);
 }
 
-export const newLabelColorStore$ = (function(target) {
-  let _iterator = target.colors.values();
-  let cur = _iterator.next().value ?? colorList[0];
+createLabelStore.prototype.notifyAddObservers = function(newValue) {
+  this.addObserverList.run(newValue);
+}
 
-  const observable = new Proxy(target, {
-    get(obj, prop, receiver) {
-      if (prop === 'next') {
-        let data = _iterator.next();
+/** override */
+createLabelStore.prototype.unsubscribe = function(observers = []) {
+  this.observerList.remove(observers);
+  this.addObserverList.remove(observers);
+}
 
-        if (data.done) {
-          _iterator = target.colors.values();
-          data = _iterator.next();
-        }
-
-        cur = data.value;
-        labelPage.renderLabelColor(cur);
-        return cur;
-      }
-
-      if (prop === 'curr') {
-        return cur;
-      }
-
-      return Reflect.get(obj, prop, receiver);
-    },
-    set(obj, prop, value, receiver) {
-      if (prop === 'colors') {
-        Reflect.set(obj, prop, value, receiver);
-      }
-
-      if (prop === 'temp') {
-        labelPage.renderLabelColor(value); // 버튼, 라벨 프리뷰에 색 입히기
-        Reflect.set(obj, prop, value, receiver);
-      }
-
-      Reflect.set(obj, prop, value, receiver);
-      return true;
-    }
-  });
-
-  return observable;
-})(initialColorValue);
+export const labelStore$ = new createLabelStore([]);

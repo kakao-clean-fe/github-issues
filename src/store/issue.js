@@ -1,4 +1,4 @@
-import {store, createDerivedStore, fetchData} from './default.js';
+import {store, createDerivedStore} from './default.js';
 
 export const pageStore$ = store('');
 
@@ -13,6 +13,3 @@ const getActivatedIssues = (issues, status) => {
 }
 
 export const activatedIssuesStore$ = createDerivedStore(getActivatedIssues, issueStore$, statusStore$);
-
-/** fetch and store data */
-export const loadIssueData = () => fetchData('../data-sources/issues.json')(issueStore$);

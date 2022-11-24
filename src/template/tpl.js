@@ -32,7 +32,7 @@ export function getIssueTpl() {
         </div>
 
         <div class="statusTab flex">
-          <div class="whitespace-nowrap open-count font-bold cursor-pointer"><span class="num-open">0</span> Opens</div>
+          <div class="whitespace-nowrap open-count cursor-pointer"><span class="num-open">0</span> Opens</div>
           <div class="whitespace-nowrap close-count ml-3 cursor-pointer"><span class="num-close">0</span> Closed</div>
         </div>
 
@@ -157,6 +157,7 @@ export function getLabelTpl() {
           <input type="text" id="label-description-input" name="label[description]"
             class="w-full p-2 base-outer focus:outline-none"
             placeholder="Description" value="" 
+            autocomplete="off" 
             maxlength="100">
         </dd>
         <dd class="" hidden="" id="label--description-error"></dd>
