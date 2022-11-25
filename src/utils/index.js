@@ -63,7 +63,10 @@ const Lazy = (importFunc) => {
 }
 
 const setLocalStorage =(key, value) => {
-  localStorage.setItem(key, JSON.stringify(value));
+  if(typeof value !== 'string') {
+    throw new Error('문자열로 바꿔서 저장 바랍니다.');
+  }
+  localStorage.setItem(key, value);
 }
 
 const getLocalStorage = (key, {isJson} = {isJson:true}) => {

@@ -11,7 +11,6 @@ const initLabels = () => {
     target: app, 
     model: labelModel,
   })
-
 }
 
 export default initLabels;

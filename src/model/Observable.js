@@ -1,4 +1,4 @@
-export default class Observer {
+export default class Observable {
   constructor() {
     this.state = {};
     this._observers = new Set();
@@ -18,7 +18,6 @@ export default class Observer {
   }
 
   notify() {
-    console.log(this.state)
     this._observers.forEach(observer => observer(this.state));
   }
 }

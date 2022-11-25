@@ -1,16 +1,32 @@
 import { fetchBody } from "../../utils";
 
 const getLabels = () => fetchBody("/labels");
-const getLabelsDelay = (() => {
-  let completed = false;
-  const controller = new AbortController();
-  const {signal} = controller;
 
+const throwIfNotAbortError = error => {
+  if(error.name !== 'AbortError') {
+    throw error;
+  }
+}
+
+const getLabelsDelay = (() => {
+  let requested = false;
+  let controller;
+  
   return () => {
-    if(completed) {
+    if(requested) {
       controller.abort();
     }
-    fetchBody("/labels-delay", {signal}).finally(() => completed = false)
+    controller = new AbortController();
+    const {signal} = controller;
+    requested = true;
+
+
+    return fetchBody("/labels-delay", {signal})
+      .then((res) => {
+        requested = false
+        return res;
+      })
+      .catch(throwIfNotAbortError)
   }
 })();
 
@@ -22,7 +38,7 @@ const addLabels = (label) =>
     },
     body: JSON.stringify(label),
   });
-  
+
 const LabelApi = { getLabels, getLabelsDelay, addLabels };
 
 export default LabelApi;

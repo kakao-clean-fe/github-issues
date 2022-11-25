@@ -1,8 +1,8 @@
 import { fetchBody, getLocalStorage, setLocalStorage } from "../../utils";
-import Observer from "../observer";
+import Observable from "../Observable";
 import LabelApi from './Api';
 
-class LabelModel extends Observer {
+class LabelModel extends Observable {
   labelKey = 'label'
   initialLabelForm = {
     name: "",
@@ -49,7 +49,7 @@ class LabelModel extends Observer {
   }
 
   saveLabelForm(labelForm) {
-    setLocalStorage(this.labelKey, labelForm);
+    setLocalStorage(this.labelKey, JSON.stringify(labelForm));
   }
 
   getLabelForm() {
@@ -59,7 +59,11 @@ class LabelModel extends Observer {
   async refreshLabel() {
     try {
       const labels = await LabelApi.getLabelsDelay();
-      this.setState({...this.state, labels});
+      
+      if(labels) {
+        this.setState({...this.state, labels});
+      }
+      
     } catch(e) {
       alert('라벨을 갱신하던 중 문제가 발생하였습니다.');
       console.error(e);
