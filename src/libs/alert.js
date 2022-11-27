@@ -17,7 +17,7 @@ const alertMessage = ({type, message}) => {
         el.remove()
       });
     }
-  }, 100000)
+  }, 2500)
 
   /* click */
   el.addEventListener("click", () => {

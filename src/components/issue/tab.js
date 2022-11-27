@@ -2,7 +2,6 @@ import {selectAll, selectOne} from "../../libs/utils.js";
 import {getIssueTpl} from "../../tpl.js";
 import {STATUS, TAB} from "../../constants.js";
 import View from "../../libs/view.js";
-import {AppState} from "../../libs/state.js";
 
 
 /** Issue Tab */
