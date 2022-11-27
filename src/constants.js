@@ -1,4 +1,5 @@
 export const ID_APP = '#app'
+export const LOCAL_STORE_COLOR = 'color';
 
 /* Issue */
 export const KEY_OPEN = 'open';

@@ -11,6 +11,7 @@ import {
   ID_NEW_LABEL_FORM,
   ID_NEW_LABEL_NAME_INPUT,
   KEY_HIDDEN,
+  LOCAL_STORE_COLOR,
 } from "../constants";
 import { getLabelTpl } from "../tpl";
 import { getRandomHexColor } from "../utils";
@@ -54,7 +55,12 @@ const evtCreateLabelClick = async (event) => {
 const evtRefreshLabelsClick = async (event) => {
   event.preventDefault();
   await labelsModel.getDelayInitialData();
-}
+};
+
+const saveHexColorInStorage = () => {
+  localStorage.setItem(LOCAL_STORE_COLOR, createModel.getHexColor());
+  console.log('saved', createModel.getHexColor());
+};
 
 const addEventHandler = () => {
   document
@@ -72,6 +78,7 @@ const addEventHandler = () => {
   document
     .querySelector(CLASS_UPDATE_LABEL_BTN)
     .addEventListener("click", evtRefreshLabelsClick);
+  window.addEventListener("beforeunload", saveHexColorInStorage);
 };
 
 export const LabelPageInit = async () => {
