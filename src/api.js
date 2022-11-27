@@ -3,12 +3,12 @@ export const getIssuesData = async (store) => {
     const response = await fetch("/issues");
 
     if (response) {
-      const data = await response.json();
-      if (data) {
+      const resData = await response.json();
+      if (resData) {
         const prevStore = store.getStore();
         store.setStore({
           ...prevStore,
-          issues: data,
+          issues: resData,
         });
       }
     }
@@ -22,9 +22,9 @@ export const getLabelsData = async () => {
     const response = await fetch("/labels");
 
     if (response) {
-      const data = await response.json();
-      if (data) {
-        return data;
+      const resData = await response.json();
+      if (resData) {
+        return resData;
       }
     }
 
@@ -42,10 +42,10 @@ export const getLabelsDataDelay = async (signal, controller) => {
     });
 
     if (response) {
-      const data = await response.json();
+      const resData = await response.json();
       controller.abort();
-      if (data) {
-        return data;
+      if (resData) {
+        return resData;
       }
     }
 
@@ -67,13 +67,11 @@ export const postLabelsData = async (data) => {
     const resData = await response.json();
     
     if (!resData) throw new Error('[Client] 서버에서 데이터를 받아올 수 없음')
-    if (response.status > 400) {
-      alert(`서버 에러 : ${JSON.stringify(resData)}`);
-      return null;
-    }
+    if (response.status > 400) throw new Error(`서버 에러 : ${JSON.stringify(resData)}`)
     
     return resData;
   } catch (err) {
+    alert(err);
     console.error("[getLabelsData]", err);
     return null;
   }
