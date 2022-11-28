@@ -6,14 +6,14 @@ import { HIDDEN } from '../constants/status';
 import { LABEL_COLOR } from "../constants/labelColor";
 import { generateColor } from '../utils/label';
 import { addLabelData } from '../common/api';
-import { localStorageUtil, resetLocalStorage } from '../utils/localStorage';
+import { localStorageUtil } from '../utils/localStorage';
 import { LOCAL_STORAGE_KEY } from "../constants/localStorage";
 
 export const LabelCreator = class {
 
-  name = localStorageUtil.getItem(LOCAL_STORAGE_KEY.NAME) || '';
-  description = localStorageUtil.getItem(LOCAL_STORAGE_KEY.DESCRIPTION) || '';
-  color = localStorageUtil.getItem(LOCAL_STORAGE_KEY.COLOR) || '';
+  name = '';
+  description = '';
+  color = '';
   colorIndex = 0;
 
   constructor () {
@@ -29,7 +29,9 @@ export const LabelCreator = class {
 
 
   initData () {
-
+    this.name = localStorageUtil.getItem(LOCAL_STORAGE_KEY.NAME) || '';
+    this.description = localStorageUtil.getItem(LOCAL_STORAGE_KEY.DESCRIPTION) || '';
+    this.color = localStorageUtil.getItem(LOCAL_STORAGE_KEY.COLOR) || '';
   }
 
   initTemplate () {
@@ -97,7 +99,7 @@ export const LabelCreator = class {
     });
 
     this.toggleLabelCreator();
-    resetLocalStorage();
+    localStorageUtil.reset();
   }
 
   onClickCancelButton () {
