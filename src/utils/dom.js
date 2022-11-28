@@ -1,6 +1,6 @@
 
-export const selectElement = querySelector => document.querySelector(querySelector);
-export const selectAllElement = querySelector => document.querySelectorAll(querySelector);
+export const selectElement = (querySelector, root = document) => root.querySelector(querySelector);
+export const selectAllElement = (querySelector, root = document) => root.querySelectorAll(querySelector);
 
 export const renderElement = querySelector => innerHTML => {
   selectElement(querySelector).innerHTML = innerHTML;

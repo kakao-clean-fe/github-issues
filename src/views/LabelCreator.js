@@ -16,8 +16,8 @@ export const LabelCreator = class {
   color = '';
   colorIndex = 0;
 
-  constructor () {
-    this.parentElement = selectElement(SELECTOR.LABEL_CREATOR_WRAPPER);
+  constructor (parentElement) {
+    this.parentElement = parentElement;
 
     this.initData();
     this.initTemplate();

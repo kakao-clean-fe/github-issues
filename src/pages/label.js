@@ -33,7 +33,8 @@ export const LabelPage = class {
 
   async initLabelCreatorView () {
     const { LabelCreator } = await import('../views/LabelCreator');
-    const labelCreator = new LabelCreator();
+    const labelCreatorWrapperElement = selectElement(SELECTOR.LABEL_CREATOR_WRAPPER);
+    const labelCreator = new LabelCreator(labelCreatorWrapperElement);
   }
 
   initEvent () {
