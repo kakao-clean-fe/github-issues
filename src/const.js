@@ -15,3 +15,5 @@ export const colorList = [
 ];
 
 export const TEMP_LABEL_FORM_DATA_KEY = 'temp_label_form_data';
+
+export const ADD_LABEL_ERROR_MESSAGE = 'label 추가에 실패했습니다. 다시 시도해주세요.';

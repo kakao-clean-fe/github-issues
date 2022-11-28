@@ -2,7 +2,7 @@ import { ABORT_ERROR, GET, POST } from "../const";
 import { HttpError } from "./errors";
 import { multipleArgsPipe } from "./operator";
 
-export class HttpService {
+export class ApiService {
   constructor() {
     this.controller = new AbortControllerManager();
   }
@@ -53,13 +53,6 @@ export class HttpService {
       throw err;
     }
   }
-}
-
-export class IssueHttpService extends HttpService {
-  constructor(targetStore) {
-    super();
-    this.store = targetStore;
-  }
 
   async getIssues() {
     try {
@@ -70,13 +63,6 @@ export class IssueHttpService extends HttpService {
     } catch(err) {
       throw err;
     }
-  }
-}
-
-export class LabelHttpService extends HttpService {
-  constructor(targetStore) {
-    super();
-    this.store = targetStore;
   }
 
   async getLabels() {

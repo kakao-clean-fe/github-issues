@@ -4,7 +4,7 @@ import {activateTabClass, openCountSelector, closeCountSelector, openIssueTabSel
 import {issueStore$,statusStore$, activatedIssuesStore$ } from '../store/issue.js'
 import {$, addClass, removeClass, clearElement, renderPageInApp, setRenderTarget, toggleClass} from '../util/dom';
 import {OPEN, CLOSE} from '../const';
-import { IssueHttpService } from '../util/httpService';
+import { ApiService } from '../util/httpService';
 
 const clickTabHandler = (status) => () => statusStore$.setValue(status);
 
@@ -16,7 +16,7 @@ export class IssuePage {
   };
 
   constructor() {
-    this.apiService = new IssueHttpService(issueStore$);
+    this.apiService = new ApiService();
     this.render();
   }
 
@@ -27,8 +27,10 @@ export class IssuePage {
   }
 
   async fetchIssues() {
-    const data = await this.apiService.getIssues();
-    issueStore$.setValue(data);
+    try {
+      const data = await this.apiService.getIssues();
+      issueStore$.setValue(data);
+    } catch(err) {}
   }
   
   /**

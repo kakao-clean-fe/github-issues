@@ -1,7 +1,8 @@
 import { newLabelColorStore$ } from './color';
 import { Observable, ObserverArray } from './observable';
-import { LabelHttpService } from '../util/httpService';
+import { ApiService } from '../util/httpService';
 import { HttpError } from '../util/errors';
+import { ADD_LABEL_ERROR_MESSAGE } from '../const';
 
 /**
  * week2 객체 지향 프로그래밍
@@ -11,7 +12,7 @@ function createLabelStore(initialValue) {
   // Observable의 constructor 로직 실행
   Observable.call(this, initialValue);
   this.addObserverList = new ObserverArray(); // 라벨 추가에 대한 observer
-  this.apiService = new LabelHttpService(this);
+  this.apiService = new ApiService();
 }
 /**
  * Object.create(object) creates an object with a prototype of the
@@ -54,7 +55,7 @@ createLabelStore.prototype.add = async function(newLabel) {
   } catch(err) {
     if (err instanceof HttpError) {
       console.error(`label 추가 실패, status: ${err.statusCode}`)
-      alert('label 추가에 실패했습니다. 다시 시도해주세요.');
+      alert(ADD_LABEL_ERROR_MESSAGE);
       return;
     }
     // 다른 에러는 처리하지 않음, 로그만 남김
