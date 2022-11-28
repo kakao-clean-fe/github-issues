@@ -1,34 +1,21 @@
 import Component from "../../core/component";
 import { routerMixin } from "../../core/router";
 
-const ROUTE = {
-  ISSUE: '/',
-  LABEL: '/label',
-}
-
 class Header extends routerMixin(Component) {
-  static getInstance ($target) {
-    return new Header($target);
-  }
-
-  onClickMoveLabelPageButton () {
-    this.pushState(ROUTE.LABEL);
-  }
-
-  onClickMoveIssuePageButton () {
-    this.pushState(ROUTE.ISSUE);
+  static getInstance (...args) {
+    return new Header(...args);
   }
 
   get events () {
     return [{
       selector: '#go-label-page',
       event: 'click',
-      callback: () => this.onClickMoveLabelPageButton(),
+      callback: () => this.props.onClickMoveLabelPageButton(),
     },
     {
       selector: '#go-issue-page',
       event: 'click',
-      callback: () => this.onClickMoveIssuePageButton(),
+      callback: () => this.props.onClickMoveIssuePageButton(),
     }]
   }
 
