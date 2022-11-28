@@ -109,9 +109,7 @@ export default class Labels extends Component {
     if (!name) {
       throw new Error("삭제하려는 name값을 찾지 못했습니다.");
     }
-    this.model.removeLabel(
-      this.state.labels.find(({ name: _name }) => _name === name)
-    );
+    this.model.removeLabel(name);
   }
 
   initForm() {

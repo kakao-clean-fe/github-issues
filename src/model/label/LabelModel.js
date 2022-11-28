@@ -29,10 +29,10 @@ class LabelModel extends Observable {
     }
   }
 
-  removeLabel(label) {
+  removeLabel(name) {
     this.setState({
       ...this.state,
-      labels: this.state.labels.filter((l) => l !== label)
+      labels: this.state.labels.filter(({name: _name}) => _name !== name)
     })
   }
 
