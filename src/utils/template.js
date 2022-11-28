@@ -7,8 +7,8 @@ export const setDefaultTemplate = ($document = document, statusCount) => {
   appElement.innerHTML = htmlData;
 }
 
-export const setListTemplate = (issues) => {
-  const ULElement = querySelector('.issue-list>ul');
+export const setListTemplate = ($document = document, issues) => {
+  const ULElement = querySelector($document, '.issue-list>ul');
   const innerHTML = issues.reduce((preValue, currValue) => preValue + getIssueItemTpl(currValue), '');
   ULElement.innerHTML = innerHTML;
 }

@@ -7,12 +7,12 @@ import { Window } from 'happy-dom';
 import { IssuesData } from '../stores/issue';
 import fetchMock from "jest-fetch-mock";
 import { getStatusCount } from '../utils/status';
-import { setDefaultTemplate } from '../utils/template';
+import { setDefaultTemplate, setListTemplate } from '../utils/template';
 import { initBodyStr } from '../constants/template-label';
-import { querySelectorAll } from '../utils/dom-selector';
+import { querySelector, querySelectorAll } from '../utils/dom-selector';
 import { issueMockData } from '../mocks/data';
 
-describe('📄 [issue Page] :', () => {
+describe('📄 [Issue Store] :', () => {
   const issueData = IssuesData();
 
   const window = new Window();
@@ -23,20 +23,43 @@ describe('📄 [issue Page] :', () => {
     document.body.innerHTML = initBodyStr;
   });
 
-  test('API로부터 가져온 issue 데이터를 store에 저장한다. ', () => {
+  test('API로부터 가져온 issue 데이터를 store에 저장한다.', () => {
     issueData.setIssues(issueMockData);
     expect(issueData.getIssues()[0]._id).toEqual(123);
   });
 
-  test('store에 저장된 issue 데이터가 있는 경우 #header의 Opens/Close 상태를 업데이트 한다.', () => {
-    const issues = issueData.getIssues();
-    const count = getStatusCount(issues);
-    
-    setDefaultTemplate(document, count);
+});
+describe('📄 [Issue Page] :', () => {
+  const issueData = IssuesData();
+
+  const window = new Window();
+  const document = window.document;
+
+  const getIssues = () => issueData.getIssues();
+
+  beforeEach(() => {
+    document.body.innerHTML = initBodyStr;
+    issueData.setIssues(issueMockData);
+    setDefaultTemplate(document, getStatusCount(issueData.getIssues()));
+  });
+  const isCreatedElement = (selector) => expect(querySelector(document, selector)).not.toBe(undefined);
+
+  test('store에 저장된 issue 데이터가 있는 경우 #header의 Opens/Close 넘버를 업데이트 한다.', () => {
+    const count = getStatusCount(getIssues());
     const statusDivList = querySelectorAll(document, '.statusTab>div');
     const textCondition = `${count.open} Opens`||`${count.close} Closed`;
 
     statusDivList.forEach(div => expect(div.innerHTML).not.toBe(textCondition));
   });
 
+  test('setDefaultTemplate() 함수를 이용해 #app 내부의 기본 element를 추가한다.', () => {
+    expect(querySelector(document, '#app')).not.toBe(undefined);
+    isCreatedElement('#app');
+  });
+
+  test('setListTemplate() 함수를 이용해 issue-list를 생성한다.', () => {
+    setListTemplate(document, getIssues());
+    isCreatedElement('.issue-list>ul');
+  })
 });
+
