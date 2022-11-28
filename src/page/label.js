@@ -4,6 +4,7 @@ import { $ ,addClickEventListener, clearElement, renderPageInApp, setRenderTarge
 import { labelStore$ } from '../store/label';
 import { compose, pipe } from '../util/operator';
 import { formData$ } from '../store/labelForm';
+import {addSubscribe as _addSubscribe} from '../util/feature';
 
 /**
  * week2. 객체지향으로 짜보기
@@ -22,17 +23,17 @@ export class LabelPage {
 
   destroy() {
     labelStore$.unsubscribe(this.#unsubscribeList);
+
+    this.#labelForm?.destroy();
+    this.#labelForm = null;
   }
 
   subscribeStore() {
+    const addSubscribe = _addSubscribe(this, this.#unsubscribeList);
+    
     // bind한 함수를 unsubscribe 메서드에도 전달해야 한다
-    const _renderLabels = this.renderLabels.bind(this);
-    const _renderLabelItem = this.renderLabelItem.bind(this);
-
-    labelStore$.subscribe([_renderLabels, this.renderLabelCount]);
-    labelStore$.subscribeAdd([_renderLabelItem]);
-
-    this.#unsubscribeList = [_renderLabels, _renderLabelItem, this.renderLabelCount];
+    labelStore$.subscribe([addSubscribe(this.renderLabels), addSubscribe(this.renderLabelCount)]);
+    labelStore$.subscribeAdd([addSubscribe(this.renderLabelItem)]);
   }
 
   addLabelPageEventListener() {

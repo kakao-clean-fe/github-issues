@@ -1,29 +1,28 @@
 import {getIssueTpl, getIssueItemTpl} from '../template/tpl';
 import {pipe, compose} from '../util/operator';
-import {activateTabClass, openCountSelector, closeCountSelector, openIssueTabSelector,closeIssueTabSelector, issueContainerSelector, selectPageContainerSelector} from '../template/selector';
+import {activateTabClass, openCountSelector, closeCountSelector, openIssueTabSelector,closeIssueTabSelector, issueContainerSelector} from '../template/selector';
 import {issueStore$,statusStore$, activatedIssuesStore$ } from '../store/issue.js'
-import {$, addClass, removeClass, clearElement, renderPageInApp, setRenderTarget, toggleClass} from '../util/dom';
+import {$, addClass, removeClass, clearElement, renderPageInApp, setRenderTarget} from '../util/dom';
 import {OPEN, CLOSE} from '../const';
+import { apiService } from '../util/httpService';
+import {addSubscribe as _addSubscribe} from '../util/feature';
 
 const clickTabHandler = (status) => () => statusStore$.setValue(status);
 
 export class IssuePage {
-  #unsubscribeList = {
-    issues: [],
-    status: [],
-    activatedIssues: [],
-  };
+  #unsubscribeList = [];
 
-  constructor(apiService) {
+  constructor() {
     this.apiService = apiService;
+    this.addSubscribe = _addSubscribe(this, this.#unsubscribeList);
     
     this.render();
   }
 
   destroy() {
-    issueStore$.removeWatchers(this.#unsubscribeList.issues);
-    statusStore$.removeWatchers(this.#unsubscribeList.status);
-    activatedIssuesStore$.removeWatchers(this.#unsubscribeList.activatedIssues);
+    issueStore$.removeWatchers(this.#unsubscribeList);
+    statusStore$.removeWatchers(this.#unsubscribeList);
+    activatedIssuesStore$.removeWatchers(this.#unsubscribeList);
   }
 
   async fetchIssues() {
@@ -58,24 +57,15 @@ export class IssuePage {
    * watcher
    */
   registerIssueWatcher() {
-    const _renderOpenCloseCount = this.renderOpenCloseCount.bind(this);
-
-    this.#unsubscribeList.issues.push(_renderOpenCloseCount);
-    issueStore$.addWatchers([_renderOpenCloseCount]);
+    issueStore$.addWatchers([this.addSubscribe(this.renderOpenCloseCount)]);
   }
 
   registerIssueStatusWatcher() {
-    const _activateTab = this.activateTab.bind(this);
-
-    this.#unsubscribeList.status.push(_activateTab);
-    statusStore$.addWatchers([_activateTab]);
+    statusStore$.addWatchers([this.addSubscribe(this.activateTab)]);
   }
 
   registerActivatedIssuesWatcher() {
-    const _renderIssues = this.renderIssues.bind(this);
-
-    this.#unsubscribeList.activatedIssues.push(_renderIssues);
-    activatedIssuesStore$.addWatchers([_renderIssues])
+    activatedIssuesStore$.addWatchers([this.addSubscribe(this.renderIssues)])
   }
 
   registerWatcher() {

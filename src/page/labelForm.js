@@ -1,7 +1,7 @@
 import { labelFormSelector, createLabelButtonSelector, formColorValueSelector, formNameSelector, formHiddenClass, labelPreviewTextContentSelector, formDescriptionSelector, labelCreateCancelButtonSelector, newLabelColorSelector, labelPreviewSelector } from "../template/selector"
 import { $, activateButton, addClickEventListener, deactivateButton, toggleClass } from "../util/dom"
 import { labelStore$ } from '../store/label';
-import { getFormStorage, isHexColor, isNotDuplicate, isValid, setInputValue } from "../util/feature";
+import { addSubscribe as _addSubscribe, getFormStorage, isHexColor, isNotDuplicate, isValid, setInputValue } from "../util/feature";
 import { formData$, formHandlers } from "../store/labelForm";
 import { omit, pipe } from "../util/operator";
 import { newLabelColorStore$ } from '../store/color';
@@ -11,6 +11,8 @@ import { colorList, DUPLICATE_LABEL_NAME_MESSAGE } from "../const";
  * dom 관련, add event listener
  */
 export class LabelFormComponent {
+  #unsubscribeList = [];
+
   /**
    * observer 등록, 이벤트 핸들러 등록
    */
@@ -30,20 +32,26 @@ export class LabelFormComponent {
    * Observable 클래스로 만든 store는 해당 store에 observer 등록
    */
   addObservers() {
+    const addSubscribe = _addSubscribe(this, this.#unsubscribeList);
     // formData 관련 observer
     formHandlers.addSetNameObserver([
-      this.setNameInputValue.bind(this),
-      this.toggleCreateButton.bind(this),
+      addSubscribe(this.setNameInputValue), 
+      addSubscribe(this.toggleCreateButton)
     ]);
-    formHandlers.addSetIsCreatingObservers([this.renderCreatingStatus.bind(this)]);
+    formHandlers.addSetIsCreatingObservers([addSubscribe(this.renderCreatingStatus)]);
     formHandlers.addSetColorObservers([
-      this.renderLabelColor.bind(this),
-      this.setColorInputValue.bind(this),
+      addSubscribe(this.renderLabelColor),
+      addSubscribe(this.setColorInputValue)
     ]);
-    formHandlers.addSetDescriptionObservers([this.setDescriptionInputValue.bind(this)]);
+    formHandlers.addSetDescriptionObservers([addSubscribe(this.setDescriptionInputValue)]);
 
     // 새로운 라벨 추가시 observer
-    labelStore$.subscribeAdd([this.initForm.bind(this)]);
+    labelStore$.subscribeAdd([addSubscribe(this.initForm)]);
+  }
+
+  destroy() {
+    formHandlers.removeObservers(this.#unsubscribeList);
+    labelStore$.unsubscribe(this.#unsubscribeList);
   }
 
   /**

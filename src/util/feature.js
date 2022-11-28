@@ -1,6 +1,14 @@
 import { TEMP_LABEL_FORM_DATA_KEY } from "../const";
 import { $ } from "./dom";
 
+export const addSubscribe = (pageInstance,unsubscribeList) => (fn) => {
+  const bindedFn = fn.bind(pageInstance);
+
+  unsubscribeList.push(bindedFn);
+
+  return bindedFn;
+}
+
 export const getRandom = (arr) => {
   return Math.floor(Math.random() * arr.length);
 }
