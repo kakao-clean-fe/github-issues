@@ -60,4 +60,3 @@ export default class LabelPage extends Component {
   }
 }
 
-LabelPage.getInstance(getElement('#app')).render();

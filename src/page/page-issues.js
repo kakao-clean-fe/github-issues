@@ -50,4 +50,3 @@ export default class IssuePage extends Component {
   }
 }
 
-IssuePage.getInstance(getElement('#app')).render();
