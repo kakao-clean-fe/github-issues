@@ -188,9 +188,9 @@ export class LabelFormComponent {
     $(labelFormSelector).addEventListener('submit', this.addLabel);
 
     // color selector
-    addClickEventListener(newLabelColorSelector, () => this.updateFormDataColor());
+    addClickEventListener($(newLabelColorSelector), () => this.updateFormDataColor());
     // cancel 버튼
-    addClickEventListener(labelCreateCancelButtonSelector, this.cancelForm.bind(this))
+    addClickEventListener($(labelCreateCancelButtonSelector), this.cancelForm.bind(this))
   }
 
   addWindowListener() {

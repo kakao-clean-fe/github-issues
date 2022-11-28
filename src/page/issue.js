@@ -1,8 +1,8 @@
 import {getIssueTpl, getIssueItemTpl} from '../template/tpl';
 import {pipe, compose} from '../util/operator';
-import {activateTabClass, openCountSelector, closeCountSelector, openIssueTabSelector,closeIssueTabSelector, issueContainerSelector} from '../template/selector';
+import {activateTabClass, openCountSelector, closeCountSelector, openIssueTabSelector,closeIssueTabSelector, issueContainerSelector, issueWrapperSelector} from '../template/selector';
 import {issueStore$,statusStore$, activatedIssuesStore$ } from '../store/issue.js'
-import {$, addClass, removeClass, clearElement, renderPageInApp, setRenderTarget} from '../util/dom';
+import {getTargetQuerySelector, addClass, removeClass, clearElement, setRenderTarget, renderWrapper } from '../util/dom';
 import {OPEN, CLOSE} from '../const';
 import { apiService } from '../util/httpService';
 import {addSubscribe as _addSubscribe} from '../util/feature';
@@ -10,13 +10,12 @@ import {addSubscribe as _addSubscribe} from '../util/feature';
 const clickTabHandler = (status) => () => statusStore$.setValue(status);
 
 export class IssuePage {
+  #issueWrapper$ = null;
   #unsubscribeList = [];
 
   constructor() {
     this.apiService = apiService;
     this.addSubscribe = _addSubscribe(this, this.#unsubscribeList);
-    
-    this.render();
   }
 
   destroy() {
@@ -36,8 +35,8 @@ export class IssuePage {
    * add event listener
    */
   addIssueTabClickListener() {
-    $(openIssueTabSelector).addEventListener('click', clickTabHandler(OPEN));
-    $(closeIssueTabSelector).addEventListener('click', clickTabHandler(CLOSE));
+    this.#issueWrapper$(openIssueTabSelector).addEventListener('click', clickTabHandler(OPEN));
+    this.#issueWrapper$(closeIssueTabSelector).addEventListener('click', clickTabHandler(CLOSE));
   }
 
   activateTab(value) {
@@ -45,11 +44,11 @@ export class IssuePage {
     const activate = addClass(activateTabClass);
 
     if (value === OPEN) {
-      activate($(openIssueTabSelector));
-      deactivate($(closeIssueTabSelector));
+      activate(this.#issueWrapper$(openIssueTabSelector));
+      deactivate(this.#issueWrapper$(closeIssueTabSelector));
     } else if (value === CLOSE) {
-      activate($(closeIssueTabSelector));
-      deactivate($(openIssueTabSelector));
+      activate(this.#issueWrapper$(closeIssueTabSelector));
+      deactivate(this.#issueWrapper$(openIssueTabSelector));
     }
   }
 
@@ -80,7 +79,7 @@ export class IssuePage {
   renderIssues(issues) {
     clearElement(issueContainerSelector);
     
-    const renderIssue = setRenderTarget($(issueContainerSelector));
+    const renderIssue = setRenderTarget(this.#issueWrapper$(issueContainerSelector));
     issues.forEach(issue => compose(renderIssue, getIssueItemTpl)(issue));
   }
 
@@ -88,18 +87,18 @@ export class IssuePage {
     const getfilteredLength = (issues) => status => issues.filter(issue => issue.status === status).length;
     const getFilteredLengthByStatus = getfilteredLength(issues);
   
-    $(openCountSelector).textContent = getFilteredLengthByStatus(OPEN);
-    $(closeCountSelector).textContent = getFilteredLengthByStatus(CLOSE);
+    this.#issueWrapper$(openCountSelector).textContent = getFilteredLengthByStatus(OPEN);
+    this.#issueWrapper$(closeCountSelector).textContent = getFilteredLengthByStatus(CLOSE);
   }
 
-  render() {
-    const renderWrapper = () => renderPageInApp(getIssueTpl());
+  render(targetEl) {
     const renderActivatedTab = () => this.activateTab(statusStore$.getValue());
 
     const initialRenderPipe = pipe(
-      renderWrapper,
+      renderWrapper(targetEl)(getIssueTpl()),
+      () => {(this.#issueWrapper$ = getTargetQuerySelector(targetEl)(issueWrapperSelector))},
       renderActivatedTab,
-      this.addIssueTabClickListener
+      this.addIssueTabClickListener.bind(this)
     );
     
     const initialStorePipe = pipe(

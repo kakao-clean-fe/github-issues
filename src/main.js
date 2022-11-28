@@ -1,8 +1,8 @@
-import {AppSelector, selectPageContainerSelector} from './template/selector';
-import {$, clearElement} from './util/dom';
-import {LABEL_PAGE, ISSUE_PAGE, DEFAULT_PAGE} from './const';
-import {IssuePage} from './page/issue';
-import {LabelPage} from './page/label';
+import { AppSelector } from './template/selector';
+import { $, clearElement } from './util/dom';
+import { LABEL_PAGE, ISSUE_PAGE } from './const';
+import { IssuePage } from './page/issue';
+import { LabelPage } from './page/label';
 import { worker } from './mocks/browser';
 import { Router } from './util/router';
 
@@ -42,17 +42,25 @@ class App {
         return; // 같은 페이지면 그대로
       }
       case ISSUE_PAGE: {
-        return this.cleanUpPageData(new IssuePage());
+        const issuePage = new IssuePage();
+
+        issuePage.render($(AppSelector));
+        this.updateCurPage(issuePage);
+        return;
       }
       case LABEL_PAGE: {
-        return this.cleanUpPageData(new LabelPage());
+        const labelPage = new LabelPage();
+
+        labelPage.render($(AppSelector));
+        this.updateCurPage(labelPage);
+        return;
       }
     }
   }
 
-  cleanUpPageData(_component = null) {
+  updateCurPage(newPage = null) {
     this.#curPage?.destroy();
-    this.#curPage = _component;
+    this.#curPage = newPage;
   }
 };
 

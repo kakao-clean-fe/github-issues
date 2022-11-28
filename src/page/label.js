@@ -1,6 +1,6 @@
 import { getLabelItemTpl, getLabelTpl } from '../template/tpl';
-import { newLabelBtnSelector, labelListContainerSelector, labelCountSelector, updateLabelSelector} from '../template/selector';
-import { $ ,addClickEventListener, clearElement, renderPageInApp, setRenderTarget } from '../util/dom';
+import { newLabelBtnSelector, labelListContainerSelector, labelCountSelector, updateLabelSelector, labelWrapperSelector} from '../template/selector';
+import { getTargetQuerySelector ,addClickEventListener, clearElement, setRenderTarget, renderWrapper } from '../util/dom';
 import { labelStore$ } from '../store/label';
 import { compose, pipe } from '../util/operator';
 import { formData$ } from '../store/labelForm';
@@ -11,6 +11,7 @@ import {addSubscribe as _addSubscribe} from '../util/feature';
  * label page
  */
 export class LabelPage {
+  #labelWrapper$ = null;
   #labelForm = null;
   #unsubscribeList = [];
 
@@ -18,7 +19,6 @@ export class LabelPage {
     this.subscribeStore();
 
     labelStore$.fetchLabels();
-    this.render();
   }
 
   destroy() {
@@ -37,20 +37,18 @@ export class LabelPage {
   }
 
   addLabelPageEventListener() {
-    addClickEventListener(newLabelBtnSelector, () => this.toggleLabelForm()),
-    addClickEventListener(updateLabelSelector, () => labelStore$.updateLabels());
+    addClickEventListener(this.#labelWrapper$(newLabelBtnSelector), () => this.toggleLabelForm()),
+    addClickEventListener(this.#labelWrapper$(updateLabelSelector), () => labelStore$.updateLabels());
   }
 
   /**
-   * render
+   * render: app에서 호출
    */
-  render() {
-    // 한 번 쓰는 함수는 지역 함수로 정의
-    const renderWrapper = () => renderPageInApp(getLabelTpl());
-
+  render(targetEl) {
     pipe(
-      renderWrapper,
-      this.addLabelPageEventListener.bind(this),
+      renderWrapper(targetEl)(getLabelTpl()),
+      () => {(this.#labelWrapper$ = getTargetQuerySelector(targetEl)(labelWrapperSelector))},
+      this.addLabelPageEventListener.bind(this)
       // test용 임시, new form 보이기
       // () => this.toggleLabelForm(),
     )();
@@ -84,7 +82,7 @@ export class LabelPage {
 
   // store에 watcher로 > 버튼, 라벨 프리뷰에 색 입히기
   renderLabelCount(labels) {
-    $(labelCountSelector).textContent = labels.length;
+    this.#labelWrapper$(labelCountSelector).textContent = labels.length;
   }
 
   // store에 watcher로
@@ -95,7 +93,7 @@ export class LabelPage {
   }
 
   renderLabelItem(label) {
-    const wrapper = setRenderTarget($(labelListContainerSelector));
+    const wrapper = setRenderTarget(this.#labelWrapper$(labelListContainerSelector));
     compose(wrapper, getLabelItemTpl)(label);
   }
 }
