@@ -10,6 +10,13 @@ export const isHexColor = (value) => {
 }
 
 export const isValid = (target) => target.validity.valid;
+export const isNotDuplicate = (property) => (list, target) => {
+  if (list.every(item => item[property] !== target)) {
+    return true;
+  }
+
+  return false;
+}
 
 export const setInputValue = (selector, newValue) => {
   const target = $(selector);

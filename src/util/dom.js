@@ -1,8 +1,7 @@
 import { AppSelector, opacityClass } from "../template/selector";
 
-export const $ = (selector) => {
-  return document.querySelector(selector);
-}
+export const $ = document.querySelector.bind(document);
+export const $$ = document.querySelectorAll.bind(document);
 
 export const clearElement = (targetSelector) => {
   const target = $(targetSelector);

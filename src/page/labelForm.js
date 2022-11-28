@@ -1,11 +1,11 @@
 import { labelFormSelector, createLabelButtonSelector, formColorValueSelector, formNameSelector, formHiddenClass, labelPreviewTextContentSelector, formDescriptionSelector, labelCreateCancelButtonSelector, newLabelColorSelector, labelPreviewSelector } from "../template/selector"
 import { $, activateButton, addClickEventListener, deactivateButton, toggleClass } from "../util/dom"
 import { labelStore$ } from '../store/label';
-import { getFormStorage, isHexColor, isValid, setInputValue } from "../util/feature";
+import { getFormStorage, isHexColor, isNotDuplicate, isValid, setInputValue } from "../util/feature";
 import { formData$, formHandlers } from "../store/labelForm";
 import { omit, pipe } from "../util/operator";
 import { newLabelColorStore$ } from '../store/color';
-import { colorList } from "../const";
+import { colorList, DUPLICATE_LABEL_NAME_MESSAGE } from "../const";
 
 /**
  * dom 관련, add event listener
@@ -202,22 +202,20 @@ export class LabelFormComponent {
  * validate and submit form
  */
 export const validator = {
-  checkName() {
-    const {name} = formData$;
-    
-    if (!labelStore$.value.every(label => label.name !== name)) {
-      return {valid: false, message: '이미 있는 라벨 이름입니다.'};
-    }
+  /**
+   * 이름 중복 검사
+   */
+  checkName(name) {
+    const isNotDuplicateName = isNotDuplicate('name');
+    const isValid = isNotDuplicateName(labelStore$.value, name);
 
-    return {valid: true};
+    return isValid ? {valid: true} : {valid: false, message: DUPLICATE_LABEL_NAME_MESSAGE};
   },
   run() {
-    const {valid: isValidName, message = ''} = this.checkName();
+    const {name} = formData$;
 
-    if (!isValidName) {
-      return {valid: isValidName, message};
-    }
-  
-    return {valid: true};
+    const {valid, message = ''} = this.checkName(name);
+
+    return {valid, message};
   }
 }
