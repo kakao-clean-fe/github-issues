@@ -1,2 +1,2 @@
-export const querySelector = (selector) => document.querySelector(selector);
-export const querySelectorAll = (selectors) => document.querySelectorAll(selectors);
+export const querySelector = ($target = document, selector) => $target.querySelector(selector);
+export const querySelectorAll = ($target = document, selectors) => $target.querySelectorAll(selectors);

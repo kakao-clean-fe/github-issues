@@ -1,7 +1,7 @@
-export const getStorageItem = (key, defaultValue) => {
-  return localStorage.getItem(key, defaultValue);
+export const getStorageItem = (storage = localStorage, key, defaultValue) => {
+  return storage.getItem(key, defaultValue);
 }
-export const setStorageItem = (key, value) => {
+export const setStorageItem = (storage = localStorage, key, value) => {
   const _value = typeof value === 'string' ? value : JSON.stringify(value);
-  localStorage.setItem(key, _value);
+  storage.setItem(key, _value);
 }

@@ -1,9 +1,9 @@
 import {getIssueTpl, getIssueItemTpl} from '../tpl';
 import { querySelector } from './dom-selector';
 
-export const setDefaultTemplate = (statusCount) => {
+export const setDefaultTemplate = ($document = document, statusCount) => {
   const htmlData = getIssueTpl(statusCount);
-  const appElement = querySelector('#app');
+  const appElement = querySelector($document, '#app');
   appElement.innerHTML = htmlData;
 }
 
