@@ -32,7 +32,7 @@ class App {
   }
 
   renderPage(pageName='') {
-    clearElement(AppSelector);
+    clearElement($(AppSelector));
 
     const curPageName = this.#curPage?.constructor?.name;
 

@@ -33,4 +33,4 @@ export const closeCountSelector = '.close-count .num-close'
 export const openIssueTabSelector = '.issue-header .open-count';
 export const closeIssueTabSelector = '.issue-header .close-count';
 export const activateTabClass = 'font-bold';
-export const issueContainerSelector = '#issues-wrapper div.issue-list ul';
+export const issueContainerSelector = 'div.issue-list ul';

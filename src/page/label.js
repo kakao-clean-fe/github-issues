@@ -1,5 +1,5 @@
 import { getLabelItemTpl, getLabelTpl } from '../template/tpl';
-import { newLabelBtnSelector, labelListContainerSelector, labelCountSelector, updateLabelSelector, labelWrapperSelector} from '../template/selector';
+import { newLabelBtnSelector, labelListContainerSelector, labelCountSelector, updateLabelSelector, labelWrapperSelector, labelFormSelector} from '../template/selector';
 import { getTargetQuerySelector ,addClickEventListener, clearElement, setRenderTarget, renderWrapper } from '../util/dom';
 import { labelStore$ } from '../store/label';
 import { compose, pipe } from '../util/operator';
@@ -47,7 +47,9 @@ export class LabelPage {
   render(targetEl) {
     pipe(
       renderWrapper(targetEl)(getLabelTpl()),
-      () => {(this.#labelWrapper$ = getTargetQuerySelector(targetEl)(labelWrapperSelector))},
+      () => {
+        this.#labelWrapper$ = getTargetQuerySelector(targetEl)(labelWrapperSelector);
+      },
       this.addLabelPageEventListener.bind(this)
       // test용 임시, new form 보이기
       // () => this.toggleLabelForm(),
@@ -66,7 +68,9 @@ export class LabelPage {
      * prefetch 적용은 SPA라 보류...
      */
     import('./labelForm').then(({LabelFormComponent}) => {
-      this.#labelForm = new LabelFormComponent();
+      const labelFormEl$ = this.#labelWrapper$(labelFormSelector);
+
+      this.#labelForm = new LabelFormComponent(labelFormEl$);
 
       formData$.isCreating = !formData$.isCreating;
     })
@@ -87,13 +91,16 @@ export class LabelPage {
 
   // store에 watcher로
   renderLabels(labels) {
-    clearElement(labelListContainerSelector);
+    const containerEl$ = this.#labelWrapper$(labelListContainerSelector);
     
-    labels.forEach(label => this.renderLabelItem(label));
+    clearElement(containerEl$);
+    
+    labels.forEach(label => this.renderLabelItem(containerEl$, label));
   }
 
-  renderLabelItem(label) {
-    const wrapper = setRenderTarget(this.#labelWrapper$(labelListContainerSelector));
+  renderLabelItem(containerEl$, label) {
+    const wrapper = setRenderTarget(containerEl$);
+
     compose(wrapper, getLabelItemTpl)(label);
   }
 }

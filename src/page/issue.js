@@ -77,9 +77,10 @@ export class IssuePage {
    * render
    */
   renderIssues(issues) {
-    clearElement(issueContainerSelector);
+    const containerEl$ = this.#issueWrapper$(issueContainerSelector);
+    clearElement(containerEl$);
     
-    const renderIssue = setRenderTarget(this.#issueWrapper$(issueContainerSelector));
+    const renderIssue = setRenderTarget(containerEl$);
     issues.forEach(issue => compose(renderIssue, getIssueItemTpl)(issue));
   }
 
