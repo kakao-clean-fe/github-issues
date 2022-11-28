@@ -1,57 +1,58 @@
 import {AppSelector, selectPageContainerSelector} from './template/selector';
 import {$, clearElement} from './util/dom';
-import {pageStore$ } from './store/issue.js'
-import {LABEL_PAGE, ISSUE_PAGE} from './const';
+import {LABEL_PAGE, ISSUE_PAGE, DEFAULT_PAGE} from './const';
 import {IssuePage} from './page/issue';
 import {LabelPage} from './page/label';
 import { worker } from './mocks/browser';
-import { apiService } from './util/httpService';
+import { Router } from './util/router';
 
 worker.start();
 
 /**
- * initiate app
+ * initiate app + initiate Router
+ * route에서 page 확인하면 app에서 그린다
+ * router에서 app.renderPage()를 호출한다
  */
 class App {
-  #activePage = null; // 일단 한 번에 한 개 페이지 컴포넌트만 동작한다고 가정
+  router = null;
+  #curPage = null; // 일단 한 번에 한 개 페이지 컴포넌트만 동작한다고 가정
 
   constructor() {
-    this.apiService = apiService;
-
-    this.addWatchers();
-    this.addRenderPageClickListener();
-    
-    pageStore$.setValue(LABEL_PAGE);
+    this.initRouter();
   }
 
-  renderPage(page) {
+  initRouter() {
+    this.router = new Router(this);
+
+    const {router} = this;
+
+    router.addRouterEvent();
+
+    location.pathname === '/' ? router.navigate(router.getNewUrl()) : router.findMatchingPage();
+  }
+
+  renderPage(pageName='') {
     clearElement(AppSelector);
-    
-    /**
-     * todo issue와 label에서 apiService를 사용하는 방식 통일할까 고민
-     */
-    page === ISSUE_PAGE ? this.initPage(new IssuePage(this.apiService)) : this.initPage(new LabelPage());
+
+    const curPageName = this.#curPage?.constructor?.name;
+
+    switch (pageName) {
+      case '':
+      case curPageName: {
+        return; // 같은 페이지면 그대로
+      }
+      case ISSUE_PAGE: {
+        return this.cleanUpPageData(new IssuePage());
+      }
+      case LABEL_PAGE: {
+        return this.cleanUpPageData(new LabelPage());
+      }
+    }
   }
 
-  initPage(target) {
-    this.#activePage?.destroy();
-
-    this.#activePage = target;
-  }
-
-  // decide whether to render issue or label page
-  clickPageHandler(e) {
-    const target = e.target.dataset.target;
-
-    pageStore$.setValue(target ?? LABEL_PAGE);
-  }
-
-  addRenderPageClickListener() {
-    $(selectPageContainerSelector).addEventListener('click', this.clickPageHandler);
-  }
-
-  addWatchers() {
-    pageStore$.addWatchers([this.renderPage.bind(this)]);
+  cleanUpPageData(_component = null) {
+    this.#curPage?.destroy();
+    this.#curPage = _component;
   }
 };
 
