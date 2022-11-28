@@ -46,7 +46,7 @@ export default class IssuePage extends Component {
   }
 
   get template () {
-    return `<div id="issue-wrapper" class="w-9/12 m-auto min-w-min">`
+    return `<div id="issue-wrapper" class="py-8 w-9/12 m-auto min-w-min">`
   }
 }
 

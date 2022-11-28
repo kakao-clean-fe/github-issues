@@ -56,7 +56,7 @@ export default class LabelPage extends Component {
   }
 
   get template () {
-    return `<div id="label-wrapper" class="w-9/12 m-auto min-w-min"></div>`
+    return `<div id="label-wrapper" class="py-8 w-9/12 m-auto min-w-min"></div>`
   }
 }
 
