@@ -1,6 +1,6 @@
 import { newLabelColorStore$ } from './color';
 import { Observable, ObserverArray } from './observable';
-import { ApiService } from '../util/httpService';
+import { apiService } from '../util/httpService';
 import { HttpError } from '../util/errors';
 import { ADD_LABEL_ERROR_MESSAGE } from '../const';
 
@@ -12,7 +12,7 @@ function createLabelStore(initialValue) {
   // Observable의 constructor 로직 실행
   Observable.call(this, initialValue);
   this.addObserverList = new ObserverArray(); // 라벨 추가에 대한 observer
-  this.apiService = new ApiService();
+  this.apiService = apiService;
 }
 /**
  * Object.create(object) creates an object with a prototype of the

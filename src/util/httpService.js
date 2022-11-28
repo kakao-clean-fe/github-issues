@@ -2,7 +2,32 @@ import { ABORT_ERROR, GET, POST } from "../const";
 import { HttpError } from "./errors";
 import { multipleArgsPipe } from "./operator";
 
-export class ApiService {
+/**
+ * Invoker: 호출자에서 store 관련 처리, 싱글톤으로
+ */
+class AbortControllerManager {
+  abortControllerMap = new Map(); // todo WeakMap 사용해보기
+
+  getControllerKey(url, method='GET') {
+    return url + ' ' + method;
+  }
+  
+  getSignal(key) {
+    // checkIsRequesting
+    let target = this.abortControllerMap.get(key);
+    
+    if (!target) {
+      this.abortControllerMap.set(key, new AbortController());
+    } else {
+      target.abort();
+      this.abortControllerMap.set(key, new AbortController());
+    }
+
+    return this.abortControllerMap.get(key).signal;
+  }
+}
+
+class ApiService {
   constructor() {
     this.controller = new AbortControllerManager();
   }
@@ -100,27 +125,4 @@ export class ApiService {
   }
 }
 
-/**
- * Invoker: 호출자에서 store 관련 처리, 싱글톤으로
- */
-class AbortControllerManager {
-  abortControllerMap = new Map(); // todo WeakMap 사용해보기
-
-  getControllerKey(url, method='GET') {
-    return url + ' ' + method;
-  }
-  
-  getSignal(key) {
-    // checkIsRequesting
-    let target = this.abortControllerMap.get(key);
-    
-    if (!target) {
-      this.abortControllerMap.set(key, new AbortController());
-    } else {
-      target.abort();
-      this.abortControllerMap.set(key, new AbortController());
-    }
-
-    return this.abortControllerMap.get(key).signal;
-  }
-}
+export const apiService = new ApiService();

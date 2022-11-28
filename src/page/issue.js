@@ -4,7 +4,6 @@ import {activateTabClass, openCountSelector, closeCountSelector, openIssueTabSel
 import {issueStore$,statusStore$, activatedIssuesStore$ } from '../store/issue.js'
 import {$, addClass, removeClass, clearElement, renderPageInApp, setRenderTarget, toggleClass} from '../util/dom';
 import {OPEN, CLOSE} from '../const';
-import { ApiService } from '../util/httpService';
 
 const clickTabHandler = (status) => () => statusStore$.setValue(status);
 
@@ -15,8 +14,9 @@ export class IssuePage {
     activatedIssues: [],
   };
 
-  constructor() {
-    this.apiService = new ApiService();
+  constructor(apiService) {
+    this.apiService = apiService;
+    
     this.render();
   }
 

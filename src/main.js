@@ -5,6 +5,7 @@ import {LABEL_PAGE, ISSUE_PAGE} from './const';
 import {IssuePage} from './page/issue';
 import {LabelPage} from './page/label';
 import { worker } from './mocks/browser';
+import { apiService } from './util/httpService';
 
 worker.start();
 
@@ -15,6 +16,8 @@ class App {
   #activePage = null; // 일단 한 번에 한 개 페이지 컴포넌트만 동작한다고 가정
 
   constructor() {
+    this.apiService = apiService;
+
     this.addWatchers();
     this.addRenderPageClickListener();
     
@@ -24,7 +27,10 @@ class App {
   renderPage(page) {
     clearElement(AppSelector);
     
-    page === ISSUE_PAGE ? this.initPage(new IssuePage()) : this.initPage(new LabelPage());
+    /**
+     * todo issue와 label에서 apiService를 사용하는 방식 통일할까 고민
+     */
+    page === ISSUE_PAGE ? this.initPage(new IssuePage(this.apiService)) : this.initPage(new LabelPage());
   }
 
   initPage(target) {
