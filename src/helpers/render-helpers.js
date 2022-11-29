@@ -8,3 +8,4 @@ export const htmlToElement = pipe(
 );
 
 export const $ = (value) => document.getElementById(value);
+export const $$ = (rootElement) => (value) => rootElement.getElementById(value);

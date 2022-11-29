@@ -24,7 +24,7 @@ export function initLabelPage() {
 
 const initLabelCreateView = async (labelStore) => {
   const { LabelCreateView } = await import("./label-create-view");
-  const labelCreateView = new LabelCreateView();
+  const labelCreateView = new LabelCreateView(document);
   labelCreateView.refreshColorBtnClick$.subscribe(() => {
     labelStore.generateRandomColor();
   });
