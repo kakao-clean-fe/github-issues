@@ -1,5 +1,4 @@
 import { ref, computed, watch } from '~/utils/reactive';
-import { SERVER_URL } from '~/env';
 import { getAPI } from '~/utils/api';
 import { filterOpenedIssues, filterClosedIssues } from '~/utils/issue';
 import { pipe } from '~/utils/functional-util';
@@ -20,10 +19,8 @@ export const issues = (): Issue[] => issuesRef.value;
 export const setIssuesWatcher = (effectFunction: EffectFunction): void => watch(issuesRef, effectFunction);
 export const setIssues = (issues: Issue[]): void => { issuesRef.value = issues; };
 
-const fetchIssues = async (): Promise<Issue[]> => {
-  const PATH = '/data-sources/issues.json';
-
-  return await getAPI<Issue[]>({ url: `${SERVER_URL}${PATH}` });
+const fetchIssues = async () => {
+  return await getAPI<Issue[]>({ url: '/issues' });
 };
 
 export const fetchAndSetIssues = (): void => {
