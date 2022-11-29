@@ -1,8 +1,16 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { IssuePage } from "../page/issue";
 import { AppSelector } from "../template/selector";
 
 describe('issue component', () => {
+  beforeEach(() => {
+    fetchMock.resetMocks();
+  });
+    
+  afterEach(() => {
+    vi.restoreAllMocks()
+  });
+
   // given
   const window = new Window();
   const document = window.document;

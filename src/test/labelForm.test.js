@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, vi, expect, beforeEach, afterEach } from "vitest";
 import { isNotDuplicate } from "../util/feature";
 
 // test suites
@@ -12,6 +12,10 @@ describe('Label Form Test', () => {
 
   beforeEach(() => {
     fetchMock.resetMocks();
+  });
+    
+  afterEach(() => {
+    vi.restoreAllMocks()
   });
 
   // test case

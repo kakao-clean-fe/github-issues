@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { colorList } from "../const";
 import { labels } from "../fixtures/values";
 import { LabelPage } from "../page/label";
-import { LabelFormComponent } from "../page/labelForm";
 import { labelStore$ } from "../store/label";
 import { AppSelector, formHiddenClass, labelCountSelector, labelFormSelector, labelListContainerSelector, newLabelBtnSelector } from "../template/selector";
 import { apiService } from "../util/httpService";
@@ -31,7 +31,7 @@ describe('label component', () => {
     AbortControllerManager.prototype.getSignal = vi.fn();
     
     return {AbortControllerManager}
-  })
+  });
 
   it('render label wrapper', () => {
     // when
@@ -67,12 +67,36 @@ describe('label component', () => {
 
     const button = rootEl.querySelector(newLabelBtnSelector);
     const isHidden = getHasHiddenClass();
+    
     // when
-    button.click();
+    const event = new window.Event("click");
+    button.dispatchEvent(event);
+
     // 동적으로 렌더되는것 기다리기 
     await window.happyDOM.whenAsyncComplete();
-
+    
     // then
     expect(getHasHiddenClass()).toBe(!isHidden);
+  })
+
+  it('labelStore$.add를 하면 라벨이 추가된다', async () => {
+    const newLabel = {
+      name: 'test',
+      color: colorList[0],
+      description: 'test~',
+    };
+
+    const curLength = labelStore$.value.length;
+    const fetchLabelsSpy = vi.spyOn(apiService, 'post');
+    fetchMock.mockResponseOnce(JSON.stringify([
+      ...labels,
+      {...newLabel}
+    ]));
+    
+    await labelStore$.add({...newLabel});
+
+    const afterLength = labelStore$.value.length;
+    expect(fetchLabelsSpy).toHaveBeenCalledOnce();
+    expect(afterLength).toBe(curLength + 1);
   })
 })
