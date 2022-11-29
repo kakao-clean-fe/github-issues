@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { pipe, map, filter, reduce } from './fx';
+import { pipe, map, filter, reduce } from '../../utils/fx';
 
 const products = [
   { name: '반팔티', price: 15000, quantity: 1, is_selected: true },

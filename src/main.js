@@ -10,7 +10,7 @@ import { worker } from './mocks/browser';
 // Utils
 import { findElement } from './utils/dom';
 import { BASE_URL, navigate } from './utils/navigate';
-class App {
+export class App {
   constructor(navbar) {
     navbar.addEventListener('click', (e) => {
       const target = e.target.closest('a');
