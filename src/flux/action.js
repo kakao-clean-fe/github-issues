@@ -1,8 +1,8 @@
 import { curry } from '../curry';
 import { pipe } from '../fp';
 
-const createAction = curry((name, payload) => ({ name, payload }));
-const createActionsFrom = actionNames => (
+export const createAction = curry((name, payload) => ({ name, payload }));
+export const createActionsFrom = actionNames => (
   Object.entries(actionNames)
     .reduce((prev, [key, value]) => ({ ...prev, [key]: pipe(createAction(value)) }), {})
 );
