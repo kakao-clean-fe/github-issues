@@ -1,18 +1,31 @@
-import { pipe } from '../fp';
+import { go } from '../fp';
 import { setEvent } from '../curry/dom';
-import { storeKey, pageType } from '../constant';
+import { pageType } from '../constant';
 import { $ } from '../util';
 import { selector as sel } from '../constant';
+import { Component } from './Component';
+import { createHeaderTemplate } from './Templates';
+import { actions } from '../flux/action';
 
-export function createHeader({ store }) {
-  const [, setPage] = store.useState(storeKey.page, pageType.issue);
-  const renderIssueTab = pipe(setEvent('click', () => setPage(pageType.issue)));
-  const renderLabelTab = pipe(setEvent('click', () => setPage(pageType.label)));
-
-  function render() {
-    renderIssueTab($(sel.issueTab));
-    renderLabelTab($(sel.labelTab));
+export class Header extends Component {
+  constructor({ store, $root }) {
+    super({ store, $root });
   }
-
-  return { render };
+  beforeMounted() {
+    this.template = createHeaderTemplate();
+  }
+  afterRender() {
+    this.$issueTabButton = $(sel.issueTab);
+    this.$labelTabButton = $(sel.labelTab);
+    this.setPage = ((page) => this.store.dispatch(actions.setPage(page))).bind(this);
+  }
+  hydrate() {
+    go(this.$issueTabButton, setEvent('click', () => {
+      this.setPage(pageType.issue)
+    }));
+    go(this.$labelTabButton, setEvent('click', () => this.setPage(pageType.label)));
+  }
+  getTemplate() {
+    return this.template;
+  }
 }

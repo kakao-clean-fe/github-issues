@@ -1,4 +1,3 @@
-import { storeKey } from './constant';
 import { localStorageKey } from './constant';
 
 export function $(selector) {
@@ -19,7 +18,7 @@ export function getRandomColor() {
 
 export function saveCreateFormBeforeUnload(store) {
   window.addEventListener('beforeunload', () => {
-    const [label] = store.useState(storeKey.labelForm);
+    const label = store.getState(state => state.labelForm);
     localStorage.setItem(localStorageKey.createForm, JSON.stringify(label));
   });
 }
@@ -38,4 +37,14 @@ export function withAbortController(callback) {
     abortController = new AbortController();
     return callback(abortController.signal, ...args);
   }
+}
+
+export function deepCopy(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+export const convertTemplateToElement = (template) => {
+  const $div = document.createElement('div');
+  $div.innerHTML = template.trim();
+  return $div.firstChild;
 }

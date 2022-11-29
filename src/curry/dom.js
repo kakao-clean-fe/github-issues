@@ -1,5 +1,9 @@
 import { curry } from './index';
 
+export const appendChild = curry((html, element) => {
+  element.appendChild(html);
+  return element;
+})
 export const setInnerHTML = curry((html, element) => {
   element.innerHTML = html;
   return element;

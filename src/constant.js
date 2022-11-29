@@ -21,16 +21,8 @@ export const selector = {
   updateLabelsButton: '.refresh-labels',
   toastContainer: '#toast',
   toastBox: '.toast-box',
-  toastMessage: '.toast-message'
-};
-
-export const storeKey = {
-  page: 'Page',
-  issues: 'Issues',
-  labels: 'Labels',
-  isNewLabelFormOpen: 'IsNewLabelFormOpen',
-  labelForm: 'LabelForm',
-  toast: 'Toast',
+  toastMessage: '.toast-message',
+  pageContainer: '.page-cont',
 };
 
 export const pageType = {

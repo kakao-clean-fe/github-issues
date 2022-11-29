@@ -10,9 +10,10 @@ import {
   setStyle,
 } from '../curry/dom';
 import { $, getRandomColor } from '../util';
-import { getLabelItemTpl } from '../tpl';
-import { selector as sel, storeKey } from '../constant';
+import { getLabelItemTpl } from '../components/Templates';
+import { selector as sel } from '../constant';
 import { addLabel } from '../service';
+import { actions } from '../flux/action';
 
 export function createNewLabelForm({ store }) {
   const show = pipe(removeClass('hidden'));
@@ -30,8 +31,8 @@ export function createNewLabelForm({ store }) {
     setInnerText(label.name || 'Label preview'),
     setStyle({ backgroundColor: label.color })
   );
-  function toggleLabelForm(event) {
-    if (event.detail) {
+  function toggleLabelForm(state) {
+    if (state.isLabelFormOpen) {
       show($(sel.newLabelForm));
     } else {
       hide($(sel.newLabelForm));
@@ -48,22 +49,21 @@ export function createNewLabelForm({ store }) {
   }
   function setInitialFormValue(label) {
     go($(sel.labelNameInput), setAttribute({ value: label.name }));
-    go($(sel.labelDescInput), setAttribute({ value: label.description}));
-    go($(sel.labelColorInput), setAttribute({value: label.color }));
+    go($(sel.labelDescInput), setAttribute({ value: label.description }));
+    go($(sel.labelColorInput), setAttribute({ value: label.color }));
   }
 
   function handleInputEvents({ target }) {
-    const [, setLabelForm] = store.useState(storeKey.labelForm);
     const selector = `#${target.id}`;
     switch (selector) {
       case sel.labelNameInput:
-        setLabelForm((prev) => ({ ...prev, name: target.value }));
+        store.dispatch(actions.setLabelForm({ name: target.value }));
         break;
       case sel.labelColorInput:
-        setLabelForm((prev) => ({ ...prev, color: target.value }));
+        store.dispatch(actions.setLabelForm({ color: target.value }));
         break;
       case sel.labelDescInput:
-        setLabelForm((prev) => ({ ...prev, description: target.value }));
+        store.dispatch(actions.setLabelForm({ description: target.value }));
         break;
       default:
         break;
@@ -72,26 +72,28 @@ export function createNewLabelForm({ store }) {
 
   function handleClickEvents(event) {
     event.preventDefault();
-    const [, setLabels] = store.useState(storeKey.labels);
-    const [, setToast] = store.useState(storeKey.toast);
-    const [labelForm, setLabelForm] = store.useState(storeKey.labelForm);
-    const [, setIsFormOpen] = store.useState(storeKey.isNewLabelFormOpen);
+    const labelForm = store.getState(state => state.labelForm);
+    const isLabelFormOpen = store.getState(state => state.isLabelFormOpen);
 
-    function showToastErrorMessage(error) {
-      setToast({ isOpen: true, message: error.message, duration: 3000 });
+    function setLabels(labels) {
+      store.dispatch(actions.setLabels(labels));
     }
-
+    function showToastErrorMessage(error) {
+      store.dispatch(actions.showToastMessage({ message: error.message, duration: 3000 }));
+    }
+    console.log(event.target);
     const isDescendantOf = pipe(isDescendant(event.target));
     if (isDescendantOf($(sel.newLabelButton))) {
-      setIsFormOpen((prev) => !prev);
+      console.log('여기!')
+      store.dispatch(actions.setIsLabelFormOpen(!isLabelFormOpen));
     } else if (isDescendantOf($(sel.labelCancelButton))) {
-      setIsFormOpen(false);
+      store.dispatch(actions.setIsLabelFormOpen(false));
     } else if (isDescendantOf($(sel.labelCreateButton))) {
       addLabel(labelForm)
         .then(setLabels)
         .catch(showToastErrorMessage);
     } else if (isDescendantOf($(sel.randomColorButton))) {
-      setLabelForm((prev) => ({ ...prev, color: getRandomColor() }));
+      store.dispatch(actions.setLabelForm({ color: getRandomColor() }));
     }
   }
 
@@ -101,19 +103,19 @@ export function createNewLabelForm({ store }) {
   );
 
   function render() {
-    const [labelForm] = store.useState(storeKey.labelForm);
+    const labelForm = store.getState(state => state.labelForm);
     updateLabelForm(labelForm);
     bindEvents($(sel.labelWrapper));
     setInitialFormValue(labelForm);
 
-    store.useEffect(storeKey.isNewLabelFormOpen, toggleLabelForm);
-    store.useEffect(storeKey.labels, ({ detail }) => {
-      updateLabels(detail);
-      updateLabelCount(detail.length);
-    });
-    store.useEffect(storeKey.labelForm, ({ detail }) => {
-      updateLabelForm(detail);
-    });
+    store.addActionListener(toggleLabelForm, actions => [actions.setIsLabelFormOpen]);
+    store.addActionListener((state) => {
+      updateLabels(state.labels);
+      updateLabelCount(state.labels.length);
+    }, actions => [actions.setLabels, actions.appendLabels]);
+    store.addActionListener((state) => {
+      updateLabelForm(state.labelForm);
+    }, actions => [actions.setLabelForm]);
   }
 
   return { render }
