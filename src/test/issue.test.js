@@ -2,7 +2,7 @@
 // 2. issue 정보 불러와서 list에 추가
 // 3. open / close 버튼 동작
 
-// import {jest} from '@jest/globals';
+import '@testing-library/jest-dom';
 import { Window } from 'happy-dom';
 import { IssuesData } from '../stores/issue';
 import fetchMock from "jest-fetch-mock";
@@ -42,7 +42,7 @@ describe('📄 [Issue Page] :', () => {
     issueData.setIssues(issueMockData);
     setDefaultTemplate(getStatusCount(issueData.getIssues()), document);
   });
-  const isCreatedElement = (selector) => expect(querySelector(selector, document)).not.toBe(undefined);
+  const isCreatedElement = (selector) => expect(querySelector(selector, document)).toBeInTheDocument();;
 
   test('store에 저장된 issue 데이터가 있는 경우 #header의 Opens/Close 넘버를 업데이트 한다.', () => {
     const count = getStatusCount(getIssues());

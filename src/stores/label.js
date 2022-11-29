@@ -2,11 +2,11 @@ import Observer from ".";
 import { getStorageItem, setStorageItem } from "../utils/storage";
 
 export class LabelStore extends Observer {
-  constructor(labelList) {
+  constructor(labelList, storage = localStorage) {
     super();
     this._isOpen = false;
     this._labelList = labelList;
-    this._label = JSON.parse(getStorageItem('NEW_LABEL', {}));
+    this._label = JSON.parse(getStorageItem('NEW_LABEL', {}, storage));
   }
   get isOpen() {
     return this._isOpen;
@@ -29,7 +29,7 @@ export class LabelStore extends Observer {
   }
   set label(label) {
     this._label = label;
-    setStorageItem('NEW_LABEL', label);
+    setStorageItem('NEW_LABEL', label, storage);
     this.notify(); //등록된 렌더링 함수들 호출
   }
 }

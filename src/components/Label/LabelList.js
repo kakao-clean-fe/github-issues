@@ -17,9 +17,9 @@ export default class LabelList extends Component{
     this.body.updateTemplate(this.store.labelList);
   }
 }
-class LabelListBody extends Component{
-  constructor(templateStr, targetQuery, labelList){
-    super(templateStr, targetQuery);
+export class LabelListBody extends Component{
+  constructor(templateStr, targetQuery, labelList, $document = document){
+    super(templateStr, targetQuery, null, $document);
     this.targetQuery = targetQuery;
     this.labelTemplates = this.createLabel(labelList);
   }
@@ -29,24 +29,24 @@ class LabelListBody extends Component{
     this.render(this.targetQuery);
   }
   createLabel(labelList){
-    return labelList.map(labelData => new LabelListRow(labelData, '.label-list'));
+    return labelList.map(labelData => new LabelListRow(labelData, '.label-list', this.$document));
   }
   
 }
-class LabelListHeader extends Component{
-  constructor(templateStr, targetQuery, count){
-    super(templateStr, targetQuery);
+export class LabelListHeader extends Component{
+  constructor(templateStr, targetQuery, count, $document = document){
+    super(templateStr, targetQuery, null, $document);
     this.count = count;
 
     this.setCountTemplate(count);
   }
   setCountTemplate(count){
-    querySelector('.open-count').innerHTML = `${count} Labels`;
+    querySelector('.open-count', this.$document).innerHTML = `${count} Labels`;
   }
 } 
 class LabelListRow extends Component{
-  constructor(labelData, targetQuery){
-    super(getLabelItemTpl(labelData), targetQuery);
+  constructor(labelData, targetQuery, $document = document){
+    super(getLabelItemTpl(labelData), targetQuery, null, $document);
     this.labelData = labelData;
   }
   setLabelData = (labelData) => {

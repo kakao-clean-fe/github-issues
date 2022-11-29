@@ -1,8 +1,8 @@
 import { Button } from "..";
 
 export default class UpdateLabelButton extends Button{
-  constructor(templateStr, targetQuery, store) {
-    super(templateStr, targetQuery);
+  constructor(templateStr, targetQuery, store, $document = document) {
+    super(templateStr, targetQuery, $document);
     this.store = store;
     this.controller = null;
     const event = () => {

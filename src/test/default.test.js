@@ -3,6 +3,7 @@
 // 3. open / close 버튼 동작
 
 // import {jest} from '@jest/globals';
+import '@testing-library/jest-dom';
 import { Window } from 'happy-dom';
 // import { IssuesData } from '../stores/issue';
 import fetchMock from "jest-fetch-mock";
@@ -23,7 +24,7 @@ describe('🧸 [Util Test] :', () => {
 
   test('querySelector() 함수를 이용해서 #app에 접근한다.', () => {
     const app = querySelector('#app', document);
-    expect(app).not.toEqual(undefined);
+    expect(app).toBeInTheDocument();
   });
 
   test('querySelectorAll() 함수를 이용해서 .p-2 리스트에 접근한다.', () => {
