@@ -40,25 +40,25 @@ describe('📄 [Issue Page] :', () => {
   beforeEach(() => {
     document.body.innerHTML = initBodyStr;
     issueData.setIssues(issueMockData);
-    setDefaultTemplate(document, getStatusCount(issueData.getIssues()));
+    setDefaultTemplate(getStatusCount(issueData.getIssues()), document);
   });
-  const isCreatedElement = (selector) => expect(querySelector(document, selector)).not.toBe(undefined);
+  const isCreatedElement = (selector) => expect(querySelector(selector, document)).not.toBe(undefined);
 
   test('store에 저장된 issue 데이터가 있는 경우 #header의 Opens/Close 넘버를 업데이트 한다.', () => {
     const count = getStatusCount(getIssues());
-    const statusDivList = querySelectorAll(document, '.statusTab>div');
+    const statusDivList = querySelectorAll('.statusTab>div', document);
     const textCondition = `${count.open} Opens`||`${count.close} Closed`;
 
     statusDivList.forEach(div => expect(div.innerHTML).not.toBe(textCondition));
   });
 
   test('setDefaultTemplate() 함수를 이용해 #app 내부의 기본 element를 추가한다.', () => {
-    expect(querySelector(document, '#app')).not.toBe(undefined);
+    expect(querySelector('#app', document)).not.toBe(undefined);
     isCreatedElement('#app');
   });
 
   test('setListTemplate() 함수를 이용해 issue-list를 생성한다.', () => {
-    setListTemplate(document, getIssues());
+    setListTemplate(getIssues(), document);
     isCreatedElement('.issue-list>ul');
   })
 });

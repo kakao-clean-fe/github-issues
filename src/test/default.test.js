@@ -22,12 +22,12 @@ describe('🧸 [Util Test] :', () => {
   });
 
   test('querySelector() 함수를 이용해서 #app에 접근한다.', () => {
-    const app = querySelector(document, '#app');
+    const app = querySelector('#app', document);
     expect(app).not.toEqual(undefined);
   });
 
   test('querySelectorAll() 함수를 이용해서 .p-2 리스트에 접근한다.', () => {
-    const app = querySelectorAll(document, '.p-2');
+    const app = querySelectorAll('.p-2', document);
     expect(app).toHaveLength(2);
   });
 
@@ -53,9 +53,9 @@ describe('🧸 [Util Test] :', () => {
 
     const test = [test1, test2, test3];
     test.forEach(t => {
-      setStorageItem(window.localStorage, t.key, t.value);
+      setStorageItem(t.key, t.value, window.localStorage);
       const value = typeof t.value === 'string' ? t.value : JSON.stringify(t.value);
-      expect(getStorageItem(window.localStorage, t.key)).toBe(value);
+      expect(getStorageItem(t.key, {}, window.localStorage)).toBe(value);
     });
   })
 });
