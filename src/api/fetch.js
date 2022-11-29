@@ -28,6 +28,7 @@ class Api {
     return this.#sendRequest(Method.GET, url);
   }
   post(url, req) {
+    console.log(url, req);
     return this.#sendRequest(Method.POST, url, req);
   }
   put(url, req) {
