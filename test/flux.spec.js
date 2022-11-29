@@ -1,61 +1,56 @@
 import { describe, it, assert, expect, test } from 'vitest'
-import { createActionsFrom } from '../src/flux/action';
 import { Store } from '../src/flux/store';
 
-const initialState = {
-  count: 0,
-  list: [1, 2, 3],
-  obj: { hello: 'world' },
-}
-const actionNames = {
-  increment: 'increment',
-  push: 'push',
-  setItem: 'setItem',
-};
-const actions = createActionsFrom(actionNames);
-
-function reducer(state, action) {
-  const { name, payload } = action;
-  switch (name) {
-    case actionNames.increment:
-      return { ...state, count: state.count + payload };
-    case actionNames.push:
-      return { ...state, list: [...state.list, payload] };
-    case actionNames.setItem:
-      return { ...state, obj: { ...state.obj, ...payload } };
-    default:
-      console.error(`Invalid action name(${name})`)
-      return state;
-  }
-}
-
-describe('flux test', () => {
-  it('action test', () => {
-    expect(actions.increment(3)).toEqual({ name: actionNames.increment, payload: 3 });
-    expect(actions.push('item')).toEqual({ name: actionNames.push, payload: 'item' });
-    expect(actions.setItem({ k: 'v' })).toEqual({ name: actionNames.setItem, payload: { k: 'v' } });
+describe('store test', () => {
+  it('number test', () => {
+    const actionNames = { increment: 'increment' };
+    const store = new Store({
+      actionNames,
+      initialState: { count: 0, },
+      reducer: (state, action) => (
+        action.name === actionNames.increment ? { ...state, count: state.count + action.payload } : state
+      ),
+    });
+    store.dispatch({ name: actionNames.increment, payload: 10 });
+    expect(store.getState().count).toBe(10);
   });
 
-  it('reducer test', () => {
-    const increasedState = reducer(initialState, actions.increment(10));
-    expect(increasedState.count).toEqual(10);
+  it('array push test', () => {
+    const actionNames = { push: 'push' };
+    const store = new Store({
+      actionNames,
+      initialState: { items: [1, 2, 3], },
+      reducer: (state, action) => (
+        action.name === actionNames.push ? { ...state, items: [...state.items, action.payload] } : state
+      ),
+    });
+    store.dispatch({ name: actionNames.push, payload: 10 });
+    expect(store.getState().items).toEqual([1, 2, 3, 10]);
+  })
 
-    const pushedState = reducer(initialState, actions.push(10));
-    expect(pushedState.list).toEqual([1, 2, 3, 10]);
-
-    const settedState = reducer(initialState, actions.setItem({ jordan: 'song' }));
-    expect(settedState.obj.jordan).toEqual('song');
+  it('array pop test', () => {
+    const actionNames = { pop: 'pop' };
+    const store = new Store({
+      actionNames,
+      initialState: { items: [1, 2, 3], },
+      reducer: (state, action) => (
+        action.name === actionNames.pop ? { ...state, items: state.items.slice(0, -1) } : state
+      ),
+    });
+    store.dispatch({ name: actionNames.pop, payload: 10 });
+    expect(store.getState().items).toEqual([1, 2]);
   });
 
-  it('store test', () => {
-    const store = new Store({ initialState, reducer, actionNames });
-    store.dispatch(actions.increment(1234));
-    expect(store.getState().count).toEqual(1234);
-
-    store.dispatch(actions.push(20));
-    expect(store.getState().list).toEqual([1, 2, 3, 20]);
-
-    store.dispatch(actions.setItem({ song: 'kr' }));
-    expect(store.getState().obj.song).toEqual('kr');
+  it('object test', () => {
+    const actionNames = { setItem: 'setItem' };
+    const store = new Store({
+      actionNames,
+      initialState: { object: { hello: 'world' }, },
+      reducer: (state, action) => (
+        action.name === actionNames.setItem ? { ...state, object: { ...state.object, ...action.payload } } : state
+      ),
+    });
+    store.dispatch({ name: actionNames.setItem, payload: { jordan: 'song' } });
+    expect(store.getState().object.jordan).toBe('song');
   })
 })
