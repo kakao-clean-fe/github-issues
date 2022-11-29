@@ -1,10 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import issues from './mocks/issues.json';
 import { getIssuesWithStatus } from '../src/utils/status';
-import { CLOSED } from '../src/constants/status';
+import { CLOSED, OPEN } from '../src/constants/status';
 import { selectElement, selectElementInTarget } from '../src/utils/dom';
 import { LABEL_COLOR } from '../src/constants/labelColor';
 import { generateColor } from '../src/utils/label';
+import { localStorageUtil } from '../src/utils/localStorage';
+import { boldToStatusButton } from '../src/utils/template';
 
 
 describe('유틸 함수 테스트', () => {
@@ -13,20 +15,17 @@ describe('유틸 함수 테스트', () => {
   const document = window.document;
 
   beforeEach(() => {
-    document.body.innerHTML = `<div class="root"></div>`;
+    document.body.innerHTML = `<div id="app"></div>`;
   });
 
   describe('util/dom', () => {
     it('selectElement', () => {
       // given
-      document.body.innerHTML = `
-        <div class="_selected_element"></div>
-      `;
       const className = '._selected_element';
 
       // when
 
-      const element = selectElement(className, document);
+      const element = selectElement(className);
 
       //then
       expect(element).toEqual(document.querySelector(className));
@@ -45,6 +44,32 @@ describe('유틸 함수 테스트', () => {
       // then
       expect(colorIndex).toBe(3);
       expect(color).toBe(colorArray[3]);
+    });
+  });
+
+  describe('util/localStorage', () => {
+    const mockSetItem = vi.spyOn(Storage.prototype, 'setItem');
+    const mockGetItem = vi.spyOn(Storage.prototype, 'getItem');
+    const mockClear = vi.spyOn(Storage.prototype, 'clear');
+
+    it('setItem', () => {
+      const labelData = {name: 'bug', description: 'need to fix', color: 'red'};
+
+      localStorageUtil.setItem('label', labelData);
+
+      expect(mockSetItem).toHaveBeenCalledWith('label', labelData);
+    });
+
+    it('getItem', () => {
+      localStorageUtil.getItem('label');
+
+      expect(mockGetItem).toHaveBeenCalledWith('label');
+    });
+
+    it('clear', () => {
+      localStorageUtil.clear();
+
+      expect(mockClear).toHaveBeenCalledWith();
     });
   });
 
@@ -78,12 +103,6 @@ describe('유틸 함수 테스트', () => {
       }]);
 
     });
-  });
-
-  describe('util/template', () => {
-    it('boldToStatusButton', () => {
-
-    })
   });
 
 });

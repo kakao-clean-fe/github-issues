@@ -99,7 +99,7 @@ export const LabelCreator = class {
     });
 
     this.toggleLabelCreator();
-    localStorageUtil.reset();
+    localStorageUtil.clear();
   }
 
   onClickCancelButton () {
