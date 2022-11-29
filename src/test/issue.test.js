@@ -1,7 +1,3 @@
-// 1. issue, label 버튼 클릭 시 페이지 이동
-// 2. issue 정보 불러와서 list에 추가
-// 3. open / close 버튼 동작
-
 import '@testing-library/jest-dom';
 import { Window } from 'happy-dom';
 import { IssuesData } from '../stores/issue';

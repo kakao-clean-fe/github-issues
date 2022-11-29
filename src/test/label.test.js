@@ -1,9 +1,6 @@
-import {jest} from '@jest/globals';
 import { Window } from 'happy-dom';
-import { Component } from '../components';
 import { initBodyStr, labelCreateActionDivStr, labelCreateCancelButtonStr, labelCreateSubmitButtonStr, labelFormStr, labelHeaderStr, labelInputDivStr, labelListBodyStr, labelListHeaderStr, labelListStr, labelPageStr, newLabelButtonStr, updateLabelButtonStr } from '../constants/template-label';
 import '@testing-library/jest-dom';
-import { querySelector } from '../utils/dom-selector';
 import { labelMockData } from '../mocks/data';
 import { LabelStore } from '../stores/label';
 import LabelList, { LabelListBody, LabelListHeader } from '../components/Label/LabelList';
