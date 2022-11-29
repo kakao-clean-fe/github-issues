@@ -8,7 +8,7 @@ import Router from './router';
 import { worker } from './mocks/browser';
 
 // Utils
-import { findElement } from './utils/dom';
+import { findElement } from './utils/common';
 import { BASE_URL, navigate } from './utils/navigate';
 export class App {
   constructor(navbar) {

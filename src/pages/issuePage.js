@@ -20,9 +20,7 @@ import IssueStore, {
 } from '../store/issueStore';
 
 // Utils
-import { pipe, filter } from '../utils/fx';
-import { findElement } from '../utils/dom';
-
+import { pipe, filter, findElement } from '../utils/common';
 export default class IssuePage extends BaseComponent {
   constructor($container) {
     super(getIssueTpl());

@@ -2,7 +2,7 @@
 import { mainSelector } from '../constants/selector';
 
 // Utils
-import { findElement } from './dom';
+import { findElement } from './common';
 
 // Variables
 const rootContainer = findElement(mainSelector.ROOT);

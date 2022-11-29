@@ -9,8 +9,7 @@ import { getLabelTpl } from '../template/label';
 import { labelSelector } from '../constants/selector';
 
 // Utils
-import { findElement } from '../utils/dom';
-import { reduce } from '../utils/fx';
+import { reduce, findElement, chunkSubstr } from '../utils/common';
 
 // Api
 import LabelApi from '../api/label';
@@ -170,7 +169,7 @@ export default class LabelPage extends BaseComponent {
 
     // color 값이 있을 때에만
     if (!!labelItem.color) {
-      const [r, g, b] = this.chunkSubstr(labelItem.color, 2);
+      const [r, g, b] = chunkSubstr(labelItem.color, 2);
       const colorStyle = `background-color: rgb(${parseInt(r, 16)}, ${parseInt(
         g,
         16
@@ -189,10 +188,6 @@ export default class LabelPage extends BaseComponent {
     const labelSubmitButton = findElement(labelSelector.LABEL_INPUT_FORM);
     labelSubmitButton.addEventListener('submit', this.onSubmit);
   }
-
-  chunkSubstr = (str, size) => {
-    return str.match(new RegExp(`.{1,${size}}`, 'g'));
-  };
 
   onLabelNameInputChange = (e) => {
     const labelItem = { ...LabelStore.getState().labelItem };
