@@ -1,6 +1,6 @@
 /** define useful Function files */
-export const selectOne = (selector) => document.querySelector(selector)
-export const selectAll = (selector) => document.querySelectorAll(selector)
+export const selectOne = (selector) => window.document.querySelector(selector)
+export const selectAll = (selector) => window.document.querySelectorAll(selector)
 
 /** pipe function */
 export const pipe = (...functions) =>

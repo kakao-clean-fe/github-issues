@@ -2,7 +2,7 @@ import {alertTpl} from "../tpl.js";
 import {selectOne} from "./utils.js";
 import {ERROR_TYPE} from "../constants.js";
 
-const alertMessage = ({type, message}) => {
+const alertMessage = ({type, message, timeout=2500}) => {
   const el = alertTpl({type: type, message: message})
 
   /* mount */
@@ -17,12 +17,10 @@ const alertMessage = ({type, message}) => {
         el.remove()
       });
     }
-  }, 2500)
+  }, timeout)
 
   /* click */
-  el.addEventListener("click", () => {
-      el.remove()
-    })
+  el.addEventListener("click", el.remove)
 }
 
 export const errorAlert = (message) => alertMessage({type: ERROR_TYPE.ERROR, message: message})

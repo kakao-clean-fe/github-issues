@@ -7,6 +7,7 @@ export default defineConfig({
       '**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
     ],
     exclude: [...configDefaults.exclude, 'packages/template/*'],
+    setupFiles: 'src/setupTests.js',
     environment: 'happy-dom',
     globals: true,
   },

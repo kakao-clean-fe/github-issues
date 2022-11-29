@@ -81,11 +81,11 @@ class LabelItem extends View {
         color: labelColorInput.value.slice(1)
       }
 
-      if (LabelStore.isValid(item)) {
-        if (await LabelStore.edit(this.labelId, item)) {
-          this.isEditing = false
-          this.state.notify()
-        }
+      if (!LabelStore.isValid(item)) return
+      const res = await LabelStore.edit(this.labelId, item)
+      if (res) {
+        this.isEditing = false
+        this.state.notify()
       }
     }
     labelSaveButton?.addEventListener('click', handleSaveLabel)

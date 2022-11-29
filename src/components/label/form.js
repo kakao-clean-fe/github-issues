@@ -73,14 +73,14 @@ class LabelForm extends View {
         color: labelColorInput.value.slice(1)
       }
 
-      if (LabelStore.isValid(item)) {
-        if (await LabelStore.add(item)) {
+      if (!LabelStore.isValid(item)) return
+      const res = await LabelStore.add(item)
+      if (res) {
           this.state.update({
             previewLabelColor: getRandomColorCode(),
             showNewLabel: false
           }, true)
         }
-      }
     }
     labelCreateButton.addEventListener('click', handleCreateLabel)
 
