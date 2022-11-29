@@ -5,11 +5,11 @@ import { labelCreateActionDivStr, labelCreateCancelButtonStr, labelCreateSubmitB
 import { querySelector, querySelectorAll } from "../../utils/dom-selector";
 
 export default class LabelForm extends Component{
-  constructor(templateStr, targetQuery, store, appendOption){
-    super(templateStr, targetQuery, appendOption);
+  constructor(templateStr, targetQuery, store, appendOption, $document = document){
+    super(templateStr, targetQuery, appendOption, $document);
     this.store = store;
     this.toggleForm();
-    this.labelInputDiv = new LabelInputDiv(labelInputDivStr, '#new-label-form', store);
+    this.labelInputDiv = new LabelInputDiv(labelInputDivStr, '#new-label-form', store, $document);
 
     this.store.subscribe(() => this.toggleForm());
   }
@@ -22,19 +22,19 @@ export default class LabelForm extends Component{
   }
 }
 
-class LabelInputDiv extends Component{
+export class LabelInputDiv extends Component{
   #childTargetQuery = '#label-input-wrapper';
-  constructor(templateStr, targetQuery, store){
-    super(templateStr, targetQuery);
+  constructor(templateStr, targetQuery, store, $document = document){
+    super(templateStr, targetQuery, null, $document);
 
     this.store = store; // 새로 생성할 라벨 정보를 가지는 모델
     this.store.subscribe(() => this.updatedLabel());
 
-    this.inputs = querySelectorAll(`${this.#childTargetQuery} input`);
+    this.inputs = querySelectorAll(`${this.#childTargetQuery} input`, $document);
     this.inputs.forEach(inputElement => this.initInput(inputElement));
-    this.labelCreateActionDiv = new LabelCreateActionDiv(labelCreateActionDivStr, this.#childTargetQuery, store);
+    this.labelCreateActionDiv = new LabelCreateActionDiv(labelCreateActionDivStr, this.#childTargetQuery, store, $document);
     
-    this.changeColorButton = querySelector('#new-label-color');
+    this.changeColorButton = querySelector('#new-label-color', $document);
     this.addChangeLabelColorEvent(this.changeColorButton);
   }
   initInput(inputElement){
@@ -85,26 +85,26 @@ class LabelInputDiv extends Component{
     return label.name && label.description && label.color ? true : false;
   }
 }
-class LabelCreateActionDiv extends Component{
-  constructor(templateStr, targetQuery, store) {
-    super(templateStr, targetQuery);
-    this.cancelButton = new CancelButton(labelCreateCancelButtonStr, '#form-button-group', store);
-    this.submitButton = new SubmitButton(labelCreateSubmitButtonStr, '#form-button-group', store);
+export class LabelCreateActionDiv extends Component{
+  constructor(templateStr, targetQuery, store, $document = document) {
+    super(templateStr, targetQuery, null, $document);
+    this.cancelButton = new CancelButton(labelCreateCancelButtonStr, '#form-button-group', store, $document);
+    this.submitButton = new SubmitButton(labelCreateSubmitButtonStr, '#form-button-group', store, $document);
   }
   setSubmitState(state) {
     this.submitButton.setSubmitState(state);
   }
 }
-class CancelButton extends Button{
-  constructor(templateStr, targetQuery, store) {
-    super(templateStr, targetQuery);
+export class CancelButton extends Button{
+  constructor(templateStr, targetQuery, store, $document = document) {
+    super(templateStr, targetQuery, $document);
     const event = () => store.isOpen = false;
     this.setOnClickListener(this.template, event);
   }
 };
-class SubmitButton extends Button{
-  constructor(templateStr, targetQuery, store) {
-    super(templateStr, targetQuery);
+export class SubmitButton extends Button{
+  constructor(templateStr, targetQuery, store, $document = document) {
+    super(templateStr, targetQuery, $document);
     this.state = false;
     this.setOnClickListener(this.template, async (e)=>{
       e.preventDefault();
