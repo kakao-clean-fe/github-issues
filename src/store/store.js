@@ -1,53 +1,43 @@
-import { setCreateButtonEnable } from '../common/render';
-import { labelObj } from '../init';
-import { postLabelsData } from '../service/apiService';
+const createStore = (initialState, reducer) => {
+  let state = initialState;
+  const events = {};
 
-const state = {
-  _labels: [],
-  _issues: [],
-  _labelForm: {
-    labelNameInput: '',
-    labelDescriptionInput: '',
-    labelColorValue: ''
-  }
+  const subscribe = (actionType, eventCallback) => {
+    if (!events[actionType]) {
+      events[actionType] = [];
+    }
+
+    if (
+      events[actionType].findIndex(
+        (existingEventCallback) =>
+          existingEventCallback.name === eventCallback.name
+      ) === -1
+    ) {
+      events[actionType].push(eventCallback);
+    }
+  };
+
+  const publish = (actionType) => {
+    if (!events[actionType]) {
+      return;
+    }
+    events[actionType].forEach((cb) => cb());
+  };
+
+  const dispatch = (action) => {
+    state = reducer(state, action);
+    publish(action.type);
+  };
+
+  const getState = () => state;
+
+  return {
+    getState,
+    subscribe,
+    dispatch,
+  };
 };
 
-export const store = {
-    // actions
-    getLabels () {
-        return state._labels;
-    },
-
-    setLabels (labels) {
-        state._labels = labels;
-    },
-
-    getIssues () {
-        return state._issues;
-    },
-
-    setIssues (issues) {
-        state._issues = issues;
-    },
-
-    setLabelFormValue (targetId, value) {
-        state._labelForm[targetId] = value;
-        this.checkLabelFormValid();
-    },
-
-    checkLabelFormValid () {
-        const formInputs = Object.values(state._labelForm);
-
-        setCreateButtonEnable(!formInputs.includes(''))
-    },
-
-    clearForm () {
-        const keys = Object.keys(state._labelForm);
-
-        keys.forEach((key) => state._labelForm[key] = '');
-    },
-
-    getLableFormValue () {
-        return state._labelForm;
-    },
-}
+export default {
+  createStore,
+};

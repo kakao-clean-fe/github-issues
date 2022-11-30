@@ -43,4 +43,25 @@ export class Label {
         
         this.setLabels(labels);
     }
+
+    setLabelFormValue (targetId, value) {
+        state._labelForm[targetId] = value;
+        this.checkLabelFormValid();
+    }
+
+    checkLabelFormValid () {
+        const formInputs = Object.values(state._labelForm);
+
+        setCreateButtonEnable(!formInputs.includes(''))
+    }
+
+    clearForm () {
+        const keys = Object.keys(state._labelForm);
+
+        keys.forEach((key) => state._labelForm[key] = '');
+    }
+
+    getLableFormValue () {
+        return state._labelForm;
+    }
 }
