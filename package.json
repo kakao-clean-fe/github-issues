@@ -7,11 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test": "vitest"
   },
   "devDependencies": {
-    "@vitest/coverage-c8": "^0.25.3",
     "autoprefixer": "^10.4.12",
     "happy-dom": "^7.7.0",
     "msw": "^0.49.0",
