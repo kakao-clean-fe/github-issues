@@ -29,6 +29,7 @@ export const COLOR_POOL = [
     '#7e57c0',
 ];
 
+export const APP_DOCUMENT = '#app';
 export const LABEL_PREVIEW = '#label-preview';
 export const NEW_LABEL_COLOR = '#new-label-color';
 export const LABEL_COLOR_VALUE = '#labelColorValue';

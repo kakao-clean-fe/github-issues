@@ -1,6 +1,5 @@
 import {STATUS} from './common/const';
 import {renderItems} from './common/render';
-import {Label} from './components/label';
 import { LabelModel } from './model/label-model';
 
 export let labelObj = {};
