@@ -14,15 +14,20 @@ export default class LabelCreator {
     this._labelStore = labelStore;
     this._id = id;
     this._data = new Store({
-      name: "",
-      color: "",
-      description: "",
+      id: "labelCreatorData",
+      isPersist: true,
+      defaultValue: {
+        name: "",
+        color: this._createColor(),
+        description: "",
+      },
     });
-    this._error = new Store("");
+    this._error = new Store({ id: "labelCreatorError", defaultValue: "" });
 
     this.addEvent();
     this.subscribe();
-    this._saveData({ color: this._createColor() });
+
+    this._data.notify(this._data);
   }
 
   _saveData(data) {

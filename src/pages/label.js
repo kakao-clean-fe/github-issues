@@ -8,7 +8,7 @@ const DATA_SOURCE_LABEL = "/labels";
 
 const initializeLabel = async (target) => {
   const items = await toFetch(DATA_SOURCE_LABEL);
-  const label = new Store(items);
+  const label = new Store({ id: "labelData", defaultValue: items });
 
   const listUI = new LabelList(label, target, () => {
     import("../core/LabelCreator")
