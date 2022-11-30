@@ -10,8 +10,8 @@ const makeQueryString = ({ path, query }: { path: Path, query: Query }): string 
   return getQueryDelimiter(path) + queryString;
 };
 
-const makeRelativeUrl = ({ path, query = {}, hash = '' }: PathObject): string =>
-   `${path}${makeQueryString({ path, query })}${hash}`;
+const makeRelativeUrl = ({ path, query, hash = '' }: PathObject): string =>
+   `${path}${query ? makeQueryString({ path, query }) : ''}${hash}`;
 
 export const router = {
   push (param: PathObject | Path) {

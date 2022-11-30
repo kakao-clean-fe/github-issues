@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type Query = Record<'string', 'string'> | {};
+export type Query = Record<'string', 'string'>;
 
 export type Route = '/issue' | '/label';
 
