@@ -242,3 +242,17 @@ export function getLabelItemTpl ({ name, color, description }: Label): string {
             </li>
         `;
 }
+
+export function get404PageTpl (): string {
+  return /* html */ `
+  <div class="h-screen w-screen flex items-center justify-center flex-col">
+    <h1 class="text-[5rem] font-bold">
+      Page Not Found 😨
+    </h1>
+    <a 
+      class="border-black p-2 border w-30 h-10 hover:bg-slate-800 hover:text-white"
+      href="/"
+    >메인으로 가기</a>
+  </div>
+  `;
+}

@@ -1,6 +1,7 @@
 import { initLabelPage } from '~/pages/label-page';
 import { initIssuePage } from '~/pages/issue-page';
 import { router } from '~/utils/router';
+import { init404Page } from '~/pages/404page';
 
 export const renderByPath = () => {
   const path = router.getPath();
@@ -16,7 +17,7 @@ export const renderByPath = () => {
       break;
     }
     default: {
-      alert('404 page');
+      init404Page();
     }
   }
 };
