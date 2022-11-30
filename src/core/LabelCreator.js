@@ -18,6 +18,7 @@ export default class LabelCreator {
       isPersist: true,
       defaultValue: {
         name: "",
+        prev: null,
         color: this._createColor(),
         description: "",
       },
@@ -30,7 +31,7 @@ export default class LabelCreator {
     this._data.notify(this._data);
   }
 
-  _saveData(data) {
+  saveData(data) {
     this._data.value = { ...this._data.value, ...data };
   }
 
@@ -71,8 +72,9 @@ export default class LabelCreator {
   }
 
   clear() {
-    this._saveData({
+    this.saveData({
       name: "",
+      prev: null,
       color: this._createColor(),
       description: "",
     });
@@ -99,6 +101,9 @@ export default class LabelCreator {
       labelDescriptionInput.value = store.value.description;
 
       labelCreateButton.classList.toggle("opacity-50", !store.value.name);
+      labelCreateButton.innerText = store.value.prev
+        ? " Save label "
+        : " Create label ";
 
       if (store.value.name) {
         labelCreateButton.removeAttribute("disabled");
@@ -139,7 +144,7 @@ export default class LabelCreator {
     const createBtn = find(CREATE_BUTTON);
 
     name.addEventListener(KEYUP, (e) => {
-      this._saveData({ name: e.target.value });
+      this.saveData({ name: e.target.value });
       const duplicate = this._labelStore.value.some(
         (item) => item.name === this._data.value.name
       );
@@ -147,47 +152,53 @@ export default class LabelCreator {
     });
 
     color.addEventListener(KEYUP, (e) => {
-      this._saveData({ color: e.target.value });
+      this.saveData({ color: e.target.value });
     });
 
     description.addEventListener(KEYUP, (e) => {
-      this._saveData({ description: e.target.value });
+      this.saveData({ description: e.target.value });
     });
 
     newColorBtn.addEventListener(CLICK, () => {
-      this._saveData({ color: this._createColor() });
+      this.saveData({ color: this._createColor() });
     });
 
     cancelBtn.addEventListener(CLICK, () => this.clear());
 
     createBtn.addEventListener(CLICK, async (e) => {
       e.preventDefault();
-      try {
-        const data = await toFetch("/labels", {
-          body: JSON.stringify({
-            ...this._data.value,
-            color: this._data.value.color.replace("#", ""),
-          }),
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        this._labelStore.value = data;
-        this.clear();
-      } catch (e) {
-        const msg = await e.json();
-        if (e.status === 500) {
+      if (!this._data.value.prev) {
+        try {
+          const data = await toFetch("/labels", {
+            body: JSON.stringify({
+              ...this._data.value,
+              color: this._data.value.color.replace("#", ""),
+            }),
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          this._labelStore.value = data;
           this.clear();
-          this._error.value = msg.error;
-          return;
+        } catch (e) {
+          const msg = await e.json();
+          if (e.status === 500) {
+            this.clear();
+            this._error.value = msg.error;
+            return;
+          }
+          if (e.status === 400) {
+            this._error.value = msg.error;
+            return;
+          }
+          throw e;
         }
-        if (e.status === 400) {
-          this._error.value = msg.error;
-          return;
-        }
-        throw e;
+        return;
       }
+      // TODO : 수정 처리
+      alert("수정!");
+      this.clear();
     });
   }
 }

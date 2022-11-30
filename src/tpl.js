@@ -235,8 +235,8 @@ export function getLabelItemTpl({ name, color, description }) {
                 <div class="issue-description ">${description}</div>
                 <div class="issue-description ">3 issues </div>
                 <div class="label-editor pr-4 ">
-                    <button class="edit-button mx-2 ">edit</button>
-                    <button class="delete-button">delete</button>
+                    <button data-name="${name}" data-color="${color}" data-description="${description}" class="edit-button mx-2 ">edit</button>
+                    <button data-name="${name}" class="delete-button">delete</button>
                 </div>
             </li>
         `;
