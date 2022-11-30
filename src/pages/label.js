@@ -20,6 +20,7 @@ const initializeLabel = async (target) => {
       })
       .catch((err) => {
         alert(err);
+        console.error(err);
       });
   });
 
