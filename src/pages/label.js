@@ -6,27 +6,34 @@ import { SELECTOR } from '../constants/selector';
 import { EVENT } from '../constants/event';
 import { HIDDEN } from '../constants/status';
 import { updateLabelData } from '../common/api';
-import { setLabelData } from '../store/dataStore';
 
 export const LabelPage = class {
+  labelData = null;
+  parentElement = null;
+  labelListView = null;
 
-  constructor (labelData) {
+  constructor (labelData, parentElement) {
     this.labelData = labelData;
-
-    this.initTemplate();
-    this.initLabelChildrenView();
+    this.parentElement = parentElement;
   }
 
   get template () {
     return getLabelTpl();
   }
 
+  render () {
+    this.initTemplate();
+    this.initLabelChildrenView();
+  }
+
   initTemplate () {
-    createApp(this.template);
+    this.parentElement.innerHTML = this.template;
   }
 
   initLabelChildrenView () {
-    const labelList = new LabelList(this.labelData);
+    const labelListTable = selectElement(SELECTOR.LABEL_LIST_TABLE, this.parentElement);
+    this.labelListView = new LabelList(this.labelData, labelListTable);
+    this.labelListView.render();
 
     this.initEvent();
   }
@@ -47,14 +54,14 @@ export const LabelPage = class {
   }
 
   onClickNewLabel () {
-    const newLabelButton = selectElement(SELECTOR.NEW_LABEL_BUTTON);
+    const newLabelButton = selectElement(SELECTOR.NEW_LABEL_BUTTON, this.parentElement);
     newLabelButton.addEventListener(EVENT.CLICK, () => {
       this.initLabelCreatorView();
     });
   }
 
   onClickUpdateLabels () {
-    selectElement(SELECTOR.UPDATE_LABEL_BUTTON).addEventListener(EVENT.CLICK, () => {
+    selectElement(SELECTOR.UPDATE_LABEL_BUTTON, this.parentElement).addEventListener(EVENT.CLICK, () => {
       updateLabelData();
     });
   }

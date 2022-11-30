@@ -4,13 +4,11 @@ import { SELECTOR } from '../constants/selector';
 
 export const LabelList = class {
 
-  constructor (labelData) {
-    this.parentElement = selectElement(SELECTOR.LABEL_LIST_TABLE);
-
+  constructor (labelData, parentElement) {
     this.labelData = labelData;
+    this.parentElement = parentElement;
 
     this.initData();
-    this.initTemplate();
   }
 
   get template () {
@@ -20,13 +18,15 @@ export const LabelList = class {
     return refinedLabelListTemplate;
   }
 
+  render () {
+    this.initTemplate();
+  }
+
   initData () {
 
   }
 
   initTemplate () {
-    if (!this.parentElement) { return; }
-
     this.parentElement.innerHTML = this.template;
   }
 }

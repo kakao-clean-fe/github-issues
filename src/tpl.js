@@ -235,7 +235,7 @@ export function getLabelCreatorTpl(name='', description='', color='') {
 
 export function getLabelItemTpl({ name, color, description }) {
 		return `
-            <li class="label-item flex items-center ml-4 py-3 justify-between border-b ">
+            <li class="label-item flex items-center ml-4 py-3 justify-between border-b _label_item">
                 <div class="issue-title flex">
                     <span class="rounded-lg border p-1 px-2" style="background-color:#${color}">${name}</span>
                 </div>
