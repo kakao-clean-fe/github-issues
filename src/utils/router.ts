@@ -21,6 +21,13 @@ export const router = {
       history.pushState({}, '', makeRelativeUrl(param));
     }
   },
+  move (param: PathObject | Path) {
+    if (typeof param === 'string') {
+      window.location.assign(param);
+    } else {
+      window.location.assign(makeRelativeUrl(param));
+    }
+  },
   getPath () {
     return location.pathname;
   }

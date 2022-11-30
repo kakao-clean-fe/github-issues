@@ -8,7 +8,7 @@ const $labelButton = getElement({ selector: NAVIGATION.LABEL_BUTTON });
 
 const addIssueButtonHandler = (): void => {
   const eventHandler = () => {
-    router.push('/issue');
+    router.move({ path: '/issue' });
   };
 
   addClickEventListener({
@@ -19,7 +19,7 @@ const addIssueButtonHandler = (): void => {
 
 const addLabelButtonHandler = (): void => {
   const eventHandler = () => {
-    router.push('/label');
+    router.move('/label');
   };
 
   addClickEventListener({
