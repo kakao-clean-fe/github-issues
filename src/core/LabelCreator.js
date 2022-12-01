@@ -117,14 +117,11 @@ export default class LabelCreator {
 
     labelDescriptionInput.value = value.description;
 
-    labelCreateButton.classList.toggle("opacity-50", !value.name);
     labelCreateButton.innerText = value.prev
       ? " Save label "
       : " Create label ";
 
-    return value.name
-      ? labelCreateButton.removeAttribute("disabled")
-      : labelCreateButton.setAttribute("disabled", "true");
+    this._handleNameValidation();
   }
 
   _updateErrorUI() {
@@ -147,6 +144,29 @@ export default class LabelCreator {
       labelNameError.setAttribute("hidden", "true");
       labelCreateButton.removeAttribute("disabled");
     }
+  }
+
+  _handleNameValidation() {
+    if (this._label.value.prev) {
+      this._error.value = "";
+      return;
+    }
+    const duplicate = this._labelStore.value.some(
+      (item) => item.name === this._label.value.name
+    );
+    this._error.value = duplicate ? "이미 등록된 이름입니다." : "";
+    return !this._error.value;
+  }
+
+  _handleClickUpdateLabel(e) {
+    e.preventDefault();
+    if (this._label.value.prev) {
+      // TODO : 수정 처리
+      alert("수정!");
+      this.clear();
+      return;
+    }
+    this._addLabel().catch((e) => this._apiErrorHandle(e));
   }
 
   toggle() {
@@ -184,37 +204,19 @@ export default class LabelCreator {
     const cancelBtn = $(CANCEL_BUTTON);
     const createBtn = $(CREATE_BUTTON);
 
-    name.addEventListener(KEYUP, (e) => {
-      this.saveData({ name: e.target.value });
-      const duplicate = this._labelStore.value.some(
-        (item) => item.name === this._label.value.name
-      );
-      this._error.value = duplicate ? "이미 등록된 이름입니다." : "";
-    });
-
+    name.addEventListener(KEYUP, (e) =>
+      this.saveData({ name: e.target.value })
+    );
     color.addEventListener(KEYUP, (e) =>
       this.saveData({ color: e.target.value })
     );
-
     description.addEventListener(KEYUP, (e) =>
       this.saveData({ description: e.target.value })
     );
-
     newColorBtn.addEventListener(CLICK, () =>
       this.saveData({ color: this._createColor() })
     );
-
     cancelBtn.addEventListener(CLICK, () => this.clear());
-
-    createBtn.addEventListener(CLICK, (e) => {
-      e.preventDefault();
-      if (this._label.value.prev) {
-        // TODO : 수정 처리
-        alert("수정!");
-        this.clear();
-        return;
-      }
-      this._addLabel().catch((e) => this._apiErrorHandle(e));
-    });
+    createBtn.addEventListener(CLICK, (e) => this._handleClickUpdateLabel(e));
   }
 }

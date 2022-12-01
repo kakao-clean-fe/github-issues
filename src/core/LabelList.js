@@ -53,7 +53,7 @@ LabelList.prototype.addNewLabelBtnEvent = function (callback) {
   return () => newLabelBtn.removeEventListener(EVENT_KEY.CLICK, handleClick);
 };
 
-LabelList.prototype._handleClickEdit = (editBtn) => {
+LabelList.prototype._handleClickEdit = function (editBtn) {
   const find = findByClass(this._target);
   const newLabelForm = find("hidden#new-label-form");
   if (newLabelForm) {
@@ -73,7 +73,7 @@ LabelList.prototype._handleClickEdit = (editBtn) => {
   }, 100);
 };
 
-LabelList.prototype._handleClickEdit = (deleteBtn) => {
+LabelList.prototype._handleClickDelete = function (deleteBtn) {
   console.log("delete > ", deleteBtn.dataset.name);
 };
 
@@ -85,7 +85,7 @@ LabelList.prototype._clickItem = async function (e) {
     this._handleClickEdit(editBtn);
   }
   if (deleteBtn) {
-    this._handleClickEdit(deleteBtn);
+    this._handleClickDelete(deleteBtn);
   }
 };
 
