@@ -98,7 +98,7 @@ export default class LabelCreator {
   }
 
   _updateUI() {
-    const { value } = this.label;
+    const { value } = this._label;
 
     const $ = this._getElement();
     const labelPreview = $("label-preview");
