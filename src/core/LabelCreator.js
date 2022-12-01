@@ -62,6 +62,35 @@ export default class LabelCreator {
     };
   }
 
+  async _addLabel() {
+    const data = await toFetch("/labels", {
+      body: JSON.stringify({
+        ...this._label.value,
+        color: this._label.value.color.replace("#", ""),
+      }),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    this._labelStore.value = data;
+    this.clear();
+  }
+
+  async _apiErrorHandle(e) {
+    const msg = await e.json();
+    if (e.status === 500) {
+      this.clear();
+      this._error.value = msg.error;
+      return;
+    }
+    if (e.status === 400) {
+      this._error.value = msg.error;
+      return;
+    }
+    throw e;
+  }
+
   toggle() {
     const find = this.$();
     const target = find();
@@ -149,21 +178,21 @@ export default class LabelCreator {
       this._error.value = duplicate ? "이미 등록된 이름입니다." : "";
     });
 
-    color.addEventListener(KEYUP, (e) => {
-      this.saveData({ color: e.target.value });
-    });
+    color.addEventListener(KEYUP, (e) =>
+      this.saveData({ color: e.target.value })
+    );
 
-    description.addEventListener(KEYUP, (e) => {
-      this.saveData({ description: e.target.value });
-    });
+    description.addEventListener(KEYUP, (e) =>
+      this.saveData({ description: e.target.value })
+    );
 
-    newColorBtn.addEventListener(CLICK, () => {
-      this.saveData({ color: this._createColor() });
-    });
+    newColorBtn.addEventListener(CLICK, () =>
+      this.saveData({ color: this._createColor() })
+    );
 
     cancelBtn.addEventListener(CLICK, () => this.clear());
 
-    createBtn.addEventListener(CLICK, async (e) => {
+    createBtn.addEventListener(CLICK, (e) => {
       e.preventDefault();
       if (this._label.value.prev) {
         // TODO : 수정 처리
@@ -171,32 +200,7 @@ export default class LabelCreator {
         this.clear();
         return;
       }
-      try {
-        const data = await toFetch("/labels", {
-          body: JSON.stringify({
-            ...this._label.value,
-            color: this._label.value.color.replace("#", ""),
-          }),
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        this._labelStore.value = data;
-        this.clear();
-      } catch (e) {
-        const msg = await e.json();
-        if (e.status === 500) {
-          this.clear();
-          this._error.value = msg.error;
-          return;
-        }
-        if (e.status === 400) {
-          this._error.value = msg.error;
-          return;
-        }
-        throw e;
-      }
+      this._addLabel().catch((e) => this._errorHandle(e));
     });
   }
 }
