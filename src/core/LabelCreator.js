@@ -91,6 +91,58 @@ export default class LabelCreator {
     throw e;
   }
 
+  _updateUI() {
+    const { value } = this.label;
+
+    const $ = this._getElement();
+    const labelPreview = $("label-preview");
+    const newLabelColor = $("new-label-color");
+    const labelNameInput = $("label-name-input");
+    const labelColorValue = $("label-color-value");
+    const labelCreateButton = $("label-create-button");
+    const labelDescriptionInput = $("label-description-input");
+
+    labelPreview.style = `background-color:${value.color}`;
+    newLabelColor.style = `background-color:${value.color}`;
+    labelColorValue.value = value.color;
+
+    labelPreview.innerText = value.name || "Label preview";
+    labelNameInput.value = value.name;
+
+    labelDescriptionInput.value = value.description;
+
+    labelCreateButton.classList.toggle("opacity-50", !value.name);
+    labelCreateButton.innerText = value.prev
+      ? " Save label "
+      : " Create label ";
+
+    return value.name
+      ? labelCreateButton.removeAttribute("disabled")
+      : labelCreateButton.setAttribute("disabled", "true");
+  }
+
+  _updateErrorUI() {
+    const { value } = this._error;
+
+    const $ = this._getElement();
+    const labelNameError = $("label--name-error");
+    const labelCreateButton = $("label-create-button");
+
+    labelNameError.innerText = value;
+    labelCreateButton.classList.toggle(
+      "opacity-50",
+      value || !this._label.value.name
+    );
+
+    if (value || !this._label.value.name) {
+      labelNameError.removeAttribute("hidden");
+      labelCreateButton.setAttribute("disabled", "true");
+    } else {
+      labelNameError.setAttribute("hidden", "true");
+      labelCreateButton.removeAttribute("disabled");
+    }
+  }
+
   toggle() {
     const $ = this._getElement();
     const target = $();
@@ -111,54 +163,8 @@ export default class LabelCreator {
   }
 
   subscribe() {
-    this._label.subscribe((store) => {
-      const $ = this._getElement();
-      const labelPreview = $("label-preview");
-      const newLabelColor = $("new-label-color");
-      const labelNameInput = $("label-name-input");
-      const labelColorValue = $("label-color-value");
-      const labelCreateButton = $("label-create-button");
-      const labelDescriptionInput = $("label-description-input");
-
-      labelPreview.style = `background-color:${store.value.color}`;
-      newLabelColor.style = `background-color:${store.value.color}`;
-      labelColorValue.value = store.value.color;
-
-      labelPreview.innerText = store.value.name || "Label preview";
-      labelNameInput.value = store.value.name;
-
-      labelDescriptionInput.value = store.value.description;
-
-      labelCreateButton.classList.toggle("opacity-50", !store.value.name);
-      labelCreateButton.innerText = store.value.prev
-        ? " Save label "
-        : " Create label ";
-
-      if (store.value.name) {
-        labelCreateButton.removeAttribute("disabled");
-      } else {
-        labelCreateButton.setAttribute("disabled", "true");
-      }
-    });
-    this._error.subscribe((store) => {
-      const $ = this._getElement();
-      const labelNameError = $("label--name-error");
-      const labelCreateButton = $("label-create-button");
-
-      labelNameError.innerText = store.value;
-      labelCreateButton.classList.toggle(
-        "opacity-50",
-        store.value || !this._label.value.name
-      );
-
-      if (store.value || !this._label.value.name) {
-        labelNameError.removeAttribute("hidden");
-        labelCreateButton.setAttribute("disabled", "true");
-      } else {
-        labelNameError.setAttribute("hidden", "true");
-        labelCreateButton.removeAttribute("disabled");
-      }
-    });
+    this._label.subscribe(() => this._updateUI());
+    this._error.subscribe(() => this._updateErrorUI());
   }
 
   addEvent() {
