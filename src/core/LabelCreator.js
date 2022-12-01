@@ -42,7 +42,7 @@ export default class LabelCreator {
       : this._createColor();
   }
 
-  $(target = document) {
+  _getElement(target = document) {
     return (id = this._id) =>
       target === document
         ? target.getElementById(id)
@@ -51,7 +51,7 @@ export default class LabelCreator {
 
   _action(id, action) {
     return (store) => {
-      const find = this.$();
+      const find = this._getElement();
       const el = find(id);
 
       if (!el) {
@@ -92,7 +92,7 @@ export default class LabelCreator {
   }
 
   toggle() {
-    const find = this.$();
+    const find = this._getElement();
     const target = find();
 
     if (target) {
@@ -112,7 +112,7 @@ export default class LabelCreator {
 
   subscribe() {
     this._label.subscribe((store) => {
-      const find = this.$();
+      const find = this._getElement();
       const labelPreview = find("label-preview");
       const newLabelColor = find("new-label-color");
       const labelNameInput = find("label-name-input");
@@ -134,12 +134,14 @@ export default class LabelCreator {
         ? " Save label "
         : " Create label ";
 
-      return store.value.name
-        ? labelCreateButton.removeAttribute("disabled")
-        : labelCreateButton.setAttribute("disabled", "true");
+      if (store.value.name) {
+        labelCreateButton.removeAttribute("disabled");
+      } else {
+        labelCreateButton.setAttribute("disabled", "true");
+      }
     });
     this._error.subscribe((store) => {
-      const find = this.$();
+      const find = this._getElement();
       const labelNameError = find("label--name-error");
       const labelCreateButton = find("label-create-button");
 
@@ -160,7 +162,7 @@ export default class LabelCreator {
   }
 
   addEvent() {
-    const find = this.$();
+    const find = this._getElement();
 
     const name = find(NAME);
     const color = find(COLOR);
@@ -194,13 +196,12 @@ export default class LabelCreator {
 
     createBtn.addEventListener(CLICK, (e) => {
       e.preventDefault();
-      if (this._label.value.prev) {
+      if (!this._label.value.prev) {
         // TODO : 수정 처리
         alert("수정!");
         this.clear();
-        return;
       }
-      this._addLabel().catch((e) => this._errorHandle(e));
+      this._addLabel().catch((e) => this._apiErrorHandle(e));
     });
   }
 }
