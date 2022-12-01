@@ -77,16 +77,22 @@ export default class LabelCreator {
     this.clear();
   }
 
+  _handleBadRequest(error) {
+    this._error.value = error;
+  }
+
+  _handleInternalServerError(error) {
+    this.clear();
+    this._error.value = error;
+  }
+
   async _apiErrorHandle(e) {
     const msg = await e.json();
-    if (e.status === 500) {
-      this.clear();
-      this._error.value = msg.error;
-      return;
-    }
     if (e.status === 400) {
-      this._error.value = msg.error;
-      return;
+      return this._handleBadRequest(msg.error);
+    }
+    if (e.status === 500) {
+      return this._handleInternalServerError(msg.error);
     }
     throw e;
   }
