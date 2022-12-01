@@ -42,7 +42,7 @@ export default class LabelCreator {
       : this._createColor();
   }
 
-  _getElement(target = document) {
+  $(target = document) {
     return (id = this._id) =>
       target === document
         ? target.getElementById(id)
@@ -51,7 +51,7 @@ export default class LabelCreator {
 
   _action(id, action) {
     return (store) => {
-      const find = this._getElement();
+      const find = this.$();
       const el = find(id);
 
       if (!el) {
@@ -63,7 +63,7 @@ export default class LabelCreator {
   }
 
   toggle() {
-    const find = this._getElement();
+    const find = this.$();
     const target = find();
 
     if (target) {
@@ -83,7 +83,7 @@ export default class LabelCreator {
 
   subscribe() {
     this._label.subscribe((store) => {
-      const find = this._getElement();
+      const find = this.$();
       const labelPreview = find("label-preview");
       const newLabelColor = find("new-label-color");
       const labelNameInput = find("label-name-input");
@@ -105,14 +105,12 @@ export default class LabelCreator {
         ? " Save label "
         : " Create label ";
 
-      if (store.value.name) {
-        labelCreateButton.removeAttribute("disabled");
-      } else {
-        labelCreateButton.setAttribute("disabled", "true");
-      }
+      return store.value.name
+        ? labelCreateButton.removeAttribute("disabled")
+        : labelCreateButton.setAttribute("disabled", "true");
     });
     this._error.subscribe((store) => {
-      const find = this._getElement();
+      const find = this.$();
       const labelNameError = find("label--name-error");
       const labelCreateButton = find("label-create-button");
 
@@ -133,7 +131,7 @@ export default class LabelCreator {
   }
 
   addEvent() {
-    const find = this._getElement();
+    const find = this.$();
 
     const name = find(NAME);
     const color = find(COLOR);
@@ -167,38 +165,38 @@ export default class LabelCreator {
 
     createBtn.addEventListener(CLICK, async (e) => {
       e.preventDefault();
-      if (!this._label.value.prev) {
-        try {
-          const data = await toFetch("/labels", {
-            body: JSON.stringify({
-              ...this._label.value,
-              color: this._label.value.color.replace("#", ""),
-            }),
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          this._labelStore.value = data;
-          this.clear();
-        } catch (e) {
-          const msg = await e.json();
-          if (e.status === 500) {
-            this.clear();
-            this._error.value = msg.error;
-            return;
-          }
-          if (e.status === 400) {
-            this._error.value = msg.error;
-            return;
-          }
-          throw e;
-        }
+      if (this._label.value.prev) {
+        // TODO : 수정 처리
+        alert("수정!");
+        this.clear();
         return;
       }
-      // TODO : 수정 처리
-      alert("수정!");
-      this.clear();
+      try {
+        const data = await toFetch("/labels", {
+          body: JSON.stringify({
+            ...this._label.value,
+            color: this._label.value.color.replace("#", ""),
+          }),
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        this._labelStore.value = data;
+        this.clear();
+      } catch (e) {
+        const msg = await e.json();
+        if (e.status === 500) {
+          this.clear();
+          this._error.value = msg.error;
+          return;
+        }
+        if (e.status === 400) {
+          this._error.value = msg.error;
+          return;
+        }
+        throw e;
+      }
     });
   }
 }
