@@ -1,3 +1,4 @@
+import { $ } from '../utils/utils';
 import { Subject } from './common';
 
 export class NewLabelStore extends Subject {
@@ -8,7 +9,8 @@ export class NewLabelStore extends Subject {
     this.registerEventHandlers();
   }
   registerEventHandlers() {
-    document.getElementsByTagName('a')[0].addEventListener('click', e => this.toggleShow());
+    $('#new-label-button').addEventListener('click', e => this.toggleShow());
+    $('#label-create-button').addEventListener('click', () => this.toggleShow());
   }
   getShow() {
     return this.show;
@@ -26,10 +28,6 @@ export class NewLabelObserver {
     this.model.subscribe(this.toggle.bind(this))
   }
   toggle() {
-    // document.getElementById('new-label-form').classList.toggle('hidden');
-    if (this.model.getShow())
-      document.getElementById('new-label-form').classList.remove('hidden');
-    else
-      document.getElementById('new-label-form').classList.add('hidden');
+    this.model.getShow() ? $('#new-label-form').classList.remove('hidden') : $('#new-label-form').classList.add('hidden');
   }
 }

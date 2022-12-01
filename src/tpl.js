@@ -103,8 +103,8 @@ export function getLabelTpl() {
       </form>
     </div>
 
-    <div class="new-label-button cursor-pointer p-1 py-1 base-outer flex items-center justify-center w-2/12 ml-4 bg-green-700 text-white">
-      <a href="#">New label</a>
+    <div id="new-label-button" class="new-label-button cursor-pointer p-1 py-1 base-outer flex items-center justify-center w-2/12 ml-4 bg-green-700 text-white">
+      New label
     </div>
   </div>
 
@@ -219,7 +219,7 @@ export function getLabelTpl() {
 
     </ul>
   </div>
-    <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
+    <button id="update-labels-button" class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
 </div>
   `
 }
