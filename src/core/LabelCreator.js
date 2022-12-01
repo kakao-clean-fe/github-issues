@@ -51,8 +51,8 @@ export default class LabelCreator {
 
   _action(id, action) {
     return (store) => {
-      const find = this._getElement();
-      const el = find(id);
+      const $ = this._getElement();
+      const el = $(id);
 
       if (!el) {
         return;
@@ -92,8 +92,8 @@ export default class LabelCreator {
   }
 
   toggle() {
-    const find = this._getElement();
-    const target = find();
+    const $ = this._getElement();
+    const target = $();
 
     if (target) {
       target.classList.toggle(HIDDEN);
@@ -112,13 +112,13 @@ export default class LabelCreator {
 
   subscribe() {
     this._label.subscribe((store) => {
-      const find = this._getElement();
-      const labelPreview = find("label-preview");
-      const newLabelColor = find("new-label-color");
-      const labelNameInput = find("label-name-input");
-      const labelColorValue = find("label-color-value");
-      const labelCreateButton = find("label-create-button");
-      const labelDescriptionInput = find("label-description-input");
+      const $ = this._getElement();
+      const labelPreview = $("label-preview");
+      const newLabelColor = $("new-label-color");
+      const labelNameInput = $("label-name-input");
+      const labelColorValue = $("label-color-value");
+      const labelCreateButton = $("label-create-button");
+      const labelDescriptionInput = $("label-description-input");
 
       labelPreview.style = `background-color:${store.value.color}`;
       newLabelColor.style = `background-color:${store.value.color}`;
@@ -141,9 +141,9 @@ export default class LabelCreator {
       }
     });
     this._error.subscribe((store) => {
-      const find = this._getElement();
-      const labelNameError = find("label--name-error");
-      const labelCreateButton = find("label-create-button");
+      const $ = this._getElement();
+      const labelNameError = $("label--name-error");
+      const labelCreateButton = $("label-create-button");
 
       labelNameError.innerText = store.value;
       labelCreateButton.classList.toggle(
@@ -162,15 +162,15 @@ export default class LabelCreator {
   }
 
   addEvent() {
-    const find = this._getElement();
+    const $ = this._getElement();
 
-    const name = find(NAME);
-    const color = find(COLOR);
-    const description = find(DESCRIPTION);
+    const name = $(NAME);
+    const color = $(COLOR);
+    const description = $(DESCRIPTION);
 
-    const newColorBtn = find(COLOR_BUTTON);
-    const cancelBtn = find(CANCEL_BUTTON);
-    const createBtn = find(CREATE_BUTTON);
+    const newColorBtn = $(COLOR_BUTTON);
+    const cancelBtn = $(CANCEL_BUTTON);
+    const createBtn = $(CREATE_BUTTON);
 
     name.addEventListener(KEYUP, (e) => {
       this.saveData({ name: e.target.value });
