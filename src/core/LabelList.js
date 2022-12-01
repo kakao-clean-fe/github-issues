@@ -53,6 +53,42 @@ LabelList.prototype.addNewLabelBtnEvent = function (callback) {
   return () => newLabelBtn.removeEventListener(EVENT_KEY.CLICK, handleClick);
 };
 
+LabelList.prototype._handleClickEdit = (editBtn) => {
+  const find = findByClass(this._target);
+  const newLabelForm = find("hidden#new-label-form");
+  if (newLabelForm) {
+    const newLabelBtn = find(SHOW_CREATE);
+    newLabelBtn.click();
+  }
+  const interval = setInterval(() => {
+    if (!this._labelCreateUI) {
+      return;
+    }
+    clearInterval(interval);
+    this._labelCreateUI(
+      editBtn.dataset.name,
+      editBtn.dataset.color,
+      editBtn.dataset.description
+    );
+  }, 100);
+};
+
+LabelList.prototype._handleClickEdit = (deleteBtn) => {
+  console.log("delete > ", deleteBtn.dataset.name);
+};
+
+LabelList.prototype._clickItem = async function (e) {
+  const editBtn = e.target.closest(".edit-button");
+  const deleteBtn = e.target.closest(".delete-button");
+
+  if (editBtn) {
+    this._handleClickEdit(editBtn);
+  }
+  if (deleteBtn) {
+    this._handleClickEdit(deleteBtn);
+  }
+};
+
 LabelList.prototype.addReloadBtnEvent = function () {
   const find = findByClass(this._target);
   const refreshBtn = find(REFRESH_BUTTON);
@@ -70,33 +106,7 @@ LabelList.prototype.addReloadBtnEvent = function () {
   };
 
   refreshBtn.addEventListener(EVENT_KEY.CLICK, handleClick);
-
-  window.addEventListener("click", async (e) => {
-    const editBtn = e.target.closest(".edit-button");
-    const deleteBtn = e.target.closest(".delete-button");
-    if (editBtn) {
-      const find = findByClass(this._target);
-      const newLabelForm = find("hidden#new-label-form");
-      if (newLabelForm) {
-        const newLabelBtn = find(SHOW_CREATE);
-        newLabelBtn.click();
-      }
-      const interval = setInterval(() => {
-        if (!this._labelCreateUI) {
-          return;
-        }
-        clearInterval(interval);
-        this._labelCreateUI(
-          editBtn.dataset.name,
-          editBtn.dataset.color,
-          editBtn.dataset.description
-        );
-      }, 100);
-    }
-    if (deleteBtn) {
-      console.log("delete > ", deleteBtn.dataset.name);
-    }
-  });
+  window.addEventListener("click", (e) => this._clickItem(e));
 };
 
 export default LabelList;
