@@ -13,7 +13,7 @@ export default class LabelCreator {
   constructor(id, labelStore) {
     this._labelStore = labelStore;
     this._id = id;
-    this._data = new Store({
+    this._label = new Store({
       id: "labelCreatorData",
       isPersist: true,
       defaultValue: {
@@ -28,11 +28,11 @@ export default class LabelCreator {
     this.addEvent();
     this.subscribe();
 
-    this._data.notify(this._data);
+    this._label.notify(this._label);
   }
 
   saveData(data) {
-    this._data.value = { ...this._data.value, ...data };
+    this._label.value = { ...this._label.value, ...data };
   }
 
   _createColor() {
@@ -82,7 +82,7 @@ export default class LabelCreator {
   }
 
   subscribe() {
-    this._data.subscribe((store) => {
+    this._label.subscribe((store) => {
       const find = this._getElement();
       const labelPreview = find("label-preview");
       const newLabelColor = find("new-label-color");
@@ -119,10 +119,10 @@ export default class LabelCreator {
       labelNameError.innerText = store.value;
       labelCreateButton.classList.toggle(
         "opacity-50",
-        store.value || !this._data.value.name
+        store.value || !this._label.value.name
       );
 
-      if (store.value || !this._data.value.name) {
+      if (store.value || !this._label.value.name) {
         labelNameError.removeAttribute("hidden");
         labelCreateButton.setAttribute("disabled", "true");
       } else {
@@ -146,7 +146,7 @@ export default class LabelCreator {
     name.addEventListener(KEYUP, (e) => {
       this.saveData({ name: e.target.value });
       const duplicate = this._labelStore.value.some(
-        (item) => item.name === this._data.value.name
+        (item) => item.name === this._label.value.name
       );
       this._error.value = duplicate ? "이미 등록된 이름입니다." : "";
     });
@@ -167,12 +167,12 @@ export default class LabelCreator {
 
     createBtn.addEventListener(CLICK, async (e) => {
       e.preventDefault();
-      if (!this._data.value.prev) {
+      if (!this._label.value.prev) {
         try {
           const data = await toFetch("/labels", {
             body: JSON.stringify({
-              ...this._data.value,
-              color: this._data.value.color.replace("#", ""),
+              ...this._label.value,
+              color: this._label.value.color.replace("#", ""),
             }),
             method: "POST",
             headers: {
