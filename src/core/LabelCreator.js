@@ -202,10 +202,11 @@ export default class LabelCreator {
 
     createBtn.addEventListener(CLICK, (e) => {
       e.preventDefault();
-      if (!this._label.value.prev) {
+      if (this._label.value.prev) {
         // TODO : 수정 처리
         alert("수정!");
         this.clear();
+        return;
       }
       this._addLabel().catch((e) => this._apiErrorHandle(e));
     });
