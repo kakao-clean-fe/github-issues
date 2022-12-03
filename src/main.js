@@ -1,9 +1,10 @@
-import { initLabelPage } from '~/pages/label-page';
+import { initNavigationBar } from '~/components/navigation-bar';
 import { worker } from './mocks/browser';
-// import { initIssuePage } from '~/pages/issue-page';
+import { renderByPath } from './utils/app-router';
+
 if (import.meta.env.DEV) {
   worker.start();
 }
-// initIssuePage();
 
-initLabelPage();
+initNavigationBar();
+renderByPath();

@@ -1,5 +1,9 @@
 // global
 export const ROOT_SELECTOR = '#app';
+export const NAVIGATION = {
+  ISSUE_BUTTON: '#nav-issue-button',
+  LABEL_BUTTON: '#nav-label-button'
+};
 
 // issue page
 export const ISSUE_OPEN_COUNT_SELECTOR = '.open-count';

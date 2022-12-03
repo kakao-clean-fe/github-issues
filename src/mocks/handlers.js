@@ -1,9 +1,13 @@
 import { rest } from 'msw';
-import { labels } from './data';
+import * as data from './data';
 
 export const handlers = [
+  rest.get('/issues', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(data.issues));
+  }),
+
   rest.get('/labels', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(labels));
+    return res(ctx.status(200), ctx.json(data.labels));
   }),
 
   rest.post('/label', async (req, res, ctx) => {
@@ -13,13 +17,13 @@ export const handlers = [
       return res(ctx.status(500), ctx.json({ error: '서버에러 발생' }));
     }
 
-    labels.push(newData);
-    return res(ctx.status(201), ctx.json(labels));
+    data.labels.push(newData);
+    return res(ctx.status(201), ctx.json(data.labels));
   }),
 
   rest.get('/labels-delay', async (req, res, ctx) => {
     await new Promise(resolve => setTimeout(() => resolve(), 5000));
-    return res(ctx.status(200), ctx.json(labels));
+    return res(ctx.status(200), ctx.json(data.labels));
   })
 
 ];

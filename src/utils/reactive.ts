@@ -15,16 +15,16 @@ export const ref = <T>(initValue: T): Ref<T> => new Proxy(
     _addEffect (effectFunction) {
       this._effects.push(effectFunction);
     },
-    _runEffect (newValue) {
-      this._effects.forEach((effectFunction: EffectFunction) => effectFunction(newValue));
+    _runEffect (newValue, prevValue) {
+      this._effects.forEach((effectFunction: EffectFunction) => effectFunction(newValue, prevValue));
     }
   }, {
     set (target: Ref<T>, prop: string, newValue: T, ...args) { // 내부 메서드 : [[Set]], 프로퍼티를 쓸 때
-      const oldValue = target[prop];
+      const prevValue: T = target[prop];
       const result = Reflect.set(target, prop, newValue, ...args);
 
-      if (oldValue !== newValue) {
-        target._runEffect(newValue);
+      if (prevValue !== newValue) {
+        target._runEffect(newValue, prevValue);
       }
 
       return result;
