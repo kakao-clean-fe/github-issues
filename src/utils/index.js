@@ -22,7 +22,33 @@ const removeClassList = ({
 }) =>
 element.querySelector(selector).classList.remove(classes);
 
-const fetchBody = (url) => fetch(url).then((response) => response.json());
+const fetchBody = (url, options={}) => fetch(url, options).then((response) => response.json());
+
+const throwIfNotAbortError = error => {
+  if(error.name !== 'AbortError') {
+    throw error;
+  }
+}
+
+/** 요청이 완료되기전에 재시도하면 기존 요청은 취소하고 다시 요청하는 fetchBody */
+const abortableFetchBody = (() => {
+  
+  let controller;
+  let requested = false;
+  
+  return (url, options = {}) => {
+    if(requested) {
+      controller.abort();
+    }
+    controller = new AbortController();
+    const {signal} = controller;
+    const _options = {...options, signal};
+    requested = true;
+    fetchBody(url, _options).catch(throwIfNotAbortError)
+    .finally(() => requested = false);
+  }
+})()
+
 const pipe = (...fns) => {
   return (args) =>
     fns.reduce((acc, fn) => {
@@ -52,13 +78,43 @@ const cacheFunction = (fn) => {
   };
 };
 
+const Lazy = (importFunc) => {
+  let LazyComponent;
+  return function (...args) {
+    if(!LazyComponent) {
+      return importFunc().then(module => LazyComponent = module.default).then(LazyComponent => this.component = new LazyComponent(...args))
+    }
+    this.component = new LazyComponent(...args);
+  }
+}
+
+const setLocalStorage =(key, value) => {
+  if(typeof value !== 'string') {
+    throw new Error('문자열로 바꿔서 저장 바랍니다.');
+  }
+  localStorage.setItem(key, value);
+}
+
+const getLocalStorage = (key, {isJson} = {isJson:true}) => {
+  const value = localStorage.getItem(key);
+  if(value && isJson) {
+    return JSON.parse(value);
+  }
+
+  return value;
+}
+
 export {
   render,
   on ,
   addClassList,
   removeClassList,
   fetchBody,
+  abortableFetchBody,
   pipe,
   cacheFunction,
   getRandomColor,
+  Lazy,
+  setLocalStorage,
+  getLocalStorage
 };

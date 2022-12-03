@@ -1,5 +1,5 @@
 export function getIssueTpl() {
-	return `
+  return `
     <div id="issue-wrapper" class="w-9/12 m-auto min-w-min">
     <div id="header" class="flex justify-between">
 
@@ -67,7 +67,7 @@ export function getIssueTpl() {
 }
 
 export function getIssueItemTpl(item) {
-    return `
+  return `
         <li> 
           <div class="py-4">
               <input type="checkbox">
@@ -84,7 +84,9 @@ export function getIssueItemTpl(item) {
                   </div>
               </div>
               <div class="issue-description text-xs mt-2">
-                ${item._id} ${item.status}ed ${item['open-date']} ${item.milestones}
+                ${item._id} ${item.status}ed ${item["open-date"]} ${
+    item.milestones
+  }
               </div>
           </div>
         </li>`;
@@ -92,7 +94,7 @@ export function getIssueItemTpl(item) {
 
 export function getLabelTpl() {
   return `
-  <div id="label-wrapper" class="w-9/12 m-auto min-w-min">
+<div id="label-wrapper" class="w-9/12 m-auto min-w-min">
 
   <div id="header" class="flex justify-between">
 
@@ -107,6 +109,8 @@ export function getLabelTpl() {
       <a href="#">New label</a>
     </div>
   </div>
+  
+  <div id="form-wrapper"></div>
 
   <div id="labels-wrapper" class="m-auto  base-outer mt-6 bg-slate-100">
     <div class="label-header h-16 flex justify-between items-center border-b">
@@ -122,17 +126,15 @@ export function getLabelTpl() {
       </div>
 
     </div>
-    <ul class="label-list ml-auto text-sm bg-white">
-
-    </ul>
+    <ul class="label-list ml-auto text-sm bg-white"></ul>
   </div>
-    <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
+  <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
 </div>
-  `
+  `;
 }
 
 export function getLabelItemTpl({ name, color, description }) {
-		return `
+  return `
             <li class="label-item flex items-center ml-4 py-3 justify-between border-b ">
                 <div class="issue-title flex"> 
                     <span class="rounded-lg border p-1 px-2" style="background-color:#${color}">${name}</span> 

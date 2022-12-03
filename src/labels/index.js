@@ -1,5 +1,5 @@
 import Labels from '../component/Label/Labels';
-import LabelModel from '../model/LabelModel';
+import LabelModel from '../model/label/LabelModel';
 import store from '../store/labelStore'
 
 const initLabels = () => {
@@ -11,7 +11,6 @@ const initLabels = () => {
     target: app, 
     model: labelModel,
   })
-
 }
 
 export default initLabels;

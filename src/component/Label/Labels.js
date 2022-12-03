@@ -1,7 +1,7 @@
 import Component from "..";
 import { EVENTS } from "../../constant";
-import { getLabelTpl } from "../../tpl";
-import { getRandomColor } from "../../utils";
+import { getLabelTpl } from "../../template/tpl";
+import { getRandomColor, Lazy } from "../../utils";
 import LabelItem from "./LabelItem";
 
 const SELECTORS = {
@@ -15,6 +15,7 @@ const SELECTORS = {
   LABEL_DESCRIPTION_INPUT: "#label-description-input",
   LABEL_CREATE_BUTTON: "#label-create-button",
   DELETE_BUTTON: ".delete-button",
+  REFRESH_BUTTON:".refresh-labels"
 };
 
 const CLASS_HIDDEN = "hidden";
@@ -26,6 +27,10 @@ const initialForm = {
   color: "#BE185D",
 };
 
+
+
+const LabelForm = Lazy(() => import('./LebelForm.js'));
+
 export default class Labels extends Component {
   constructor({ model, ...args }) {
     super({ ...args });
@@ -36,7 +41,7 @@ export default class Labels extends Component {
       labelForm: initialForm,
     }),
       this._bindMethod();
-    this.model.subscribe(this.setLabel);
+    this.model.subscribe(({labels}) => this.setLabel(labels));
   }
 
   _bindMethod() {
@@ -48,6 +53,7 @@ export default class Labels extends Component {
     this.removeLabel = this.removeLabel.bind(this);
     this.render = this.render.bind(this);
     this.setLabel = this.setLabel.bind(this);
+    this.refreshLabel = this.refreshLabel.bind(this);
   }
 
   setLabel(labels) {
@@ -103,13 +109,15 @@ export default class Labels extends Component {
     if (!name) {
       throw new Error("삭제하려는 name값을 찾지 못했습니다.");
     }
-    this.model.removeLabel(
-      this.state.labels.find(({ name: _name }) => _name === name)
-    );
+    this.model.removeLabel(name);
   }
 
   initForm() {
     this.setState({ labelForm: initialForm });
+  }
+
+  refreshLabel() {
+    this.model.refreshLabel();
   }
 
   setListeners() {
@@ -123,30 +131,20 @@ export default class Labels extends Component {
     );
     this.on(SELECTORS.LABEL_CREATE_BUTTON, EVENTS.CLICK, this.addNewLabel);
     this.on(SELECTORS.DELETE_BUTTON, EVENTS.CLICK, this.removeLabel);
+    this.on(SELECTORS.REFRESH_BUTTON, EVENTS.CLICK, this.refreshLabel);
   }
 
   render() {
     if (!this.state) {
-      this.template = null;
+      return this.template = null;
     }
+
     this.template = this.convertHTMLStringToNode(getLabelTpl());
+
     if (this.state.showForm) {
-      this.select(SELECTORS.NEW_LABEL_FORM).classList.remove(CLASS_HIDDEN);
-    }
-
-    const { name, description, color } = this.state.labelForm || {};
-
-    if (name && description && color) {
-      const button = this.select(SELECTORS.LABEL_CREATE_BUTTON);
-      button.disabled = false;
-      button.classList.remove(CLASS_DISABLED);
-    }
-
-    this.select(SELECTORS.LABEL_PREVIEW).style.backgroundColor = color;
-    this.select(SELECTORS.NEW_LABEL_COLOR).style.backgroundColor = color;
-    this.select(SELECTORS.LABEL_COLOR_INPUT).value = color;
-    this.select(SELECTORS.LABEL_NAME_INPUT).value = name;
-    this.select(SELECTORS.LABEL_DESCRIPTION_INPUT).value = description;
+      const formContainer = this.select("#form-wrapper");
+      new LabelForm({model: this.model, target: formContainer});
+    } 
 
     const list = this.select(SELECTORS.LABEL_LIST);
     this.state?.labels?.forEach(
@@ -156,5 +154,6 @@ export default class Labels extends Component {
           state: label,
         })
     );
+    return;
   }
 }

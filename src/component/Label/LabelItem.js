@@ -11,6 +11,6 @@ export default class LabelItem extends Component {
 
   render() {
     this.template = this.convertHTMLStringToNode(getLabelItemTpl(this.state));
-    this.select(SELECTORS.DELETE_BUTTON).dataset.name = this.state.name;    
+    this.select(SELECTORS.DELETE_BUTTON).dataset.name = this.state.name;
   }
 }
