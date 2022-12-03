@@ -1,6 +1,6 @@
 // Utils
 import { routes } from '../utils/navigate';
-import { findElement } from '../utils/dom';
+import { findElement } from '../utils/common';
 
 // Constants
 import { mainSelector } from '../constants/selector';

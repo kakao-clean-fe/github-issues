@@ -2,7 +2,7 @@
 let abortController = null;
 let whileFetching = false;
 
-const init = () => {
+const startRequest = () => {
   if (whileFetching) {
     abortController.abort();
   }
@@ -11,7 +11,7 @@ const init = () => {
   whileFetching = true;
 };
 
-const finish = () => {
+const finishResponse = () => {
   abortController = null;
   whileFetching = false;
 };
@@ -23,11 +23,11 @@ const LabelApi = {
   },
   async fetchDelayLabels() {
     try {
-      init();
+      startRequest();
       const res = await fetch('/labels-delay', {
         signal: abortController.signal,
       });
-      finish();
+      finishResponse();
 
       return res.json();
     } catch (error) {

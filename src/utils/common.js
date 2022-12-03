@@ -41,3 +41,11 @@ export const reduce = curry((f, acc, iter) => {
   }
   return acc;
 });
+
+export const findElement = (selector, fromElement = document) => {
+  return fromElement.querySelector(selector);
+};
+
+export const chunkSubstr = (str, size) => {
+  return str.match(new RegExp(`.{1,${size}}`, 'g'));
+};

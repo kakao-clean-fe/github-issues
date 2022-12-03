@@ -9,8 +9,7 @@ import { getLabelTpl } from '../template/label';
 import { labelSelector } from '../constants/selector';
 
 // Utils
-import { findElement } from '../utils/dom';
-import { reduce } from '../utils/fx';
+import { reduce, findElement, chunkSubstr } from '../utils/common';
 
 // Api
 import LabelApi from '../api/label';
@@ -111,63 +110,17 @@ export default class LabelPage extends BaseComponent {
 
     // Dynamic Import
     if (!labelFormWrapper.firstChild) {
-      await (async () => {
-        const { default: LabelForm } = await import(
-          '../components/label/labelForm'
-        );
-        const labelForm = new LabelForm();
-        labelForm.attatchTo(labelFormWrapper, 'beforeend');
-      })();
+      await this.importLabelForm();
 
       // 로컬 스토리지로부터 기존 저장된 라벨 아이템 추출
       const labelItem = JSON.parse(localStorage.getItem('labelItem'));
 
       /* 이벤트 및 value 등록 */
-
-      // Name
-      const labelNameInput = findElement(labelSelector.LABEL_NAME_INPUT);
-      labelNameInput.addEventListener('input', this.onLabelNameInputChange);
-      labelNameInput.value = labelItem.name;
-
-      // Description
-      const labelDescriptionInput = findElement(
-        labelSelector.LABEL_DESCRIPTION_INPUT
-      );
-      labelDescriptionInput.addEventListener(
-        'input',
-        this.onLabelDescriptionInputChange
-      );
-      labelDescriptionInput.value = labelItem.description;
-
-      // Color
-      const newLabelColorButton = findElement(labelSelector.NEW_LABEL_COLOR);
-      const labelColorInput = findElement(labelSelector.LABEL_COLOR_VALUE);
-      newLabelColorButton.addEventListener(
-        'click',
-        this.onNewLabelColorButtonClick
-      );
-
-      // color 값이 있을 때에만
-      if (!!labelItem.color) {
-        const [r, g, b] = this.chunkSubstr(labelItem.color, 2);
-        const colorStyle = `background-color: rgb(${parseInt(
-          r,
-          16
-        )}, ${parseInt(g, 16)}, ${parseInt(b, 16)})`;
-        newLabelColorButton.style = colorStyle;
-        labelColorInput.value = `#${labelItem.color}`;
-      }
-
-      // Cancel Button
-      const labelCancelButton = findElement(labelSelector.LABEL_CANCEL_BUTTON);
-      labelCancelButton.addEventListener(
-        'click',
-        this.onLabelCancelButtonClick
-      );
-
-      // Create Label
-      const labelSubmitButton = findElement(labelSelector.LABEL_INPUT_FORM);
-      labelSubmitButton.addEventListener('submit', this.onSubmit);
+      this.registerLabelFormNameEvent(labelItem);
+      this.registerLabelFormDescriptionEvent(labelItem);
+      this.registerLabelFormColorEvent(labelItem);
+      this.registerLabelFormCancelEvent();
+      this.registerLabelFormCreateEvent();
 
       // 스토어에 로컬 스토리지 값 세팅
       LabelStore.dispatch({
@@ -179,9 +132,62 @@ export default class LabelPage extends BaseComponent {
     labelFormWrapper.classList.remove('hidden');
   };
 
-  chunkSubstr = (str, size) => {
-    return str.match(new RegExp(`.{1,${size}}`, 'g'));
-  };
+  async importLabelForm() {
+    await (async () => {
+      const { default: LabelForm } = await import(
+        '../components/label/labelForm'
+      );
+      const labelForm = new LabelForm();
+      labelForm.attatchTo(labelFormWrapper, 'beforeend');
+    })();
+  }
+
+  registerLabelFormNameEvent(labelItem) {
+    const labelNameInput = findElement(labelSelector.LABEL_NAME_INPUT);
+    labelNameInput.addEventListener('input', this.onLabelNameInputChange);
+    labelNameInput.value = labelItem.name;
+  }
+
+  registerLabelFormDescriptionEvent(labelItem) {
+    const labelDescriptionInput = findElement(
+      labelSelector.LABEL_DESCRIPTION_INPUT
+    );
+    labelDescriptionInput.addEventListener(
+      'input',
+      this.onLabelDescriptionInputChange
+    );
+    labelDescriptionInput.value = labelItem.description;
+  }
+
+  registerLabelFormColorEvent(labelItem) {
+    const newLabelColorButton = findElement(labelSelector.NEW_LABEL_COLOR);
+    const labelColorInput = findElement(labelSelector.LABEL_COLOR_VALUE);
+    newLabelColorButton.addEventListener(
+      'click',
+      this.onNewLabelColorButtonClick
+    );
+
+    // color 값이 있을 때에만
+    if (!!labelItem.color) {
+      const [r, g, b] = chunkSubstr(labelItem.color, 2);
+      const colorStyle = `background-color: rgb(${parseInt(r, 16)}, ${parseInt(
+        g,
+        16
+      )}, ${parseInt(b, 16)})`;
+      newLabelColorButton.style = colorStyle;
+      labelColorInput.value = `#${labelItem.color}`;
+    }
+  }
+
+  registerLabelFormCancelEvent() {
+    const labelCancelButton = findElement(labelSelector.LABEL_CANCEL_BUTTON);
+    labelCancelButton.addEventListener('click', this.onLabelCancelButtonClick);
+  }
+
+  registerLabelFormCreateEvent() {
+    const labelSubmitButton = findElement(labelSelector.LABEL_INPUT_FORM);
+    labelSubmitButton.addEventListener('submit', this.onSubmit);
+  }
 
   onLabelNameInputChange = (e) => {
     const labelItem = { ...LabelStore.getState().labelItem };
