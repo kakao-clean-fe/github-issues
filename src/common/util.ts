@@ -4,7 +4,16 @@ import FetchController from './FetchController';
 
 export const isEquals = <T = any>(a: T, b: T) => {
   try {
-    if (typeof a === 'string') {
+    if (typeof a !== typeof b) {
+      return false;
+    } else if (Object.keys(a).length !== Object.keys(b).length) {
+      return false;
+    }
+    if (
+      typeof a === 'string' ||
+      typeof a === 'number' ||
+      typeof a === 'boolean'
+    ) {
       return a === b;
     } else {
       return Object.keys(a).reduce((prev, key) => {
@@ -42,26 +51,6 @@ export const removeUndefinedParam = (obj: object) =>
       values ? { ...prev, [`${keys}`]: values } : prev,
     {}
   );
-
-const commonFetch = async <T = any>({
-  url,
-  method,
-  body,
-  errorMessage,
-}: Api) => {
-  try {
-    const res = await fetch(url, removeUndefinedParam({ method, body }));
-    return (await res.json()) as Promise<T>;
-  } catch (err) {
-    if (errorMessage !== '' && errorMessage) {
-      console.error(err);
-    }
-    throw err;
-  }
-};
-export const getRandomColor = () => {
-  Math.random() * 10;
-};
 
 export const API = {
   GET<T = any>({ url, errorMessage }: Api) {
