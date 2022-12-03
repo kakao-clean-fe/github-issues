@@ -1,15 +1,17 @@
 import { getLabelItemTpl, getLabelTpl } from '../template/tpl';
-import { newLabelBtnSelector, labelListContainerSelector, labelCountSelector, updateLabelSelector} from '../template/selector';
-import { $ ,addClickEventListener, clearElement, renderPageInApp, setRenderTarget } from '../util/dom';
+import { newLabelBtnSelector, labelListContainerSelector, labelCountSelector, updateLabelSelector, labelWrapperSelector, labelFormSelector} from '../template/selector';
+import { getTargetQuerySelector ,addClickEventListener, clearElement, setRenderTarget, renderWrapper } from '../util/dom';
 import { labelStore$ } from '../store/label';
 import { compose, pipe } from '../util/operator';
 import { formData$ } from '../store/labelForm';
+import {addSubscribe as _addSubscribe} from '../util/feature';
 
 /**
  * week2. 객체지향으로 짜보기
  * label page
  */
 export class LabelPage {
+  #labelWrapper$ = null;
   #labelForm = null;
   #unsubscribeList = [];
 
@@ -17,39 +19,38 @@ export class LabelPage {
     this.subscribeStore();
 
     labelStore$.fetchLabels();
-    this.render();
   }
 
   destroy() {
     labelStore$.unsubscribe(this.#unsubscribeList);
+
+    this.#labelForm?.destroy();
+    this.#labelForm = null;
   }
 
   subscribeStore() {
+    const addSubscribe = _addSubscribe(this, this.#unsubscribeList);
+    
     // bind한 함수를 unsubscribe 메서드에도 전달해야 한다
-    const _renderLabels = this.renderLabels.bind(this);
-    const _renderLabelItem = this.renderLabelItem.bind(this);
-
-    labelStore$.subscribe([_renderLabels, this.renderLabelCount]);
-    labelStore$.subscribeAdd([_renderLabelItem]);
-
-    this.#unsubscribeList = [_renderLabels, _renderLabelItem, this.renderLabelCount];
+    labelStore$.subscribe([addSubscribe(this.renderLabels), addSubscribe(this.renderLabelCount)]);
+    labelStore$.subscribeAdd([addSubscribe(this.renderLabelItem)]);
   }
 
   addLabelPageEventListener() {
-    addClickEventListener(newLabelBtnSelector, () => this.toggleLabelForm()),
-    addClickEventListener(updateLabelSelector, () => labelStore$.updateLabels());
+    addClickEventListener(this.#labelWrapper$(newLabelBtnSelector), () => this.toggleLabelForm()),
+    addClickEventListener(this.#labelWrapper$(updateLabelSelector), () => labelStore$.updateLabels());
   }
 
   /**
-   * render
+   * render: app에서 호출
    */
-  render() {
-    // 한 번 쓰는 함수는 지역 함수로 정의
-    const renderWrapper = () => renderPageInApp(getLabelTpl());
-
+  render(targetEl) {
     pipe(
-      renderWrapper,
-      this.addLabelPageEventListener.bind(this),
+      renderWrapper(targetEl)(getLabelTpl()),
+      () => {
+        this.#labelWrapper$ = getTargetQuerySelector(targetEl)(labelWrapperSelector);
+      },
+      this.addLabelPageEventListener.bind(this)
       // test용 임시, new form 보이기
       // () => this.toggleLabelForm(),
     )();
@@ -67,7 +68,9 @@ export class LabelPage {
      * prefetch 적용은 SPA라 보류...
      */
     import('./labelForm').then(({LabelFormComponent}) => {
-      this.#labelForm = new LabelFormComponent();
+      const labelFormEl$ = this.#labelWrapper$(labelFormSelector);
+
+      this.#labelForm = new LabelFormComponent(labelFormEl$);
 
       formData$.isCreating = !formData$.isCreating;
     })
@@ -83,18 +86,21 @@ export class LabelPage {
 
   // store에 watcher로 > 버튼, 라벨 프리뷰에 색 입히기
   renderLabelCount(labels) {
-    $(labelCountSelector).textContent = labels.length;
+    this.#labelWrapper$(labelCountSelector).textContent = labels.length;
   }
 
   // store에 watcher로
   renderLabels(labels) {
-    clearElement(labelListContainerSelector);
+    const containerEl$ = this.#labelWrapper$(labelListContainerSelector);
     
-    labels.forEach(label => this.renderLabelItem(label));
+    clearElement(containerEl$);
+    
+    labels.forEach(label => this.renderLabelItem(containerEl$, label));
   }
 
-  renderLabelItem(label) {
-    const wrapper = setRenderTarget($(labelListContainerSelector));
+  renderLabelItem(containerEl$, label) {
+    const wrapper = setRenderTarget(containerEl$);
+
     compose(wrapper, getLabelItemTpl)(label);
   }
 }

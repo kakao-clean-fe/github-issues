@@ -1,7 +1,5 @@
 import {store, createDerivedStore} from './default.js';
 
-export const pageStore$ = store('');
-
 /**
  * issue store 관련
  */

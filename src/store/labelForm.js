@@ -29,6 +29,12 @@ export const formHandlers = {
   addSetDescriptionObservers(observers=[]) {
     this.setDescriptionObservers.add(observers);
   },
+  removeObservers(observers=[]) {
+    this.setNameObservers.remove(observers);
+    this.setIsCreatingObservers.remove(observers);
+    this.setColorObservers.remove(observers);
+    this.setDescriptionObservers.remove(observers);
+  }
 }
 
 export const formData$ = new Proxy(initialFormData, {

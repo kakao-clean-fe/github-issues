@@ -1,12 +1,9 @@
-import { AppSelector, opacityClass } from "../template/selector";
+import { opacityClass } from "../template/selector";
 
-export const $ = (selector) => {
-  return document.querySelector(selector);
-}
+export const $ = document.querySelector.bind(document);
+export const $$ = document.querySelectorAll.bind(document);
 
-export const clearElement = (targetSelector) => {
-  const target = $(targetSelector);
-  
+export const clearElement = (target=null) => {
   if (!target) return;
 
   while (target.lastElementChild) {
@@ -18,8 +15,18 @@ export const renderTemplate = (parent, template) => {
   parent?.insertAdjacentHTML('beforeend', template);
 }
 
-export const setRenderTarget = (parent) => (template) => parent?.insertAdjacentHTML('beforeend', template);
-export const renderPageInApp = setRenderTarget($(AppSelector));
+export const setRenderTarget = (parentEl) => (template) => parentEl?.insertAdjacentHTML('beforeend', template);
+export const renderWrapper = (parentEl) => (template) => {
+  return function() {
+    setRenderTarget(parentEl)(template);
+  }
+}
+
+export const getTargetQuerySelector = (targetEl) => (selector) => {
+  const wrapper = targetEl.querySelector(selector);
+
+  return wrapper.querySelector.bind(wrapper);
+}
 
 export const removeClass = (className) => target => target.classList.remove(className);
 export const addClass = className => target => target.classList.add(className);
@@ -35,7 +42,7 @@ export const deactivateButton = target => {
   target.style.cursor = '';
 }
 
-export const addClickEventListener = (selector, callback) => $(selector).addEventListener('click', callback);
+export const addClickEventListener = (el, callback) => el.addEventListener('click', callback);
 
 export const addTargetsClickListener = (_targetElements, callback = () => {}) => {
   const targetElements = Array.isArray(_targetElements) ? _targetElements : [_targetElements];

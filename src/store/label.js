@@ -1,6 +1,8 @@
-import { newLabelColorStore$, ProxyStore } from './color';
+import { newLabelColorStore$ } from './color';
 import { Observable, ObserverArray } from './observable';
-import { fetchStoreData } from '../util/feature';
+import { apiService } from '../util/httpService';
+import { HttpError } from '../util/errors';
+import { ADD_LABEL_ERROR_MESSAGE } from '../const';
 
 /**
  * week2 객체 지향 프로그래밍
@@ -10,7 +12,7 @@ function createLabelStore(initialValue) {
   // Observable의 constructor 로직 실행
   Observable.call(this, initialValue);
   this.addObserverList = new ObserverArray(); // 라벨 추가에 대한 observer
-  this.httpRequest = fetchStoreData(this);
+  this.apiService = apiService;
 }
 /**
  * Object.create(object) creates an object with a prototype of the
@@ -18,39 +20,46 @@ function createLabelStore(initialValue) {
  */
 createLabelStore.prototype = Object.create(Observable.prototype);
 createLabelStore.constructor = createLabelStore;
-createLabelStore.prototype.fetchLabels = function() {
-  this.httpRequest('/labels')();
+createLabelStore.prototype.fetchLabels = async function() {
+  try {
+    const data = await this.apiService.getLabels();
+    
+    this.setValue(data);
+
+  } catch(err) {}
 }
-createLabelStore.prototype.updateLabels = function() {
-  this.httpRequest('/labels-delay')(); // GET은 setValue에서 notify
+createLabelStore.prototype.updateLabels = async function() {
+  try {
+    const data = await this.apiService.getDelayedLabels();
+
+    this.setValue(data);
+
+  } catch(err) {}
 }
+/**
+ * 호출하는 쪽에서 성공, 실패 처리
+ */
 createLabelStore.prototype.add = async function(newLabel) {
-  const {status, data, isAborted, isOtherError} = await this.httpRequest('/labels')('POST', newLabel);
+  try {
+    const data = await this.apiService.postLabel(newLabel);
+    const newLabelRes = data[data.length-1];
 
-  if (isAborted || isOtherError) {
-    return;
+    this.value.push(newLabelRes);
+    this.notifyAddObservers(newLabelRes);
+
+    /**
+     * labelStore에 새로운 color 추가 (set이라 일단 add)
+     */
+    const color = newLabelRes.color;
+    color && newLabelColorStore$.colors.add(color.toUpperCase());
+  } catch(err) {
+    if (err instanceof HttpError) {
+      console.error(`label 추가 실패, status: ${err.statusCode}`)
+      alert(ADD_LABEL_ERROR_MESSAGE);
+      return;
+    }
+    // 다른 에러는 처리하지 않음, 로그만 남김
   }
-
-  if (status !== 201) {
-    console.error(`label 추가 실패, status: ${status}`)
-    alert('label 추가에 실패했습니다. 다시 시도해주세요.');
-    return;
-  }
-  
-  /**
-   * todo. 일단 새로운 라벨을 추가로 그리기만 해도 되는지 확인
-   * 전체 라벨을 그린다면 fetchStoreData 함수 > POST일 때 setValue 추가
-   */
-  const newLabelRes = data[data.length-1];
-
-  this.value.push(newLabelRes);
-  this.notifyAddObservers(newLabelRes);
-
-  /**
-   * labelStore에 새로운 color 추가 (set이라 일단 add)
-   */
-  const color = newLabelRes.color;
-  color && newLabelColorStore$.colors.add(color);
 }
 
 createLabelStore.prototype.subscribeAdd = function(observers = []) {

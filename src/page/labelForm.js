@@ -1,20 +1,27 @@
-import { labelFormSelector, createLabelButtonSelector, formColorValueSelector, formNameSelector, formHiddenClass, labelPreviewTextContentSelector, formDescriptionSelector, labelCreateCancelButtonSelector, newLabelColorSelector, labelPreviewSelector } from "../template/selector"
-import { $, activateButton, addClickEventListener, deactivateButton, toggleClass } from "../util/dom"
+import { createLabelButtonSelector, formColorValueSelector, formNameSelector, formHiddenClass, labelPreviewTextContentSelector, formDescriptionSelector, labelCreateCancelButtonSelector, newLabelColorSelector, labelPreviewSelector } from "../template/selector"
+import { activateButton, addClickEventListener, deactivateButton, toggleClass } from "../util/dom"
 import { labelStore$ } from '../store/label';
-import { getFormStorage, isHexColor, isValid, setInputValue } from "../util/feature";
+import { addSubscribe as _addSubscribe, getFormStorage, isHexColor, isNotDuplicate, isValid, setInputValue } from "../util/feature";
 import { formData$, formHandlers } from "../store/labelForm";
 import { omit, pipe } from "../util/operator";
 import { newLabelColorStore$ } from '../store/color';
-import { colorList } from "../const";
+import { colorList, DUPLICATE_LABEL_NAME_MESSAGE } from "../const";
 
 /**
  * dom 관련, add event listener
  */
 export class LabelFormComponent {
+  #labelFormEl = null;
+  #labelFormEl$ = null;
+  #unsubscribeList = [];
+
   /**
    * observer 등록, 이벤트 핸들러 등록
    */
-  constructor() {
+  constructor(targetEl) {
+    this.#labelFormEl = targetEl;
+    this.#labelFormEl$ = targetEl.querySelector.bind(targetEl);
+
     this.formStorage = getFormStorage();
     
     this.addObservers();
@@ -30,20 +37,26 @@ export class LabelFormComponent {
    * Observable 클래스로 만든 store는 해당 store에 observer 등록
    */
   addObservers() {
+    const addSubscribe = _addSubscribe(this, this.#unsubscribeList);
     // formData 관련 observer
     formHandlers.addSetNameObserver([
-      this.setNameInputValue.bind(this),
-      this.toggleCreateButton.bind(this),
+      addSubscribe(this.setNameInputValue), 
+      addSubscribe(this.toggleCreateButton)
     ]);
-    formHandlers.addSetIsCreatingObservers([this.renderCreatingStatus.bind(this)]);
+    formHandlers.addSetIsCreatingObservers([addSubscribe(this.renderCreatingStatus)]);
     formHandlers.addSetColorObservers([
-      this.renderLabelColor.bind(this),
-      this.setColorInputValue.bind(this),
+      addSubscribe(this.renderLabelColor),
+      addSubscribe(this.setColorInputValue)
     ]);
-    formHandlers.addSetDescriptionObservers([this.setDescriptionInputValue.bind(this)]);
+    formHandlers.addSetDescriptionObservers([addSubscribe(this.setDescriptionInputValue)]);
 
     // 새로운 라벨 추가시 observer
-    labelStore$.subscribeAdd([this.initForm.bind(this)]);
+    labelStore$.subscribeAdd([addSubscribe(this.initForm)]);
+  }
+
+  destroy() {
+    formHandlers.removeObservers(this.#unsubscribeList);
+    labelStore$.unsubscribe(this.#unsubscribeList);
   }
 
   /**
@@ -83,7 +96,7 @@ export class LabelFormComponent {
    */
   setNameInputValue(newValue) {
     setInputValue(formNameSelector, newValue);
-    $(labelPreviewTextContentSelector).textContent = newValue.trim() === '' ? 'Label preview' : newValue;
+    this.#labelFormEl$(labelPreviewTextContentSelector).textContent = newValue.trim() === '' ? 'Label preview' : newValue;
   }
 
   toggleCreateButton(nameInputValue) {
@@ -91,8 +104,10 @@ export class LabelFormComponent {
   }
 
   activateCreateButton(isActivate = false) {
-    isActivate ? activateButton($(createLabelButtonSelector)) : deactivateButton($(createLabelButtonSelector));
-    $(createLabelButtonSelector).disabled = !isActivate;
+    const createButtonEl = this.#labelFormEl$(createLabelButtonSelector);
+
+    isActivate ? activateButton(createButtonEl) : deactivateButton(createButtonEl);
+    createButtonEl.disabled = !isActivate;
   }
 
   setColorInputValue(newColor) {
@@ -105,7 +120,10 @@ export class LabelFormComponent {
 
   // formData$.color 변경시 동작
   renderLabelColor(newColor) {
-    const targetEls = [$(labelPreviewSelector), $(newLabelColorSelector)];
+    const targetEls = [
+      this.#labelFormEl$(labelPreviewSelector),
+      this.#labelFormEl$(newLabelColorSelector)
+    ];
     
     targetEls.forEach(el => (el.style.backgroundColor = newColor));
   }
@@ -115,7 +133,7 @@ export class LabelFormComponent {
   }
 
   renderCreatingStatus() {
-    toggleClass(formHiddenClass)($(labelFormSelector));
+    toggleClass(formHiddenClass)(this.#labelFormEl);
   }
 
   /**
@@ -171,18 +189,18 @@ export class LabelFormComponent {
 
   addFormEventListener() {
     // name
-    $(formNameSelector).addEventListener('input', this.addNameInputListener.bind(this));
+    this.#labelFormEl$(formNameSelector).addEventListener('input', this.addNameInputListener.bind(this));
     // color
-    $(formColorValueSelector).addEventListener('input', this.addColorInputListener);
+    this.#labelFormEl$(formColorValueSelector).addEventListener('input', this.addColorInputListener);
     // description
-    $(formDescriptionSelector).addEventListener('input', this.addDescriptionInputListener);
+    this.#labelFormEl$(formDescriptionSelector).addEventListener('input', this.addDescriptionInputListener);
     // submit
-    $(labelFormSelector).addEventListener('submit', this.addLabel);
+    this.#labelFormEl.addEventListener('submit', this.addLabel);
 
     // color selector
-    addClickEventListener(newLabelColorSelector, () => this.updateFormDataColor());
+    addClickEventListener(this.#labelFormEl$(newLabelColorSelector), () => this.updateFormDataColor());
     // cancel 버튼
-    addClickEventListener(labelCreateCancelButtonSelector, this.cancelForm.bind(this))
+    addClickEventListener(this.#labelFormEl$(labelCreateCancelButtonSelector), this.cancelForm.bind(this))
   }
 
   addWindowListener() {
@@ -202,22 +220,20 @@ export class LabelFormComponent {
  * validate and submit form
  */
 export const validator = {
-  checkName() {
-    const {name} = formData$;
-    
-    if (!labelStore$.value.every(label => label.name !== name)) {
-      return {valid: false, message: '이미 있는 라벨 이름입니다.'};
-    }
+  /**
+   * 이름 중복 검사
+   */
+  checkName(name) {
+    const isNotDuplicateName = isNotDuplicate('name');
+    const isValid = isNotDuplicateName(labelStore$.value, name);
 
-    return {valid: true};
+    return isValid ? {valid: true} : {valid: false, message: DUPLICATE_LABEL_NAME_MESSAGE};
   },
   run() {
-    const {valid: isValidName, message = ''} = this.checkName();
+    const {name} = formData$;
 
-    if (!isValidName) {
-      return {valid: isValidName, message};
-    }
-  
-    return {valid: true};
+    const {valid, message = ''} = this.checkName(name);
+
+    return {valid, message};
   }
 }

@@ -8,6 +8,7 @@ export const selectPageContainerSelector = 'nav#select-page';
 /**
  * label 관련 selector
  */
+export const labelWrapperSelector = '#label-wrapper';
 export const labelListContainerSelector = 'ul.label-list';
 export const labelCountSelector = 'div#labels-wrapper .open-count #label-num'
 export const labelFormSelector = '#new-label-form';
@@ -26,9 +27,10 @@ export const updateLabelSelector = 'button.refresh-labels';
 /**
  * issue 관련 selector
  */
+export const issueWrapperSelector = '#issue-wrapper';
 export const openCountSelector = '.open-count .num-open';
 export const closeCountSelector = '.close-count .num-close'
 export const openIssueTabSelector = '.issue-header .open-count';
 export const closeIssueTabSelector = '.issue-header .close-count';
 export const activateTabClass = 'font-bold';
-export const issueContainerSelector = '#issues-wrapper div.issue-list ul';
+export const issueContainerSelector = 'div.issue-list ul';
