@@ -1,3 +1,18 @@
+const initBodyStr = `
+  <nav id="nav" class="flex justify-end py-8 w-full m-auto text-1xl bg-neutral-800" style="padding-right: 12.5rem;">
+  <button class="mr-4 base-outer p-2 px-5">Issue</button>
+  <button class="base-outer p-2 px-5">Label</button>
+  </nav>
+
+  <div id="app" class="py-8">
+
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+  <script>
+
+  </script>
+`;
 const labelPageStr = `
   <div id="label-wrapper" class="w-9/12 m-auto min-w-min">
   </div>
@@ -133,6 +148,7 @@ const updateLabelButtonStr = `
   <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
 `;
 export {
+  initBodyStr,
   labelPageStr,
   labelHeaderStr,
   labelFormStr,
