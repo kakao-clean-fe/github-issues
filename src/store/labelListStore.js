@@ -1,4 +1,5 @@
 import * as tpl from '../tpl';
+import { $, toggleLabelCreateButton, setInput } from '../utils/utils';
 import { Subject } from './common';
 
 export class LabelListStore extends Subject {
@@ -7,28 +8,31 @@ export class LabelListStore extends Subject {
 
     this.labelListText = '';
 
-    this.configureElements();
     this.registerEventHandlers();
     this.initialize();
   }
-  configureElements() {
-    this.$createButton = document.getElementById('label-create-button');
-
-    this.$name = document.getElementById('label-name-input');
-    this.$description = document.getElementById('label-description-input');
-    this.$color = document.getElementById('label-color-value');
-  }
   registerEventHandlers() {
-    this.$createButton.addEventListener('click', e => {
-      this.appendLabelListText(
-        this.$name.value,
-        this.$description.value,
-        this.$color.value
+    $('#label-create-button').addEventListener('click', e => {
+      this.appendNewLabel(
+        $('#label-name-input').value,
+        $('#label-description-input').value,
+        $('#label-color-value').value.split('#')[1]
       );
+      localStorage.clear();
+
+      setInput('label-name-input', '');
+      setInput('label-description-input', '');
+      setInput('label-color-value', '');
+
+      toggleLabelCreateButton(false);
     });
   }
+  fetchRaw(isStatic) {
+    return isStatic ? fetch('/data-sources/labels.json') : fetch('http://localhost:5173/labels');
+  }
   initialize() {
-    fetch('/data-sources/labels.json')
+    this.labelListText = '';
+    this.fetchRaw(false)
       .then(res => res.json())
       .then(data => {
         for (let e of data) {
@@ -46,14 +50,26 @@ export class LabelListStore extends Subject {
 
     this.notify();
   }
+  appendNewLabel(name, description, color) {
+    fetch('/labels', {
+      method: 'POST',
+      body: JSON.stringify(
+        new Label(name, color, description)
+      )
+    })
+      .then(res => {
+        if (!res.ok)
+          throw new Error();
+      })
+      .catch(e => alert('짐시 후 다시 시도해주세요.'))
+      .then(() => { this.initialize() });
+  }
 }
 
-class Label {
-  constructor(name, color, description) {
-    this.name = name;
-    this.color = color;
-    this.description = description;
-  }
+function Label(name, color, description) {
+  this.name = name;
+  this.color = color;
+  this.description = description;
 }
 
 export class LabelListObserver {

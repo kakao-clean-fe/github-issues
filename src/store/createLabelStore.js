@@ -1,51 +1,57 @@
+import { getRandomColor, storeLocalStorage, $, toggleLabelCreateButton } from '../utils/utils';
 import { Subject } from "./common";
 
 export class CreateLabelStore extends Subject {
   constructor() {
     super();
 
-    this.configureElements();
     this.registerEventHandlers();
   }
-  configureElements() {
-    this.$cancelButton = document.getElementById('label-cancel-button');
-    this.$createButton = document.getElementById('label-create-button');
-
-    this.$name = document.getElementById('label-name-input');
-    this.$description = document.getElementById('label-description-input');
-    this.$color = document.getElementById('label-color-value');
+  loadLocalStorage() {
+    var pendingLabel = JSON.parse(localStorage.getItem('pendingLabel'));
+    if (pendingLabel) {
+      this.setLabelName(pendingLabel.name);
+      this.setLabelDescription(pendingLabel.description);
+      this.setLabelColor(pendingLabel.color);
+    }
   }
   registerEventHandlers() {
-    this.$cancelButton.addEventListener('click', e => {
+    $('#new-label-color').addEventListener('click', () => {
+      var color = getRandomColor();
+
+      this.setLabelColor(`#${color}`);
+    });
+    $('#label-cancel-button').addEventListener('click', e => {
       this.setLabelName('');
       this.setLabelDescription('');
       this.setLabelColor('');
     });
-    this.$createButton.addEventListener('click', e => console.log('create'));
 
-    this.$name.addEventListener('input', e => this.setLabelName(e.target.value));
-    this.$description.addEventListener('input', e => this.setLabelDescription(e.target.value));
-    this.$color.addEventListener('input', e => this.setLabelColor(e.target.value));
+    $('#label-name-input').addEventListener('input', e => this.setLabelName(e.target.value));
+    $('#label-description-input').addEventListener('input', e => this.setLabelDescription(e.target.value));
+    $('#label-color-value').addEventListener('input', e => this.setLabelColor(e.target.value));
   }
   getLabelName() {
-    return this.$name.value;
+    return $('#label-name-input').value;
   }
   getLabelDescription() {
-    return this.$description.value;
+    return $('#label-description-input').value;
   }
   getLabelColor() {
-    return this.$color.value;
+    return $('#label-color-value').value;
   }
   setLabelName(value) {
-    this.$name.value = value;
+    $('#label-name-input').value = value;
     this.notify();
   }
   setLabelDescription(value) {
-    this.$description.value = value;
+    $('#label-description-input').value = value;
     this.notify();
   }
   setLabelColor(value) {
-    this.$color.value = value;
+    $('#label-color-value').value = value;
+    $('#label-preview').style.background = value;
+    $('#new-label-color').style.background = value;
     this.notify();
   }
 }
@@ -53,14 +59,22 @@ export class CreateLabelStore extends Subject {
 export class CreateLabelObserver {
   constructor(model) {
     this.model = model;
-    model.subscribe(this.activate.bind(this))
+    model.subscribe(this.inputCallback.bind(this))
 
-    this.$createButton = document.getElementById('label-create-button');
+    this.model.loadLocalStorage();
   }
-  activate() {
+  inputCallback() {
+    storeLocalStorage({
+      name: this.model.getLabelName(),
+      description: this.model.getLabelDescription(),
+      color: this.model.getLabelColor()
+    });
+
     if (!!this.model.getLabelName() && !!this.model.getLabelDescription() && !!this.model.getLabelColor()) {
-      this.$createButton.classList.remove('opacity-50');
-      this.$createButton.disabled = false;
+      toggleLabelCreateButton(true);
+    }
+    else {
+      toggleLabelCreateButton(false);
     }
   }
 }
