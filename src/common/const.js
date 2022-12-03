@@ -28,3 +28,20 @@ export const COLOR_POOL = [
     '#7e57c2',
     '#7e57c0',
 ];
+
+export const APP_DOCUMENT = '#app';
+export const LABEL_PREVIEW = '#label-preview';
+export const NEW_LABEL_COLOR = '#new-label-color';
+export const LABEL_COLOR_VALUE = '#labelColorValue';
+export const ISSUE_LIST_UL = '.issue-list ul';
+export const NEW_LABEL_BUTTON = '.new-label-button';
+export const NEW_LABEL_FORM = '#new-label-form';
+export const LABEL_COUNT = '#label-count';
+export const LABEL_LIST = '#labels-wrapper .label-list';
+export const LABEL_CREATE_BUTTON = '#label-create-button';
+export const LABEL_CANCEL_BUTTON = '#label-cancel-button';
+export const LABEL_INPUT = '#label-input-wrapper input';
+export const OPACITY_50 = 'opacity-50';
+export const OPACITY_100 = 'opacity-100';
+export const POINTER = 'pointer';
+export const NOT_ALLOWED = 'not-allowed';
