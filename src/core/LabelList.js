@@ -14,6 +14,7 @@ function LabelList(store, target, done) {
   this._target = target;
   this._renderItems = null;
   this._done = done;
+  this._labelCreateUI = null;
   this._fetchController = null;
 }
 
@@ -25,8 +26,8 @@ LabelList.prototype.render = function () {
   const openEl = find(ITEM_CNT);
 
   this._renderItems = updateUI(getLabelItemTpl, listEl, [openEl], ["Labels"]);
-  const removeEvent = this.addNewLabelBtnEvent(() => {
-    this._done();
+  const removeEvent = this.addNewLabelBtnEvent(async () => {
+    this._labelCreateUI = await this._done();
     removeEvent();
   });
   this.addReloadBtnEvent();
@@ -52,6 +53,42 @@ LabelList.prototype.addNewLabelBtnEvent = function (callback) {
   return () => newLabelBtn.removeEventListener(EVENT_KEY.CLICK, handleClick);
 };
 
+LabelList.prototype._handleClickEdit = function (editBtn) {
+  const find = findByClass(this._target);
+  const newLabelForm = find("hidden#new-label-form");
+  if (newLabelForm) {
+    const newLabelBtn = find(SHOW_CREATE);
+    newLabelBtn.click();
+  }
+  const interval = setInterval(() => {
+    if (!this._labelCreateUI) {
+      return;
+    }
+    clearInterval(interval);
+    this._labelCreateUI(
+      editBtn.dataset.name,
+      editBtn.dataset.color,
+      editBtn.dataset.description
+    );
+  }, 100);
+};
+
+LabelList.prototype._handleClickDelete = function (deleteBtn) {
+  console.log("delete > ", deleteBtn.dataset.name);
+};
+
+LabelList.prototype._clickItem = async function (e) {
+  const editBtn = e.target.closest(".edit-button");
+  const deleteBtn = e.target.closest(".delete-button");
+
+  if (editBtn) {
+    this._handleClickEdit(editBtn);
+  }
+  if (deleteBtn) {
+    this._handleClickDelete(deleteBtn);
+  }
+};
+
 LabelList.prototype.addReloadBtnEvent = function () {
   const find = findByClass(this._target);
   const refreshBtn = find(REFRESH_BUTTON);
@@ -69,6 +106,7 @@ LabelList.prototype.addReloadBtnEvent = function () {
   };
 
   refreshBtn.addEventListener(EVENT_KEY.CLICK, handleClick);
+  window.addEventListener("click", (e) => this._clickItem(e));
 };
 
 export default LabelList;
