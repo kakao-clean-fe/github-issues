@@ -1,8 +1,12 @@
 import { LabelPage } from '../pages/label';
+import { selectElement } from '../utils/dom';
+import { SELECTOR } from '../constants/selector';
 
 const labelView = {
   render (target) {
-    new LabelPage(target.labelData);
+    const app = selectElement(SELECTOR.APP);
+    const labelPage = new LabelPage(target.labelData, app);
+    labelPage.render();
   }
 };
 
