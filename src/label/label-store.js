@@ -21,23 +21,21 @@ export class LabelStore {
       if (savedForm) this.form = JSON.parse(savedForm);
     });
   }
-  getLabels() {
-    LabelApi.getLabelsWithDelay().then((res) => {
-      if (res) {
-        this.labelList = res;
-      }
-    });
-  }
-  createLabel() {
-    LabelApi.postNewLabel(this._form).then((res) => {
-      if (res.error) {
-        console.error(res.error);
-        alert(res.error);
-        return;
-      }
+  async getLabels() {
+    const res = await LabelApi.getLabelsWithDelay();
+    if (res) {
       this.labelList = res;
-      this.form = { ...this._DEFAULT_FORM };
-    });
+    }
+  }
+  async createLabel() {
+    const res = await LabelApi.postNewLabel(this._form);
+    if (res.error) {
+      console.error(res.error);
+      alert(res.error);
+      return;
+    }
+    this.labelList = res;
+    this.form = { ...this._DEFAULT_FORM };
   }
   generateRandomColor() {
     const randomRGBValue = () => Math.floor(Math.random() * 256 * 256 * 256);
