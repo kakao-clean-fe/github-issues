@@ -1,8 +1,6 @@
-import {REQUEST_POST_FAILED} from "./msg.js";
-
 /** define useful Function files */
-export const selectOne = (selector) => document.querySelector(selector)
-export const selectAll = (selector) => document.querySelectorAll(selector)
+export const selectOne = (selector) => window.document.querySelector(selector)
+export const selectAll = (selector) => window.document.querySelectorAll(selector)
 
 /** pipe function */
 export const pipe = (...functions) =>
@@ -13,25 +11,24 @@ export const asyncPipe = (...functions) =>
   args => functions.reduce((promise, nextFn) => promise.then(nextFn), Promise.resolve(args));
 
 /** fetch의 try/catch를 추가합니다. */
-export const requestGet = async (url, options = {}) => {
-  return fetch(url, options)
-    .then(res => res.json())
-    .catch((err) => {
-      console.error(REQUEST_POST_FAILED, err)
-      throw err
-    })
-}
-export const requestPost = (url, options = {}) => {
+export const client = (method) => (url, options = {}) => {
+  const {params = {}} = options
+  if (Object.keys(params).length > 0) {
+    url += "?" + new URLSearchParams(params)
+    delete options.params
+  }
   return fetch(
     url,
     {
-      method: "POST",
+      method: method,
       ...options
     }
   )
-    .then(res => res.json())
+    .then(res => ({
+      status: res.status,
+      data: res.json()
+    }))
     .catch((err) => {
-      console.error(REQUEST_GET_FAILED, err)
       throw err
     })
 }
@@ -62,3 +59,5 @@ export const removeItem = (arr, conditionFunc) => {
   }
   return arr;
 }
+
+

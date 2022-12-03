@@ -3,14 +3,14 @@ import LabelStore from "./stores/label.js";
 import Nav from "./components/nav.js";
 import IssueTab from "./components/issue/tab.js"
 import {STATUS, TAB} from "./constants.js";
-import AppState from "./libs/state.js";
-import {getRandomColorCode} from "./utils.js";
+import {AppState} from "./libs/state.js";
+import {getRandomColorCode} from "./libs/utils.js";
 import LabelTab from "./components/label/tab.js";
 import {worker} from './mocks/browser';
 
 
 (
-  () => {
+  async () => {
     /* worker start */
     worker.start();
 
@@ -26,19 +26,16 @@ import {worker} from './mocks/browser';
     /* Nav event bind */
     new Nav()
 
-    Promise.all([
-      IssueStore.getInitialData(),
-      LabelStore.getInitialData()
-    ])
-      .then(() => {
-        /* data loading 후 observer를 통해 전체 update */
-        AppState.notify()
-      })
-
     /* Issue, Label, LabelForm 생성 -> 생성과 함께 subscribe */
     new IssueTab()
     new LabelTab()
-    // notify는 데이터 로딩 후 실행하므로 notify X
 
+    await Promise.all([
+      IssueStore.getInitialData(),
+      LabelStore.getInitialData()
+    ])
+
+    /* data loading 후 observer를 통해 전체 update */
+    AppState.notify()
   }
 )()

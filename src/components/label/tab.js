@@ -1,18 +1,18 @@
-import {requestPost, selectOne} from "../../utils.js";
+import {selectOne} from "../../libs/utils.js";
 import {getLabelTpl} from "../../tpl.js";
 import {TAB} from "../../constants.js";
 import View from "../../libs/view.js";
-import AppState from "../../libs/state.js";
 import LabelStore from "../../stores/label.js";
 
 
-const localState = {
-  controller: undefined,
-  isFormImported: false
-}
-
-
 class LabelTab extends View {
+  constructor() {
+    super();
+    this.controller = undefined
+    this.isFormImported = false
+    this.isSearchResult = false
+  }
+
   get $targetEl() {
     return selectOne('#app')
   }
@@ -27,53 +27,89 @@ class LabelTab extends View {
     return getLabelTpl({
       numLabels: labels?.length || 0,
       show: activeTab === 'label',
+      isSearchResult: this.isSearchResult,
+      lastSearch: this.$.searchInput?.value
     })
   }
 
   bindEvents() {
+    const {
+      clearSearchButton,
+      searchInput,
+      newLabelButton,
+      updateLabelButton,
+    } = this.$
+
     // toggle new label button
     const handleNewLabelButton = async () => {
-      if (localState.isFormImported) {
-        const {showNewLabel} = AppState.get()
-        AppState.update({showNewLabel: !showNewLabel})
+      if (this.isFormImported) {
+        const {showNewLabel} = this.state.get()
+        this.state.update({showNewLabel: !showNewLabel})
       } else {
         const {default: LabelForm} = await import("./form.js")
-        localState.isFormImported = true
+        this.isFormImported = true
         new LabelForm()
-        const {showNewLabel} = AppState.get()
-        AppState.update({showNewLabel: !showNewLabel})
+        const {showNewLabel} = this.state.get()
+        this.state.update({showNewLabel: !showNewLabel})
       }
     }
-    this.$newLabelButton.addEventListener('click', handleNewLabelButton)
+    newLabelButton.addEventListener('click', handleNewLabelButton)
 
     // click update labels button
-    const handleUpdateLabelsButton = async () => {
-      if (localState.controller) {
-        localState.controller.abort()
+    const handleUpdateLabels = async () => {
+      if (this.controller) {
+        this.controller.abort()
       }
-      localState.controller = new AbortController()
+      this.controller = new AbortController()
       try {
-        await LabelStore.updateData({signal: localState.controller.signal})
+        const params = {}
+        if (searchInput?.value) {
+          this.isSearchResult = true
+          params.search = searchInput.value
+        } else {
+          this.isSearchResult = false
+        }
+
+        await LabelStore.updateItems(
+          {
+            signal: this.controller.signal,
+            params: params
+          }
+        )
       } catch (err) {
         if (err.name === 'AbortError') {
           return null
         }
       }
     }
-    this.$updateLabelButton.addEventListener('click', handleUpdateLabelsButton)
+    updateLabelButton.addEventListener('click', handleUpdateLabels)
 
+    // search filter
+    const handleEnter = async ({which}) => {
+      if (which === 13) {
+        await handleUpdateLabels()
+      }
+    }
+    searchInput.addEventListener('keypress', handleEnter)
+
+    clearSearchButton?.addEventListener('click', async () => {
+      this.isSearchResult = false
+      await handleUpdateLabels()
+    })
   }
 
-  get $newLabelButton() {
-    return this.$targetEl.querySelector(".new-label-button")
-  }
-
-  get $updateLabelButton() {
-    return this.$targetEl.querySelector(".refresh-labels")
+  get $() {
+    const querySelector = (selector) => this.contents?.querySelector(selector)
+    return {
+      clearSearchButton: querySelector(".issues-reset-query"),
+      searchInput: querySelector("#filter-input"),
+      newLabelButton: querySelector(".new-label-button"),
+      updateLabelButton: querySelector(".refresh-labels")
+    }
   }
 
   render() {
-    const {activeTab} = AppState.get()
+    const {activeTab} = this.state.get()
     if (activeTab === TAB.LABEL) super.render()
   }
 }

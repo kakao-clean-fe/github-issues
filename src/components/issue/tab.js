@@ -1,8 +1,7 @@
-import {selectAll, selectOne} from "../../utils.js";
+import {selectAll, selectOne} from "../../libs/utils.js";
 import {getIssueTpl} from "../../tpl.js";
 import {STATUS, TAB} from "../../constants.js";
 import View from "../../libs/view.js";
-import AppState from "../../libs/state.js";
 
 
 /** Issue Tab */
@@ -33,7 +32,7 @@ class IssueTab extends View {
     const handleIssueStatus = ({target: {classList}}) => {
       if (classList.contains("active")) return;
       const activeStatus = classList.contains("open-count") ? STATUS.OPEN : STATUS.CLOSE
-      AppState.update({...AppState.get(), activeStatus: activeStatus})
+      this.state.update({...this.state.get(), activeStatus: activeStatus})
     }
 
     this.$statusTabs.forEach(
@@ -46,7 +45,7 @@ class IssueTab extends View {
   }
 
   render() {
-    const {activeTab} = AppState.get()
+    const {activeTab} = this.state.get()
     if (activeTab === TAB.ISSUE) super.render()
   }
 

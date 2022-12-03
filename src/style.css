@@ -38,34 +38,81 @@ li {
   .details-list details{
     @apply mx-6
   }
-  
+
   .details-list details summary{
     list-style: none;
     @apply cursor-pointer
   }
-  
+
   .issue-list {
     @apply bg-white
   }
-  
+
   .issue-list ul{
     @apply w-full
   }
-  
+
   .issue-list li {
     @apply border-b p-4
   }
 
-  .label-item > div {
+  .label-item .label-item-contents div {
     @apply w-3/12 flex justify-between
   }
 
-  .label-item > div:last-child {
+  .label-item .label-item-contents div:last-child {
     @apply justify-end
   }
-  
+
+  .issues-reset-query-wrapper {
+    display: block;
+    font-weight: 600;
+  }
+
+  .issues-reset-query {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .issues-reset-query-icon {
+    border-radius: 6px;
+    height: 18px;
+    margin-right: 3px;
+    padding: 1px;
+    text-align: center;
+    width: 18px;
+  }
 }
 
 #label-wrapper, #issue-wrapper {
   min-width: 960px;
+}
+
+#alert-portal {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 15px;
+  right: 15px;
+  width: 450px;
+}
+
+#alert-portal .alert-message {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  min-width: 350px;
+  cursor: pointer
+}
+
+/* fadeOut */
+.fade-out {
+  animation: fadeOut 0.5s forwards;
+}
+
+@keyframes fadeOut {
+  100% {
+    opacity: 0;
+  }
 }
