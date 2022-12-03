@@ -1,5 +1,6 @@
-import { setInnerHTML } from '../curry/dom';
+import { appendChild } from '../curry/dom';
 import { go } from '../fp';
+import { convertTemplateToElement } from '../util';
 
 export class Component {
   constructor({ store, $root }) {
@@ -15,7 +16,12 @@ export class Component {
     this.hydrate();
   }
   render(template = this.getTemplate()) {
-    go(this.$root, setInnerHTML(template));
+    const node = convertTemplateToElement(template);
+    go(this.$root, appendChild(node));
+  }
+  reRender() {
+    this.__mount();
+    this.afterMounted();
   }
   afterRender() {}
   hydrate() {}

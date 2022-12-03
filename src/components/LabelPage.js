@@ -1,48 +1,53 @@
 import { go } from '../fp';
 import { setInnerHTML, setInnerText, setEvent } from '../curry/dom';
 import { $, saveCreateFormBeforeUnload } from '../util';
-import { getLabelTpl, getLabelItemTpl } from '../tpl';
-import { selector as sel, storeKey, pageType } from '../constant';
+import { getLabelTpl, getLabelItemTpl } from '../components/Templates';
+import { selector as sel, pageType } from '../constant';
 import { createNewLabelForm } from './NewLabelForm';
 import { fetchLabelsWithDelay } from '../service';
+import { Component } from './Component';
 
-export function createLabelPage({ store }) {
-  const [labels, setLabels] = store.useState(storeKey.labels);
-  const newLabelForm = createNewLabelForm({ store });
-
-  function renderLabelLayout() {
-    go($(sel.app), setInnerHTML(getLabelTpl()));
+export class LabelPage extends Component {
+  constructor({ store, $root }) {
+    super({ store, $root });
   }
-  function renderLabels(labelList) {
-    go($(sel.labelList), setInnerHTML(labelList.map(getLabelItemTpl).join('')));
+  beforeMounted() {
+    this.labels = this.store.getState(state => state.labels);
+    this.newLabelForm = createNewLabelForm({ store: this.store });
   }
-  function renderLabelCount(labelList) {
-    go($(sel.labelCount), setInnerText(`${labelList.length} Labels`));
+  render(template = this.getTemplate()) {
+    go(this.$root, setInnerHTML(template));
   }
-  function renderUpdateLabelsButton() {
-    go($(sel.updateLabelsButton), setEvent('click', () => fetchLabelsWithDelay().then(setLabels)));
-  }
-  function renderLabelComponents(labels) {
-    renderLabelLayout();
-    renderLabels(labels);
-    renderLabelCount(labels);
-    renderUpdateLabelsButton();
-    newLabelForm.render();
-  }
-  function handlePageChange(event) {
-    const [labels] = store.useState(storeKey.labels);
-    if (event.detail === pageType.label) {
-      renderLabelComponents(labels);
+  afterRender() {
+    this.renderLabels = (labelList) => go($(sel.labelList),
+      setInnerHTML(labelList.map(getLabelItemTpl).join(''))
+    );
+    this.renderLabelCount = (labelList) => go($(sel.labelCount),
+      setInnerText(`${labelList.length} Labels`)
+    );
+    this.renderUpdateLabelsButton = () => go($(sel.updateLabelsButton),
+      setEvent('click', () => fetchLabelsWithDelay().then(setLabels))
+    );
+    this.renderLabelComponents = (labels) => {
+      this.renderLabels(labels);
+      this.renderLabelCount(labels);
+      this.renderUpdateLabelsButton();
+      this.newLabelForm.render();
     }
   }
-  function render() {
-    const [page] = store.useState(storeKey.page);
-    if (page === pageType.label) {
-      renderLabelComponents(labels);
-    }
-    saveCreateFormBeforeUnload(store);
-    store.useEffect(storeKey.page, handlePageChange);
+  hydrate() {
+    const labels = this.store.getState(state => state.labels);
+    this.renderLabelComponents(labels);
+    this.store.addActionListener(this.handlePageChange.bind(this), actionNames => [actionNames.setPage]);
+    saveCreateFormBeforeUnload(this.store);
+  }
+  getTemplate() {
+    return getLabelTpl();
   }
 
-  return { render };
+  handlePageChange(state) {
+    if (state.page === pageType.label) {
+      this.reRender();
+    }
+  }
 }

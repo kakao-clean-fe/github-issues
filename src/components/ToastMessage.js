@@ -1,6 +1,6 @@
 import { Component } from './Component';
-import { createToastMessageTemplate } from '../tpl';
-import { storeKey, selector as sel } from '../constant';
+import { createToastMessageTemplate } from '../components/Templates';
+import { selector as sel } from '../constant';
 import { go } from '../fp';
 import { addClass, removeClass, setInnerText, setStyle } from '../curry/dom';
 
@@ -10,8 +10,6 @@ export class ToastMessage extends Component {
     this.timeoutID = null;
   }
   beforeMounted() {
-    this.useToastState = () => this.store.useState(storeKey.toast);
-    this.useToastEffect = onChange => this.store.useEffect(storeKey.toast, onChange)
     this.handleToastChange = this.handleToastChange.bind(this);
   }
   afterRender() {
@@ -23,24 +21,23 @@ export class ToastMessage extends Component {
     this.setToastMessage = (message) => go(this.$toastMessage, setInnerText(message))
   }
   hydrate() {
-    this.store.useEffect(storeKey.toast, this.handleToastChange);
+    this.store.addActionListener(this.handleToastChange, acts => [acts.showToastMessage, acts.hideToastMessage])
   }
   getTemplate() {
-    const [toast] = this.useToastState();
-    const { type, message } = toast;
-    return createToastMessageTemplate({ type, message });
+    const toast = this.store.getState(state => state.toast);
+    return createToastMessageTemplate({ message: toast.message });
   }
 
-  handleToastChange (event) {
-    const { isOpen } = event.detail;
+  handleToastChange (state) {
+    const { isOpen } = state.toast;
     if (isOpen) {
-      this.showToastForDuration(event);
+      this.showToastForDuration(state.toast);
     } else {
       this.render(createToastMessageTemplate(event.detail))
     }
   }
-  showToastForDuration (event) {
-    const { message, duration } = event.detail;
+  showToastForDuration (toast) {
+    const { message, duration } = toast;
     if (this.timeoutID) {
       this.hideToastMessage();
     }

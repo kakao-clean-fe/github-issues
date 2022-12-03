@@ -1,37 +1,41 @@
 import { fetchIssues, fetchLabels } from './service';
-import { storeKey, pageType, selector as sel } from './constant';
-import { Store, EventBus } from './store';
-import { createHeader } from './components/Header';
-import { createIssuePage } from './components/IssuePage';
-import { createLabelPage } from './components/LabelPage';
+import { pageType, selector as sel } from './constant';
+import { Store } from './flux/store';
+import { Header } from './components/Header';
+import { IssuePage } from './components/IssuePage'
+import { LabelPage } from './components/LabelPage';
 import { $, loadCreateForm } from './util';
+import { actionNames } from './flux/action';
+import { reducer } from './flux/reducer';
+import { PageContainer } from './components/PageContainer';
 
 export async function createApp() {
   const [issues, labels] = await Promise.all([fetchIssues(), fetchLabels()]);
-  const eventBus = new EventBus();
   const initialState = {
-    [storeKey.page]: pageType.issue,
-    [storeKey.issues]: issues,
-    [storeKey.labels]: labels,
-    [storeKey.isNewLabelFormOpen]: false,
-    [storeKey.labelForm]: {
+    page: pageType.issue,
+    issues: issues,
+    labels: labels,
+    isLabelFormOpen: false,
+    labelForm: {
       name: '',
       description: '',
       color: '#ffffff',
       ...loadCreateForm()
     },
-    [storeKey.toast]: {
+    toast: {
       isOpen: false,
       message: '',
       duration: 3000,
     }
   }
-  const store = new Store({ eventBus, initialState });
+  const store = new Store({ initialState, reducer, actionNames });
 
   function render() {
-    createHeader({ store }).render();
-    createIssuePage({ store }).render();
-    createLabelPage({ store }).render();
+    const $root = $(sel.app);
+    new Header({ store, $root });
+    new PageContainer({ store, $root });
+    new IssuePage({ store, $root: $(sel.pageContainer) });
+    new LabelPage({ store, $root: $(sel.pageContainer) });
     import('./components/ToastMessage').then(({ ToastMessage }) => {
       new ToastMessage({ store, $root: $(sel.toastContainer) });
     })

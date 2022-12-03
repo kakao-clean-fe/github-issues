@@ -1,6 +1,6 @@
 export function getIssueTpl() {
-	return `
-    <div id="issue-wrapper" class="w-9/12 m-auto min-w-min">
+  return `
+    <div id="issue-wrapper" class="w-9/12 m-auto min-w-min py-8">
     <div id="header" class="flex justify-between">
 
       <div class="filter-menu w-2/3 px-3 py-1 flex base-outer items-center">
@@ -67,7 +67,7 @@ export function getIssueTpl() {
 }
 
 export function getIssueItemTpl(item) {
-    return `
+  return `
         <li> 
           <div class="py-4">
               <input type="checkbox">
@@ -84,7 +84,9 @@ export function getIssueItemTpl(item) {
                   </div>
               </div>
               <div class="issue-description text-xs mt-2">
-                ${item._id} ${item.status}ed ${item['open-date']} ${item.milestones}
+                ${item._id} ${item.status}ed ${item['open-date']} ${
+    item.milestones
+  }
               </div>
           </div>
         </li>`;
@@ -92,7 +94,7 @@ export function getIssueItemTpl(item) {
 
 export function getLabelTpl() {
   return `
-  <div id="label-wrapper" class="w-9/12 m-auto min-w-min">
+  <div id="label-wrapper" class="w-9/12 m-auto min-w-min py-8">
 
   <div id="header" class="flex justify-between">
 
@@ -221,23 +223,23 @@ export function getLabelTpl() {
   </div>
     <button class="refresh-labels base-outer p-2 mt-2 float-right">update labels</button>
 </div>
-  `
+  `;
 }
 
 export function getLabelItemTpl({ name, color, description }) {
-		return `
-            <li class="label-item flex items-center ml-4 py-3 justify-between border-b ">
-                <div class="issue-title flex"> 
-                    <span class="rounded-lg border p-1 px-2" style="background-color:${color}">${name}</span> 
-                </div>
-                <div class="issue-description ">${description}</div>
-                <div class="issue-description ">3 issues </div>
-                <div class="label-editor pr-4 ">
-                    <button class="edit-button mx-2 ">edit</button>
-                    <button class="delete-button">delete</button>
-                </div>
-            </li>
-        `;
+  return `
+      <li class="label-item flex items-center ml-4 py-3 justify-between border-b ">
+          <div class="issue-title flex"> 
+              <span class="rounded-lg border p-1 px-2" style="background-color:${color}">${name}</span> 
+          </div>
+          <div class="issue-description ">${description}</div>
+          <div class="issue-description ">3 issues </div>
+          <div class="label-editor pr-4 ">
+              <button class="edit-button mx-2 ">edit</button>
+              <button class="delete-button">delete</button>
+          </div>
+      </li>
+  `;
 }
 
 export function createToastMessageTemplate({ message }) {
@@ -247,5 +249,14 @@ export function createToastMessageTemplate({ message }) {
         <div class="toast-message">${message}</div>
       </div>
     </div>
+  `;
+}
+
+export function createHeaderTemplate() {
+  return `
+    <nav class="flex justify-end py-8 w-full m-auto text-1xl bg-neutral-800" style="padding-right: 12.5rem;">
+      <button id="issue-tab" class="mr-4 base-outer p-2 px-5">Issue</button>
+      <button id="label-tab" class="base-outer p-2 px-5">Label</button>
+    </nav>
   `;
 }
