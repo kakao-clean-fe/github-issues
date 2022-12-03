@@ -18,3 +18,10 @@ export const RENDER_TYPE = {
     OVERRIDE: 'override',
     REPLACE: 'replace'
 }
+
+export const API_PATH = {
+    GET_ISSUES: "/issues",
+    GET_LABELS: "/labels",
+    SAVE_LABELS: "/labels",
+    UPDATE_LABELS: "/labels-delay"
+}

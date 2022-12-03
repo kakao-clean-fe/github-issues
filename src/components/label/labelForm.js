@@ -28,17 +28,17 @@ export class LabelForm extends Component {
         createBtnElem.addEventListener('click', this.#onClickCreateBtn.bind(this));
     }
 
-    #onClickCreateBtn() {
+    async #onClickCreateBtn() {
         const name = document.querySelector(SELECTOR.LABEL_FORM_NAME);
         const description = document.querySelector(SELECTOR.LABEL_FORM_DESCRIPTION);
         const color = document.querySelector(SELECTOR.LABEL_FORM_COLOR);
         const newLabel = {name: name.value, color: color.value.substring(1), description: description.value};
-        saveLabels(newLabel).then((result) => {
-            result
-                .doOnSuccess((res) => setLabels(res.data))
+        (await saveLabels(newLabel))
+                .doOnSuccess((res) => {
+                    setLabels(res.data);
+                    [name, description, color].forEach((e) => e.value = '');
+                })
                 .doOnError(({data: {error}}) => alert(error))
-        });
-        [name, description, color].forEach((e) => e.value = '');
     }
 
     #addEventToColorBtn() {
